@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 21:27:02 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/04/12 01:27:28 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/04/12 17:15:17 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,11 +46,18 @@ t_shell *init_data(char *ss, int type1)
 // 	free(ss);
 // 	return (tmp);
 // }
+int	check_is_oper(char c)
+{
+	if (c == '>' || c == '<' || c == '|' || c == 32 || c == 34 || c == 39 || c == '\t')
+		return (1);
+	return (0);		
+}
 
 void    lexer(char *str)
 {
 	int     i;
 	int		j;
+	int		b;
 	t_shell *data_cmd;
 	t_shell *tmp;
 	char *ss;
@@ -65,8 +72,14 @@ void    lexer(char *str)
 		return ;
 	while (str[i] == ' ' || str[i] == '\t')
 		i++;
-	while(str[i])
+	b = ft_strlen(str);
+	b--;
+	while (str[b] == ' ' || str[b] == '\t')
+		b--;
+	while(str[i] && i <= b)
 	{
+		if (str[i] == ' ')
+			i++;
 		if (str[i] == '|')
 		{
 			ss = ft_strdup("|");
@@ -74,7 +87,7 @@ void    lexer(char *str)
 			tmp = tmp->next;
 			free(ss);
 		}
-		else if (str[i] == '"')
+		else if (str[i] == 34)
 		{
 			ss = ft_strdup("\34");
 			tmp->next = init_data(ss, DOUBLE);
@@ -105,7 +118,7 @@ void    lexer(char *str)
 		}
 		else if (str[i] == '<' && str[i + 1] == '<')
 		{
-			ss = ft_strdup("<");
+			ss = ft_strdup("<<");
 			tmp->next = init_data(ss, HER);
 			tmp = tmp->next;
 			free(ss);
@@ -118,24 +131,31 @@ void    lexer(char *str)
 			tmp = tmp->next;
 			free(ss);
 		}
-		// else
-		// {
-		// 	// printf("%d")
-		// 	j = i;
-		// 	while(str[i] != ' ' && str[i])
-		// 		i++;
-		// 	ss = ft_substr(str, j, i - j);
-		// 	tmp->next = init_data(ss, WORD);
-		// 	tmp = tmp->next;
-		// 	free(ss);
-		// }
+		else
+		{
+			while (str[i] == 32 && str[i])
+				i++;
+			j = i;
+			while(!check_is_oper(str[i]) && str[i])
+			{
+				i++;
+				if (check_is_oper(str[i]) && str[i +1] != ' ' && str[i +1] != '\0')
+					i++;
+			}
+			ss = ft_substr(str, j, i - j);
+			tmp->next = init_data(ss, WORD);
+			tmp = tmp->next;
+			free(ss);
+			if (check_is_oper(str[i]))
+				i--;
+		}
 		i++;
 	}
 	i = 0;
 	data_cmd = data_cmd->next;
 	while(data_cmd)
 	{
-		printf("%c || %d\n ", data_cmd->type, i++);
+		printf("%c || %d\n\n ", data_cmd->type, i++);
 		printf("%s\n", data_cmd->s);
 		data_cmd = data_cmd->next;
 	}
