@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 21:27:02 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/04/12 17:15:17 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/04/12 18:18:12 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,7 +139,7 @@ void    lexer(char *str)
 			while(!check_is_oper(str[i]) && str[i])
 			{
 				i++;
-				if (check_is_oper(str[i]) && str[i +1] != ' ' && str[i +1] != '\0')
+				if ((str[i] == '"' || str[i] == 39) && str[i +1] != ' ' && !check_is_oper(str[i +1]))
 					i++;
 			}
 			ss = ft_substr(str, j, i - j);
@@ -155,7 +155,7 @@ void    lexer(char *str)
 	data_cmd = data_cmd->next;
 	while(data_cmd)
 	{
-		printf("%c || %d\n\n ", data_cmd->type, i++);
+		printf("%c || %d\n\n", data_cmd->type, i++);
 		printf("%s\n", data_cmd->s);
 		data_cmd = data_cmd->next;
 	}
@@ -164,7 +164,7 @@ void    lexer(char *str)
 int main()
 {
 	char *str;
-	t_shell d;
+	// t_shell d;
 	printf("\033[2J");
 	printf("\033[1;1H");
 	str = readline("\033[1;32m➜  \033[0m\033[1;36mMinishell\033[0m\033[0;35m$\033[0m ");
