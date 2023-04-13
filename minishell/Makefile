@@ -1,17 +1,20 @@
 NAME = minishell
-CC = CC -Wall -Wextra -Werror
+CC = CC 
 RM = rm -f
 
-SRC = main.c libft.a libftt.a
+SRC = main.c lexer.c parser.c libft.a libftt.a
 
 OBJ = $(SRC:.c=.o)
 
-all: $(NAME)
+all: $(lib) $(NAME)
 
-$(NAME): $(OBJ)
+$(NAME): $(lib) $(OBJ)
 	$(CC) $(OBJ) -lreadline -o $(NAME)
 
-%o : %c minishell.h
+$(lib):
+	cd libft && make
+
+%o: %c minishell.h
 	$(CC) -c $<
 
 clean :
