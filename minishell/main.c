@@ -6,11 +6,11 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 21:27:02 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/04/14 01:52:14 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/04/14 18:31:16 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "include/minishell.h"
 
 t_shell *init_data(char *ss, int type1)
 {
@@ -115,19 +115,55 @@ int	checke_single(char *str)
 	}
 	return (flg);
 }
+int	check_error(char *str)
+{
+	int	i;
+
+	i = 0;
+	if (!str)
+		return (0);
+	while (str[i] == ' ' || str[i] == '\t' || str[i] == '>' || str[i] == '<' || str[i] == '|')
+		i++;
+	if (str[i] == '\0')
+	{
+		printf("Minishell$: syntax error !\n");
+		return (1);
+	}
+	else
+		i = 0;
+	while(str[i] == ' ' || str[i] == '\t')
+		i++;
+	if (str[i] == '|')
+	{
+		printf("Minishell$: syntax error near unexpected token `|'\n");
+		return (1);
+	}
+	while (str[i] == '>' || str[i] == '<')
+		i++;
+	while(str[i] == ' ' || str[i] == '\t')
+		i++;
+	if (str[i] == '\0')
+	{
+		printf("Minishell$: syntax error near unexpected token `newline'\n");
+		return (1);
+	}
+	return (0);
+}
 
 int main()
 {
 	char *str;
 	int	flg_d;
 	int	flg_s;
+	int	error;
 
 	printf("\033[2J");
 	printf("\033[1;1H");
 	str = readline("\033[1;32m➜  \033[0m\033[1;36mMinishell\033[0m\033[0;35m$\033[0m ");
 	while(str)
 	{
-		while (1)
+		error = check_error(str);
+		while (1 && !error)
 		{
 			flg_d = checke_double(str);
 			flg_s = checke_single(str);
@@ -136,7 +172,7 @@ int main()
 			else
 				break;
 		}
-		while (1)
+		while (1 && !error)
 		{
 			flg_d = checke_pipe(str);
 			if (flg_d)
@@ -144,12 +180,13 @@ int main()
 			else
 				break;
 		}
-		if (str[0] == 'c' && str[1] == 'l' && str[2] == 'e' && str[3] == 'a' && str[4] == 'r' && (str[5] == '\0' || str[5] == ' '))
+		if (str[0] == 'c' && str[1] == 'l' && str[2] == 'e'
+			&& str[3] == 'a' && str[4] == 'r' && (str[5] == '\0' || str[5] == ' '))
 		{
 			printf("\033[2J");
 			printf("\033[1;1H");
 		}
-		else if(str)
+		else if(str && !error)
 		{
 			add_history(str);
 			lexer(str);

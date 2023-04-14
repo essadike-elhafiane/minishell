@@ -6,11 +6,11 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 18:07:00 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/04/13 18:19:16 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/04/14 18:31:42 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../include/minishell.h"
 
 void	lexer_0(char *str, t_stk *y)
 {
