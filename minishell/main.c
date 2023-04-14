@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 21:27:02 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/04/14 18:31:16 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/04/14 20:49:26 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,7 +120,7 @@ int	check_error(char *str)
 	int	i;
 
 	i = 0;
-	if (!str)
+	if (str[i] == '\0')
 		return (0);
 	while (str[i] == ' ' || str[i] == '\t' || str[i] == '>' || str[i] == '<' || str[i] == '|')
 		i++;

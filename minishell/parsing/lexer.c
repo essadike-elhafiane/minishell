@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 18:07:00 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/04/14 18:31:42 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/04/14 20:47:07 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,11 @@ void	lexer_0(char *str, t_stk *y)
 	}
 	else if (str[y->i] == 34)
 	{
-		y->ss = ft_strdup("\"");
+		y->b = y->i;
+		y->i++;
+		while(str[y->i] != 34)
+			y->i++;
+		y->ss = ft_substr(str, y->b, y->i - y->b +1);
 		y->tmp->next = init_data(y->ss, DOUBLE);
 		y->tmp = y->tmp->next;
 		free(y->ss);
@@ -78,7 +82,11 @@ void	lexer_2(char *str, t_stk *y)
 	}
 	if (str[y->i] == 39)
 	{
-		y->ss = ft_strdup("'");
+		y->b = y->i;
+		y->i++;
+		while(str[y->i] != 39)
+			y->i++;
+		y->ss = ft_substr(str, y->b, y->i - y->b +1);
 		y->tmp->next = init_data(y->ss, SINGLE);
 		y->tmp = y->tmp->next;
 		free(y->ss);
@@ -126,7 +134,7 @@ void    lexer(char *str)
 	free(y.tmp->s);
 	free(y.tmp);
 	y.tmp = y.data_cmd;
-    parser(y.data_cmd);
+    // parser(y.data_cmd);
 	while(y.tmp)
 	{
 		printf("%c || %d\n\n", y.tmp->type, y.i++);
