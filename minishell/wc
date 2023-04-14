@@ -1,0 +1,16 @@
+Makefile
+grep
+lexer.c
+lexer.o
+libft
+libft.a
+libftt.a
+main.c
+main.o
+minishell
+minishell.h
+parser.c
+parser.o
+test.c
+wc
+we

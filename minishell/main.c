@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 21:27:02 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/04/13 20:36:36 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/04/14 01:52:14 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,35 @@ int	check_is_oper(char c)
 	return (0);		
 }
 
+int	check_is_oper_error(char c)
+{
+	if (c == '>' || c == '<' || c == '|')
+		return (1);
+	return (0);		
+}
+int	checke_pipe(char *str)
+{
+	int	i;
+	int	flg;
+
+	i = 0;
+	flg = 0;
+	while(str[i])
+	{
+		if(str[i] == '|')
+		{
+			i++;
+			while (str[i] == ' ')
+				i++;
+			if (str[i] == '\0')
+				return (1);
+		}
+		else
+			i++;
+	}
+	return (flg);
+}
+	
 int	checke_double(char *str)
 {
 	int	i;
@@ -92,15 +121,12 @@ int main()
 	char *str;
 	int	flg_d;
 	int	flg_s;
-	// t_shell d;
+
 	printf("\033[2J");
 	printf("\033[1;1H");
 	str = readline("\033[1;32m➜  \033[0m\033[1;36mMinishell\033[0m\033[0;35m$\033[0m ");
 	while(str)
 	{
-		// d.type = WORD;
-		// printf("%c\n\n", d.type);
-		// printf("%s\n", str);
 		while (1)
 		{
 			flg_d = checke_double(str);
@@ -110,7 +136,24 @@ int main()
 			else
 				break;
 		}
-		lexer(str);
+		while (1)
+		{
+			flg_d = checke_pipe(str);
+			if (flg_d)
+				str = ft_strjoin(str, readline("pipe> "));
+			else
+				break;
+		}
+		if (str[0] == 'c' && str[1] == 'l' && str[2] == 'e' && str[3] == 'a' && str[4] == 'r' && (str[5] == '\0' || str[5] == ' '))
+		{
+			printf("\033[2J");
+			printf("\033[1;1H");
+		}
+		else if(str)
+		{
+			add_history(str);
+			lexer(str);
+		}
 		free(str);
 		str = readline("\033[1;32m➜  \033[0m\033[1;36mMinishell\033[0m\033[0;35m$\033[0m ");
 	}
