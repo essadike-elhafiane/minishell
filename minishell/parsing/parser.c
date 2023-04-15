@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 18:06:57 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/04/15 16:36:39 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/04/15 17:23:56 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int	check_double_oper(t_shell *data)
 	y.j = 0;
 	while(tmp)
 	{
-		if (tmp->type == SPACE || tmp->type == WORD)
+		if (tmp->type == SPACE)
 			tmp = tmp->next;
 		if (tmp)
 		{
@@ -72,10 +72,11 @@ int	check_double_oper(t_shell *data)
 				{
 					printf("➜  Minishell$: syntax error near unexpected token `%s'\n", tmp->s);
 					return (1);
+				
 				}
-				else
-					y.j = 0;
-			}
+			} 
+			else
+				y.j = 0;
 			tmp = tmp->next;
 		}
 	}
