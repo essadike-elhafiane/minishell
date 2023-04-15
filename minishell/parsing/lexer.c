@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 18:07:00 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/04/15 01:00:02 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/04/15 17:06:16 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,11 +117,7 @@ void    lexer(char *str, char **env)
 	free(y.ss);
 	while (str[y.i] == ' ' || str[y.i] == '\t')
 		y.i++;
-	y.b = ft_strlen(str);
-	y.b--;
-	while (str[y.b] == ' ' || str[y.b] == '\t')
-		y.b--;
-	while(str[y.i] && y.i <= y.b)
+	while(str[y.i])
 	{
 		lexer_0(str, &y);
 		lexer_1(str, &y);
@@ -134,7 +130,8 @@ void    lexer(char *str, char **env)
 	free(y.tmp->s);
 	free(y.tmp);
 	y.tmp = y.data_cmd;
-    parser(y.data_cmd, env);
+    if (parser(y.data_cmd, env))
+		return ;
 	while(y.tmp)
 	{
 		printf("%c || %d\n\n", y.tmp->type, y.i++);

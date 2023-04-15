@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 18:06:57 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/04/15 01:40:41 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/04/15 16:36:39 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,54 @@ char	*expand(char *ss, char **env)
 	// printf("%s\n", s);
 	return (s);
 }
+int	check_double_oper(t_shell *data)
+{
+	t_shell *tmp;
+	t_stk	y;
 
-void    parser(t_shell *data, char **env)
+	tmp = data;
+	y.i = 0;
+	y.j = 0;
+	while(tmp)
+	{
+		if (tmp->type == SPACE || tmp->type == WORD)
+			tmp = tmp->next;
+		if (tmp)
+		{
+			if (tmp->type == PIPE)
+			{
+				y.i++;
+				if (y.i > 1)
+				{
+					printf("➜  Minishell$: syntax error near unexpected token `%s'\n", tmp->s);
+					return (1);
+				}
+			}
+			else
+				y.i = 0;
+			if (tmp->type == IN || tmp->type == OUT || tmp->type == HER || tmp->type == APPEND)
+			{
+				y.j++;
+				if ((tmp->next && tmp->next->type != WORD && tmp->next->type != DOUBLE && tmp->next->type != SINGLE && tmp->next->type != SPACE) || !tmp->next)
+				{
+					printf("➜  Minishell$: syntax error near unexpected token `%s'\n", tmp->s);
+					return (1);
+				}
+				if (y.j > 1)
+				{
+					printf("➜  Minishell$: syntax error near unexpected token `%s'\n", tmp->s);
+					return (1);
+				}
+				else
+					y.j = 0;
+			}
+			tmp = tmp->next;
+		}
+	}
+	return (0);
+}
+
+int    parser(t_shell *data, char **env)
 {
 	t_stk	y;
 	t_shell	*tmp;
@@ -48,6 +94,8 @@ void    parser(t_shell *data, char **env)
 		y.i = 0;
 		while(tmp->s[y.i])
 		{
+			if (tmp->s[y.i] == 39)
+				break;
 			if (tmp->s[y.i] == '$')
 			{
 				y.i++;
@@ -56,9 +104,6 @@ void    parser(t_shell *data, char **env)
 					y.i++;
 				y.ss = ft_substr(tmp->s, y.b, y.i - y.b);
 				y.ss = expand(y.ss, env);
-				
-				// printf("%s\n", y.ss);
-				// exit(1);
 				y.back = ft_strdup(tmp->s + y.i);
 				y.front = ft_substr(tmp->s, 0, y.b -1);
 				free(tmp->s);
@@ -70,7 +115,12 @@ void    parser(t_shell *data, char **env)
 		}
 		tmp = tmp->next;
 	}
+	if (check_double_oper(data))
+		return (1);
+	return (0);
 }
+
+
 	// if(y.i % 2 != 0 || y.j % 2 != 0)
 	// {
 	// 	printf("minishell: syntax error \n");

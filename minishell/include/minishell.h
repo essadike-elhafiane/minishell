@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 16:38:31 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/04/15 01:24:20 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/04/15 16:08:09 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,5 +53,5 @@ void    	lexer(char *str, char **env);
 t_shell		*init_data(char *ss, int type1);
 void		fun_free(t_shell **a);
 int			check_is_oper(char c);
-void    	parser(t_shell *data, char **env);
+int    		parser(t_shell *data, char **env);
 #endif
