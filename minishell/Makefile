@@ -2,12 +2,14 @@ NAME = minishell
 CC = cc
 RM = rm -f
 
-SRC = main.c parsing/lexer.c parsing/parser.c libft/ft_strlen.c libft/ft_substr.c libft/ft_strjoin.c libft/ft_strdup.c 
+SRC = main.c parsing/lexer.c parsing/parser.c libft/ft_strlen.c libft/ft_substr.c \
+	libft/ft_strjoin.c libft/ft_strdup.c libft/ft_strnstr.c \
+	libft/ft_isdigit.c libft/ft_isalpha.c
 
 FILES = ft_striteri.c ft_memcmp.c  ft_bzero.c ft_putnbr_fd.c ft_strmapi.c ft_itoa.c \
 	ft_putendl_fd.c ft_putchar_fd.c ft_putstr_fd.c ft_strtrim.c   \
-	ft_calloc.c  ft_isalnum.c ft_isalpha.c \
-	ft_isascii.c ft_isdigit.c ft_isprint.c \
+	ft_calloc.c  ft_isalnum.c  \
+	ft_isascii.c  ft_isprint.c \
 	ft_memchr.c ft_memset.c ft_memcpy.c \
 	 ft_strncmp.c ft_strlcat.c ft_strlcpy.c ft_atoi.c \
 	ft_strchr.c ft_strrchr.c ft_strnstr.c \

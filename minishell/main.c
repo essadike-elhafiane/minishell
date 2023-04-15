@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 21:27:02 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/04/14 20:49:26 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/04/14 23:18:11 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	fun_free(t_shell **a)
 
 int	check_is_oper(char c)
 {
-	if (c == '>' || c == '<' || c == '|' || c == 34 || c == 39 || c == '$')
+	if (c == '>' || c == '<' || c == '|' || c == 34 || c == 39)
 		return (1);
 	return (0);		
 }
@@ -150,7 +150,7 @@ int	check_error(char *str)
 	return (0);
 }
 
-int main()
+int main(int ac, char **av, char **env)
 {
 	char *str;
 	int	flg_d;
@@ -189,7 +189,7 @@ int main()
 		else if(str && !error)
 		{
 			add_history(str);
-			lexer(str);
+			lexer(str, env);
 		}
 		free(str);
 		str = readline("\033[1;32m➜  \033[0m\033[1;36mMinishell\033[0m\033[0;35m$\033[0m ");

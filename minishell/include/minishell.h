@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 16:38:31 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/04/14 18:32:01 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/04/14 21:08:08 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,9 +47,9 @@ typedef struct s_stk
 	char *ss;
 } t_stk;
 
-void    	lexer(char *str);
+void    	lexer(char *str, char **env);
 t_shell		*init_data(char *ss, int type1);
 void		fun_free(t_shell **a);
 int			check_is_oper(char c);
-void    	parser(t_shell *data);
+void    	parser(t_shell *data, char **env);
 #endif

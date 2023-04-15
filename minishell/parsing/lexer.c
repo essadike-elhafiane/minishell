@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 18:07:00 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/04/14 20:47:07 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/04/14 21:08:45 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ void	lexer_2(char *str, t_stk *y)
 	}
 }
 
-void    lexer(char *str)
+void    lexer(char *str, char **env)
 {
 	t_stk y;
 
@@ -134,7 +134,7 @@ void    lexer(char *str)
 	free(y.tmp->s);
 	free(y.tmp);
 	y.tmp = y.data_cmd;
-    // parser(y.data_cmd);
+    parser(y.data_cmd, env);
 	while(y.tmp)
 	{
 		printf("%c || %d\n\n", y.tmp->type, y.i++);
