@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 18:07:00 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/04/15 17:06:16 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/04/15 18:26:32 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,12 +104,44 @@ void	lexer_2(char *str, t_stk *y)
 	}
 }
 
+t_env *init_env(char *env)
+{
+	t_env *data;
+
+	data =(t_env *) malloc(sizeof(t_env));
+	if(!data)
+		exit(1);
+	data->env = ft_strdup(env);
+	data->next = NULL;
+	return (data);
+}
+
+t_env *creat_env_list(char **env)
+{
+	int	i;
+	t_env *env_l;
+	t_env *tmp;
+	
+	if(!*env)
+		return (NULL);
+	env_l = init_env(env[0]);
+	tmp = env_l;
+	i = 1;
+	while(env[i])
+	{
+		tmp->next = init_env(env[i]);
+		tmp = tmp->next;
+		i++;
+	}
+	return (env_l);
+}
+
 void    lexer(char *str, char **env)
 {
 	t_stk y;
 
 	y.i = 0;
-	if (!str)
+	if (!str || str[0] == '\0')
 		return ;
 	y.ss = ft_strdup("1");
 	y.data_cmd = init_data(y.ss, 14);
@@ -130,8 +162,15 @@ void    lexer(char *str, char **env)
 	free(y.tmp->s);
 	free(y.tmp);
 	y.tmp = y.data_cmd;
-    if (parser(y.data_cmd, env))
+	y.data_cmd->env = creat_env_list(env);
+    if (parser(y.data_cmd, y.data_cmd->env))
 		return ;
+	// while(y.tmp->env)
+	// {
+	// 	// printf("%c || %d\n\n", y.tmp->type, y.i++);
+	// 	printf("%s\n", y.tmp->env->env);
+	// 	y.tmp->env = y.tmp->env->next;
+	// }
 	while(y.tmp)
 	{
 		printf("%c || %d\n\n", y.tmp->type, y.i++);
@@ -139,4 +178,6 @@ void    lexer(char *str, char **env)
 		y.tmp = y.tmp->next;
 	}
 	fun_free(&y.data_cmd);
+	return ;
+	fun_free_env(&y.data_cmd->env);
 }

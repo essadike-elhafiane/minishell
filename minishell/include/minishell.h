@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 16:38:31 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/04/15 16:08:09 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/04/15 18:11:50 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,17 @@
 # define HER 'H'
 # define APPEND 'A'
 
+typedef struct s_env
+{
+	char			*env;
+	struct s_env  *next;
+} t_env;
+
 typedef struct s_shell
 {
 	int				type;
 	char			*s;
+	t_env			*env;
 	struct s_shell  *next;
 } t_shell;
 
@@ -53,5 +60,6 @@ void    	lexer(char *str, char **env);
 t_shell		*init_data(char *ss, int type1);
 void		fun_free(t_shell **a);
 int			check_is_oper(char c);
-int    		parser(t_shell *data, char **env);
+int    		parser(t_shell *data, t_env *env);
+void		fun_free_env(t_env **a);
 #endif

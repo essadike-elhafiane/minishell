@@ -1,5 +1,5 @@
 NAME = minishell
-CC = cc
+CC = cc -Wall -Wextra -Werror
 RM = rm -f
 
 SRC = main.c parsing/lexer.c parsing/parser.c libft/ft_strlen.c libft/ft_substr.c \

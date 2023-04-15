@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 21:27:02 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/04/14 23:18:11 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/04/15 18:30:16 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,20 @@ void	fun_free(t_shell **a)
 		tmp = *a;
 		*a = (*a)->next;
 		free(tmp->s);
+		free(tmp);
+	}
+	a = NULL;
+}
+
+void	fun_free_env(t_env **a)
+{
+	t_env	*tmp;
+
+	while (*a)
+	{
+		tmp = *a;
+		*a = (*a)->next;
+		free(tmp->env);
 		free(tmp);
 	}
 	a = NULL;
@@ -157,6 +171,8 @@ int main(int ac, char **av, char **env)
 	int	flg_s;
 	int	error;
 
+	(void )ac;
+	(void )av[0];
 	printf("\033[2J");
 	printf("\033[1;1H");
 	str = readline("\033[1;32m➜  \033[0m\033[1;36mMinishell\033[0m\033[0;35m$\033[0m ");
@@ -165,18 +181,18 @@ int main(int ac, char **av, char **env)
 		error = check_error(str);
 		while (1 && !error)
 		{
-			flg_d = checke_double(str);
-			flg_s = checke_single(str);
-			if (flg_d % 2 != 0 || flg_s % 2 != 0)
-				str = ft_strjoin(str, readline("> "));
+			flg_d = checke_pipe(str);
+			if (flg_d)
+				str = ft_strjoin(str, readline("pipe> "));
 			else
 				break;
 		}
 		while (1 && !error)
 		{
-			flg_d = checke_pipe(str);
-			if (flg_d)
-				str = ft_strjoin(str, readline("pipe> "));
+			flg_d = checke_double(str);
+			flg_s = checke_single(str);
+			if (flg_d % 2 != 0 || flg_s % 2 != 0)
+				str = ft_strjoin(str, readline("quote> "));
 			else
 				break;
 		}

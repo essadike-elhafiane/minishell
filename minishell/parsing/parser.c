@@ -6,13 +6,13 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 18:06:57 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/04/15 17:23:56 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/04/15 18:47:11 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-char	*expand(char *ss, char **env)
+char	*expand(char *ss, t_env *env)
 {
 	char *s;
 	int	i;
@@ -21,18 +21,17 @@ char	*expand(char *ss, char **env)
 	i = 0;
 	len = ft_strlen(ss);
 	s = NULL;
-	while(env[i])
+	while(env)
 	{
-		if(ft_strnstr(env[i], ss, len))
+		if(ft_strnstr(env->env, ss, len))
 		{
-			if(env[i][len] == '=')
-				s = ft_strdup(env[i] + len +1);
+			if(env->env[len] == '=')
+				s = ft_strdup(env->env + len +1);
 		}
-		i++;
+		env = env->next;
 	}
 	free(ss);
 	ss = NULL;
-	// printf("%s\n", s);
 	return (s);
 }
 int	check_double_oper(t_shell *data)
@@ -83,7 +82,7 @@ int	check_double_oper(t_shell *data)
 	return (0);
 }
 
-int    parser(t_shell *data, char **env)
+int    parser(t_shell *data, t_env *env)
 {
 	t_stk	y;
 	t_shell	*tmp;
@@ -95,7 +94,7 @@ int    parser(t_shell *data, char **env)
 		y.i = 0;
 		while(tmp->s[y.i])
 		{
-			if (tmp->s[y.i] == 39)
+			if (tmp->s[y.i] == 39 && tmp->type != 'D')
 				break;
 			if (tmp->s[y.i] == '$')
 			{
@@ -128,3 +127,4 @@ int    parser(t_shell *data, char **env)
 	// 	return ;
 	// 	printf("%s", y.ss);
 	// }
+// echo '"hello'$USER'"'
