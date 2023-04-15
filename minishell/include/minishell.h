@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 16:38:31 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/04/14 21:08:08 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/04/15 01:24:20 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,12 +39,14 @@ typedef struct s_shell
 
 typedef struct s_stk
 {
+	char *ss;
+	char *back;
+	char *front;
+	t_shell *data_cmd;
+	t_shell *tmp;
 	int     i;
 	int		j;
 	int		b;
-	t_shell *data_cmd;
-	t_shell *tmp;
-	char *ss;
 } t_stk;
 
 void    	lexer(char *str, char **env);
