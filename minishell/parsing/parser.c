@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 18:06:57 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/04/15 18:47:11 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/04/15 19:49:35 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,6 @@ int	check_double_oper(t_shell *data)
 				{
 					printf("➜  Minishell$: syntax error near unexpected token `%s'\n", tmp->s);
 					return (1);
-				
 				}
 			} 
 			else
