@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/16 20:08:08 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/04/16 21:17:59 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/04/16 22:40:01 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,8 @@ t_cmd    *creat_cmd(t_shell *data)
 
 	tmp = data;
 	cmds = (t_cmd *)malloc(sizeof(t_cmd));
+	cmds->fd_input = 0;
+	cmds->fd_out = 1;
 	cmds->next = NULL;
 	tmp_cmd = cmds;
 	y.i = 0;
@@ -73,7 +75,10 @@ t_cmd    *creat_cmd(t_shell *data)
 					tmp = tmp->next;
 				tmp_cmd->fd_input = open(tmp->s, O_RDONLY);
 				if (tmp_cmd->fd_input < 0)
-					tmp_cmd->fd_input = 0;
+				{
+					printf("Minishell$: %s; No such file or directory\n", tmp->s);
+					return (NULL);
+				}
 				tmp = tmp->next;
 			}
 			if (tmp && tmp->type == OUT)
@@ -83,6 +88,7 @@ t_cmd    *creat_cmd(t_shell *data)
 					tmp = tmp->next;
 				tmp_cmd->fd_out = open(tmp->s, O_CREAT | O_RDWR | O_TRUNC, 777);
 				tmp = tmp->next;
+				// printf("%s", tmp->s);
 				// write (tmp_cmd->fd_out, "sdfgsfgasf\n", 11);
 			}
 			if (tmp && tmp->type == APPEND)
@@ -107,28 +113,45 @@ t_cmd    *creat_cmd(t_shell *data)
 			r = tmp;
 			while(tmp && (tmp->type == WORD || tmp->type == DOUBLE || tmp->type == SINGLE))
 			{
+				y.i = 0;
 				while(tmp && (tmp->type == WORD || tmp->type == DOUBLE || tmp->type == SINGLE || tmp->type == SPACE))
 				{
-					printf("%s\n\n", tmp->s);
+					
 					if (tmp && tmp->type == SPACE)
 						tmp = tmp->next;
-					if (tmp && (tmp->type == WORD || tmp->type == DOUBLE || tmp->type == SINGLE || tmp->type == SPACE))
+					if (tmp && (tmp->type == WORD || tmp->type == DOUBLE || tmp->type == SINGLE))
 					{
+						// printf("%s\n\n", tmp->s);
 						tmp = tmp->next;
 						y.i++;
 					}
-					y.j = -1;
-					tmp_cmd->cmd = (char **)malloc(sizeof(char *) * (y.i + 1));
-					tmp_cmd->cmd[y.i] = NULL;
-					while (++y.j < y.i)
-					{
-						
-					}
-					
 				}
-				printf("%d\n\n", y.i);
+				y.j = 0;
+				tmp_cmd->cmd = (char **)malloc(sizeof(char *) * (y.i + 1));
+				tmp_cmd->cmd[y.i] = NULL;
+				// printf("%d\n\n", y.i);
+				while (y.j < y.i && r)
+				{
+					if (r && (r->type == WORD || r->type == DOUBLE || r->type == SINGLE))
+					{
+						tmp_cmd->cmd[y.j] = ft_strdup(r->s);
+						// printf("%s\n\n", r->s);
+						r = r->next;
+						y.j++;
+					}
+					else
+						r = r->next;
+				}
 			}
-				
+		}
+		if (tmp)
+		{
+			tmp = tmp->next;
+			tmp_cmd->next = (t_cmd *)malloc(sizeof(t_cmd));
+			tmp_cmd = tmp_cmd->next;
+			tmp_cmd->fd_input = 0;
+			tmp_cmd->fd_out = 1;
+			tmp_cmd->next = NULL;
 		}
 	}
 	return (cmds);

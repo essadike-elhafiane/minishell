@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 18:07:00 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/04/16 20:55:08 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/04/16 22:38:13 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,13 +165,17 @@ void    lexer(char *str, char **env)
 	y.data_cmd->env = creat_env_list(env);
     if (parser(y.data_cmd, y.data_cmd->env))
 		return ;
-	creat_cmd(y.data_cmd);
-	// while(y.tmp->env)
-	// {
-	// 	// printf("%c || %d\n\n", y.tmp->type, y.i++);
-	// 	printf("%s\n", y.tmp->env->env);
-	// 	y.tmp->env = y.tmp->env->next;
-	// }
+	t_cmd *cmd;
+	cmd = creat_cmd(y.data_cmd);
+	while(cmd)
+	{
+		int i = 0;
+		// printf("%c || %d\n\n", y.tmp->type, y.i++);
+		while(cmd->cmd[i])
+			printf("%s\n", cmd->cmd[i++]);
+		printf("\n\n");
+		cmd = cmd->next;
+	}
 	// while(y.tmp)
 	// {
 	// 	printf("%c || %d\n\n", y.tmp->type, y.i++);

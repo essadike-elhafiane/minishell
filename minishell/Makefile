@@ -1,5 +1,5 @@
 NAME = minishell
-CC = cc 
+CC = cc -g
 RM = rm -f
 
 SRC = main.c parsing/lexer.c parsing/parser.c parsing/creat_files_cmd.c libft/ft_strlen.c libft/ft_substr.c \
