@@ -1,0 +1,8 @@
+Makefile
+include
+libft
+main.c
+main.o
+minishell
+parsing
+wc

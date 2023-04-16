@@ -1,8 +1,8 @@
 NAME = minishell
-CC = cc -Wall -Wextra -Werror
+CC = cc 
 RM = rm -f
 
-SRC = main.c parsing/lexer.c parsing/parser.c libft/ft_strlen.c libft/ft_substr.c \
+SRC = main.c parsing/lexer.c parsing/parser.c parsing/creat_files_cmd.c libft/ft_strlen.c libft/ft_substr.c \
 	libft/ft_strjoin.c libft/ft_strdup.c libft/ft_strnstr.c \
 	libft/ft_isdigit.c libft/ft_isalpha.c
 

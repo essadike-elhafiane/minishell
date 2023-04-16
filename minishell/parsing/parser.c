@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 18:06:57 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/04/15 19:49:35 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/04/16 20:10:51 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,10 +62,15 @@ int	check_double_oper(t_shell *data)
 			if (tmp->type == IN || tmp->type == OUT || tmp->type == HER || tmp->type == APPEND)
 			{
 				y.j++;
-				if ((tmp->next && tmp->next->type != WORD && tmp->next->type != DOUBLE && tmp->next->type != SINGLE && tmp->next->type != SPACE) || !tmp->next)
+				if ((tmp->next && tmp->next->type != WORD && tmp->next->type != DOUBLE && tmp->next->type != SINGLE && tmp->next->type != SPACE && tmp->next->type != PIPE) || !tmp->next)
 				{
-					printf("➜  Minishell$: syntax error near unexpected token `%s'\n", tmp->s);
-					return (1);
+					if (tmp->type == '>' && tmp->next->type == PIPE)
+						y.i = y.i;
+					else
+					{
+						printf("➜  Minishell$: syntax error near unexpected token `%s'\n", tmp->s);
+						return (1);
+					}
 				}
 				if (y.j > 1)
 				{
@@ -77,6 +82,33 @@ int	check_double_oper(t_shell *data)
 				y.j = 0;
 			tmp = tmp->next;
 		}
+	}
+	return (0);
+}
+
+int	check_is_word_after_oper(t_shell *data)
+{
+	t_shell *tmp;
+	t_stk	y;
+
+	tmp = data;
+	y.i = 0;
+	y.j = 0;
+	while(tmp)
+	{
+		if  (tmp->type == IN ||tmp->type == OUT || tmp->type == HER || tmp->type == APPEND)
+		{
+			tmp = tmp->next;
+			if  (tmp && tmp->type == SPACE)
+				tmp = tmp->next;
+			if(!tmp || tmp->type != WORD)
+			{
+				printf("syntax error !\n");
+				return (1);
+			}
+		}
+		if(tmp)
+			tmp = tmp->next;
 	}
 	return (0);
 }
@@ -116,6 +148,8 @@ int    parser(t_shell *data, t_env *env)
 	}
 	if (check_double_oper(data))
 		return (1);
+	if (check_is_word_after_oper(data))
+		return (1);
 	return (0);
 }
 
@@ -126,4 +160,4 @@ int    parser(t_shell *data, t_env *env)
 	// 	return ;
 	// 	printf("%s", y.ss);
 	// }
-// echo '"hello'$USER'"'
+// 
