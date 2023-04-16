@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 16:38:31 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/04/16 20:55:53 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/04/16 22:52:31 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,4 +72,5 @@ int			check_is_oper(char c);
 int    		parser(t_shell *data, t_env *env);
 void		fun_free_env(t_env **a);
 t_cmd    	*creat_cmd(t_shell *data);
+void		fun_free_cmd(t_cmd **a);
 #endif

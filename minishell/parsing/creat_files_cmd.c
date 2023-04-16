@@ -6,47 +6,47 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/16 20:08:08 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/04/16 22:40:01 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/04/16 23:02:02 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-void creat_files(t_shell **tmp ,t_cmd *cmd)
-{
-	cmd->fd_input = 0;
-	cmd->fd_out = 1;
+// void creat_files(t_shell **tmp ,t_cmd *cmd)
+// {
+// 	cmd->fd_input = 0;
+// 	cmd->fd_out = 1;
 	
-	while((*tmp) && (*tmp)->type != PIPE)
-	{
-		if ((*tmp)->type == IN)
-		{
-			while((*tmp)->type != WORD && tmp)
-				(*tmp) = (*tmp)->next;
-			cmd->fd_input = open((*tmp)->s, O_RDONLY);
-			if (cmd->fd_input < 0)
-			{
-				printf("No such file or directory\n");
-			}
-		}
-		if ((*tmp)->type == OUT)
-		{
-			while((*tmp)->type != WORD && tmp)
-				(*tmp) = (*tmp)->next;
-			cmd->fd_out = open((*tmp)->s,O_CREAT | O_RDWR, 777);
-			if (cmd->fd_out < 0)
-			{
-				printf("No such file or directory\n");
-			}
-		}
-		(*tmp) = (*tmp)->next;
-	}
-	if((*tmp)  && (*tmp)->type == PIPE)
-	{
-		(*tmp) = (*tmp)->next;
-		return;
-	}
-}
+// 	while((*tmp) && (*tmp)->type != PIPE)
+// 	{
+// 		if ((*tmp)->type == IN)
+// 		{
+// 			while((*tmp)->type != WORD && tmp)
+// 				(*tmp) = (*tmp)->next;
+// 			cmd->fd_input = open((*tmp)->s, O_RDONLY);
+// 			if (cmd->fd_input < 0)
+// 			{
+// 				printf("No such file or directory\n");
+// 			}
+// 		}
+// 		if ((*tmp)->type == OUT)
+// 		{
+// 			while((*tmp)->type != WORD && tmp)
+// 				(*tmp) = (*tmp)->next;
+// 			cmd->fd_out = open((*tmp)->s,O_CREAT | O_RDWR, 777);
+// 			if (cmd->fd_out < 0)
+// 			{
+// 				printf("No such file or directory\n");
+// 			}
+// 		}
+// 		(*tmp) = (*tmp)->next;
+// 	}
+// 	if((*tmp)  && (*tmp)->type == PIPE)
+// 	{
+// 		(*tmp) = (*tmp)->next;
+// 		return;
+// 	}
+// }
 
 t_cmd    *creat_cmd(t_shell *data)
 {

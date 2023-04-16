@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 21:27:02 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/04/15 18:30:16 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/04/16 22:50:40 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,34 +32,6 @@ t_shell	*lstlast(t_shell *lst)
 	while (lst->next)
 		lst = lst->next;
 	return (lst);
-}
-
-void	fun_free(t_shell **a)
-{
-	t_shell	*tmp;
-
-	while (*a)
-	{
-		tmp = *a;
-		*a = (*a)->next;
-		free(tmp->s);
-		free(tmp);
-	}
-	a = NULL;
-}
-
-void	fun_free_env(t_env **a)
-{
-	t_env	*tmp;
-
-	while (*a)
-	{
-		tmp = *a;
-		*a = (*a)->next;
-		free(tmp->env);
-		free(tmp);
-	}
-	a = NULL;
 }
 
 int	check_is_oper(char c)
