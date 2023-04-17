@@ -6,47 +6,25 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/16 20:08:08 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/04/17 10:31:15 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/04/17 22:51:15 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-// void creat_files(t_shell **tmp ,t_cmd *cmd)
-// {
-// 	cmd->fd_input = 0;
-// 	cmd->fd_out = 1;
-	
-// 	while((*tmp) && (*tmp)->type != PIPE)
-// 	{
-// 		if ((*tmp)->type == IN)
-// 		{
-// 			while((*tmp)->type != WORD && tmp)
-// 				(*tmp) = (*tmp)->next;
-// 			cmd->fd_input = open((*tmp)->s, O_RDONLY);
-// 			if (cmd->fd_input < 0)
-// 			{
-// 				printf("No such file or directory\n");
-// 			}
-// 		}
-// 		if ((*tmp)->type == OUT)
-// 		{
-// 			while((*tmp)->type != WORD && tmp)
-// 				(*tmp) = (*tmp)->next;
-// 			cmd->fd_out = open((*tmp)->s,O_CREAT | O_RDWR, 777);
-// 			if (cmd->fd_out < 0)
-// 			{
-// 				printf("No such file or directory\n");
-// 			}
-// 		}
-// 		(*tmp) = (*tmp)->next;
-// 	}
-// 	if((*tmp)  && (*tmp)->type == PIPE)
-// 	{
-// 		(*tmp) = (*tmp)->next;
-// 		return;
-// 	}
-// }
+int	word_stop(char *word, char *str)
+{
+	int	i;
+
+	i = 0;
+	while(word[i] == str[i])
+	{
+		if(word[i] == '\0' && str[i] == '\0')
+			return (1);
+		i++;
+	}
+	return (0);
+}
 
 t_cmd    *creat_cmd(t_shell *data)
 {
@@ -186,7 +164,7 @@ t_cmd    *creat_cmd(t_shell *data)
 					close(fd[0]); // close read end of pipe
 					// Send input to write end of pipe
 					y.ss = readline("> ");
-					while (y.ss && y.ss[0] != 'l')
+					while (y.ss && !word_stop(tmp->s, y.ss))
 					{
 						write(fd[1], y.ss, ft_strlen(y.ss));
 						write(fd[1], "\n", 1);
@@ -200,16 +178,6 @@ t_cmd    *creat_cmd(t_shell *data)
 				{
 					close(fd[1]); // close write end of pipe
 					wait(0);
-					// Read output from read end of pipe
-					// char rd[100];
-					// ssize_t bytes_read = read(fd[0], rd, 100);
-					// if (bytes_read == -1) {
-					// 	perror("read");
-					// 	return NULL;
-					// }
-					// rd[bytes_read] = '\0';
-					// printf("%s | %ld\n\n ", rd, bytes_read);
-					// close(fd[0]); // close read end of pipe
 					tmp_cmd->fd_input = fd[0];
 					tmp = tmp->next;
 				}
@@ -229,9 +197,9 @@ t_cmd    *creat_cmd(t_shell *data)
 				while(tmp && (tmp->type == WORD || tmp->type == DOUBLE || tmp->type == SINGLE || tmp->type == SPACE))
 				{
 					
-					if (tmp && tmp->type == SPACE)
-						tmp = tmp->next;
-					if (tmp && (tmp->type == WORD || tmp->type == DOUBLE || tmp->type == SINGLE))
+					// if (tmp && tmp->type == SPACE)
+					// 	tmp = tmp->next;
+					if (tmp && (tmp->type == WORD || tmp->type == DOUBLE || tmp->type == SINGLE || tmp->type == SPACE))
 					{
 						// printf("%s\n\n", tmp->s);
 						tmp = tmp->next;
@@ -244,16 +212,20 @@ t_cmd    *creat_cmd(t_shell *data)
 				// printf("%d\n\n", y.i);
 				while (y.j < y.i && r)
 				{
-					if (r && (r->type == WORD || r->type == DOUBLE || r->type == SINGLE))
+					if (r && (r->type == WORD || r->type == DOUBLE || r->type == SINGLE || r->type == SPACE))
 					{
 						tmp_cmd->cmd[y.j] = ft_strdup(r->s);
 						// printf("%s\n\n", r->s);
 						r = r->next;
+						// if (r->next && r->next->type == SPACE)
+						// 	tmp_cmd->flg_space = 1;
 						y.j++;
 					}
 					else
 						r = r->next;
 				}
+				if (tmp && tmp->type == SPACE)
+						tmp = tmp->next;
 			}
 		}
 		if (tmp)

@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 16:38:31 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/04/17 09:11:56 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/04/17 22:32:36 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,4 +80,5 @@ t_cmd    	*creat_cmd(t_shell *data);
 void		fun_free_cmd(t_cmd **a);
 
 void		exection(t_cmd *cmd);
+int			word_stop(char *word, char *str);
 #endif

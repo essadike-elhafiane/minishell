@@ -1,10 +1,2 @@
-Makefile
-exe
-include
-l
-libft
-main.c
-main.o
-minishell
-parsing
-pipe
+ k 
+[1;32m➜  [0m[1;36mMinishell[0m[0;35m$[0m 

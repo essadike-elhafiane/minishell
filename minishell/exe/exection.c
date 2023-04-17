@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/17 08:40:36 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/04/17 11:17:35 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/04/17 23:16:32 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,6 @@ void	fork11(t_cmd *cmd, int *fd, t_stk *y)
 		free(y->ss);
 		y->i++;
 	}
-		printf("%s\n", y->ss);
 	if (!y->j)
 		printf("cmd not fond !\n");
 		// ft_puterror1("Error command path not fond !\n", av[4]);
@@ -106,14 +105,16 @@ void	fork11(t_cmd *cmd, int *fd, t_stk *y)
 	// close(fd[0]);
 	// close(fd[1]);
 	// close(cmd)
-	dup2(fd[0], 0);
-	if (cmd->fd_out != 1)
-	{
-		dup2(cmd->fd_out, 1);
-		close(cmd->fd_out);
-	}
-	else
-		dup2(fd[1], 1);
+	// close(cmd->cmd)
+	dup2(fd[0], cmd->fd_input);
+	// printf("%s\n", y->ss);
+	// if (cmd->fd_out != 1)
+	// {
+	// 	dup2(cmd->fd_out, 1);
+	// 	close(cmd->fd_out);
+	// }
+	// else
+	// 	dup2(fd[1], 1);
 	close(fd[0]);
 	close(fd[1]);
 	// if (dup2(cmd->fd_input, 0) < 0)
@@ -132,35 +133,115 @@ int	pipex(t_cmd *cmd)
 	int		fd[2];
 	pid_t	fork1;
 	t_stk	y;
+	int		flg_n;
+	int sd;
 	// t_stk1	y;
-
+	y.i = 1;
+	flg_n = 0;
 	// y.input = open(av[1], O_RDONLY, 0777);
 	// if (y.input < 0)
 	// 	ft_puterror("Error in file input\n");
 	// y.output = open(av[4], O_CREAT | O_WRONLY | O_TRUNC, 0777);
 	// if (y.output < 0)
 	// 	ft_puterror("Error in file output\n");
+	if (word_stop("echo", cmd->cmd[0]))
+	{
+		y.i = 1;
+		if (cmd->fd_out != 1)
+		{
+			sd = dup(1);
+			dup2(cmd->fd_out, 1);
+		}
+		while (cmd->cmd[y.i])
+		{
+			y.j = 0;
+			if (word_stop("-n", cmd->cmd[y.i]))
+			{
+				flg_n = 1;
+				y.i++;
+			}
+			if (cmd->cmd[y.i][y.j] == '\"')
+			{
+				while (cmd->cmd[y.i][y.j])
+				{
+					if (cmd->cmd[y.i][y.j] == '\"')
+						y.j++;
+					else
+					{
+						write(cmd->fd_out, &cmd->cmd[y.i][y.j], 1);
+						y.j++;
+					}
+				}
+			}
+			else if (cmd->cmd[y.i][y.j] == 39)
+			{
+				while (cmd->cmd[y.i][y.j])
+				{
+					if (cmd->cmd[y.i][y.j] == 39)
+						y.j++;
+					else
+					{
+						write(cmd->fd_out, &cmd->cmd[y.i][y.j], 1);
+						y.j++;
+					}
+				}
+			}
+			else
+			{
+				while (cmd->cmd[y.i][y.j])
+				{
+					// if (cmd->cmd[y.i][y.j] == 39)
+					// 	y.j++;
+					// else
+					// {
+						write(cmd->fd_out, &cmd->cmd[y.i][y.j], 1);
+						y.j++;
+					// }
+				}
+			}
+			y.i++;
+			// if (cmd->cmd[y.i])
+			// 	write(1, " ", 1);
+		}
+		if (!flg_n)
+			printf("\n");
+		if (cmd->fd_out != 1)
+			dup2(1, cmd->fd_out);
+		cmd = cmd->next;
+		if (!cmd)
+			return (0);
+		dup2(sd, cmd->fd_out);
+		close(cmd->fd_out);
+	}
+	y.i = 1;
 	if (pipe(fd) < 0)
 		ft_puterror("Error in pipe !\n");
 	// exit_notpath(av, path);
 	// printf("i -> %d o -> %d | cmd -> %s | path -> %s ", cmd->fd_input, cmd->fd_out, cmd->cmd[0], cmd->path[0]);
+	if (cmd)
+	{
 	fork1 = fork();
 	if (fork1 < 0)
 		ft_puterror("Error in fork1 !\n");
 	if (!fork1)
 		fork11(cmd, fd, &y);
 	close(fd[1]);
+	}
 	// while (cmd->next)
 	// {
 		
 	// }
 	cmd = cmd->next;
-	fork1 = fork();
-	if (fork1 < 0)
-		ft_puterror("Error in fork1 !\n");
-	if (!fork1)
-		fork2(cmd, fd, &y);
-	// close(fd[1]);
+	if (cmd)
+	{
+		y.i++;
+		fork1 = fork();
+		if (fork1 < 0)
+			ft_puterror("Error in fork1 !\n");
+		if (!fork1)
+			fork2(cmd, fd, &y);
+	}
+	close(fd[1]);
 	// char rd[100];
 	// ssize_t bytes_read = read(fd[0], rd, 100);
 	// if (bytes_read == -1) {
@@ -182,8 +263,8 @@ int	pipex(t_cmd *cmd)
 	// close(fd[0]);
 	// cmd = cmd->next;
 	// printf("dfsdg\n");
-	if(cmd->fd_out != 1)
-		close(cmd->fd_out);
+	// if(cmd->fd_out != 1)
+	// 	close(cmd->fd_out);
 	// ft_close_fd(cmd, fd);
 	return (wait(NULL), wait(NULL), 0);
 }
@@ -193,13 +274,15 @@ void	exection(t_cmd *cmd)
 	t_cmd *tmp;
 	char **path;
 
+	cmd->path = get_path(cmd->env);
 	tmp = cmd;
-	path = get_path(cmd->env);
 	if (path == NULL)
 		ft_puterror("Error in path !!\n");
 	while (tmp)
 	{
-		tmp->path = path;
+		// if(tmp->cmd == ' ')
+		// 	tmp = tmp->next;
+		tmp->path = cmd->path;
 		tmp = tmp->next;
 	}
 	pipex(cmd);
