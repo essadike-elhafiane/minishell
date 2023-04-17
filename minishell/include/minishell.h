@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 16:38:31 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/04/16 22:52:31 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/04/17 02:54:35 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,9 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include <fcntl.h>
+#include <signal.h>
 #include "../libft/libft.h"
 
 # define SPACE 'S'
@@ -61,6 +63,7 @@ typedef struct s_stk
 	t_shell *data_cmd;
 	t_shell *tmp;
 	int     i;
+	pid_t	pid;
 	int		j;
 	int		b;
 } t_stk;

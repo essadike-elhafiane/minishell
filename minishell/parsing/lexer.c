@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 18:07:00 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/04/16 23:00:21 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/04/17 02:29:42 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -168,14 +168,19 @@ void    lexer(char *str, char **env)
 	t_cmd *cmd;
 	t_cmd *cmdd;
 	cmd = creat_cmd(y.data_cmd);
+	// printf("asafa\n");
 	cmdd = cmd;
 	while(cmdd)
 	{
 		int i = 0;
+		
 		// printf("%c || %d\n\n", y.tmp->type, y.i++);
-		while(cmdd->cmd[i])
-			printf("%s\n", cmdd->cmd[i++]);
-		printf("\n\n");
+		if (cmdd->cmd)
+		{
+			while(cmdd->cmd[i])
+				printf("%s\n", cmdd->cmd[i++]);
+			printf("\n\n");
+		}
 		cmdd = cmdd->next;
 	}
 	// while(y.tmp)
@@ -184,7 +189,7 @@ void    lexer(char *str, char **env)
 	// 	printf("%s\n", y.tmp->s);
 	// 	y.tmp = y.tmp->next;
 	// }
-	fun_free_cmd(&cmd);
+	// fun_free_cmd(&cmd);
 	fun_free_cmd(&cmd);
 	fun_free_env(&y.data_cmd->env);
 	fun_free(&y.data_cmd);

@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/16 22:48:31 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/04/16 22:57:26 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/04/17 01:38:31 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,8 +50,11 @@ void    fun_free_cmd(t_cmd **a)
 		i = 0;
 		tmp = *a;
 		*a = (*a)->next;
-		while(tmp->cmd[i])
-			free(tmp->cmd[i++]);
+		if (tmp->cmd)
+		{
+			while(tmp->cmd[i])
+				free(tmp->cmd[i++]);
+		}
 		free(tmp->cmd);
 		free(tmp);
 	}

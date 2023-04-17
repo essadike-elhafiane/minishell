@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/16 20:08:08 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/04/16 23:02:02 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/04/17 02:56:54 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ t_cmd    *creat_cmd(t_shell *data)
 	tmp = data;
 	cmds = (t_cmd *)malloc(sizeof(t_cmd));
 	cmds->fd_input = 0;
+	cmds->cmd = NULL;
 	cmds->fd_out = 1;
 	cmds->next = NULL;
 	tmp_cmd = cmds;
@@ -96,17 +97,126 @@ t_cmd    *creat_cmd(t_shell *data)
 				tmp = tmp->next;
 				if (tmp && tmp->type == SPACE)
 					tmp = tmp->next;
-				tmp_cmd->fd_out = open(tmp->s,O_CREAT | O_RDWR, 777);
+				tmp_cmd->fd_out = open(tmp->s, O_CREAT | O_RDWR, 777);
 				tmp = tmp->next;
 			}
+			// if (tmp && tmp->type == HER)
+			// {
+			// 	tmp = tmp->next;
+			// 	if (tmp && tmp->type == SPACE)
+			// 		tmp = tmp->next;
+			// 	// tmp_cmd->fd_input = open("src", O_CREAT | O_RDWR | O_TRUNC, 777);
+			// 	// if (tmp_cmd->fd_input < 0)
+			// 	// {
+			// 	// 	printf("Minishell$: %s; error in file herdoc\n", tmp->s);
+			// 	// 	return (NULL);
+			// 	// }
+			// 	int fd[2];
+				
+			// 	// pipe(fd);
+			// 	fd[1] = open("src", O_CREAT | O_RDWR | O_TRUNC, 777);
+				
+			// 	// pid_t forr = fork();
+			// 	// if (!forr)
+			// 	// {
+			// 	// 	y.ss = readline("> ");
+					
+			// 	// 	while(y.ss && y.ss[0] != 'l')
+			// 	// 	{
+			// 	// 		// dup2(fd, 1);
+			// 	// 		// dup2(fd[1], 1);
+			// 	// 		// printf("%s\n", y.ss);
+			// 	// 		ft_putstr_fd(y.ss, fd[1]);
+			// 	// 		write(fd[1], "\n", 1);
+			// 	// 		// close(fd[1]);
+			// 	// 		// kill(forr, SIGTERM);
+			// 	// 		free(y.ss);
+			// 	// 		y.ss = readline("> ");
+			// 	// 	}
+			// 	// 	close(fd[1]);
+			// 	// 	exit(0);
+					
+			// 	// }
+			// 	// wait(0);
+			// 	// close(fd[1]);
+			// 	printf ("%d\n",fd[1]);
+			// 	// write(fd[1], "fhdhhshsh\n", 10);
+			// 	ft_putstr_fd("saddik\n", fd[1]);
+			// 	// close(fd[1]);
+			// 	// tmp_cmd->fd_input = fd[1];
+			// 	char	*rd;
+			// 	rd = malloc((4) * sizeof(char));
+			// 	if (!rd)
+			// 		return (NULL);
+		
+			// 	size_t i = read(fd[1], rd, 3);
+			// 	if (i < 0)
+			// 		printf("dfsfs\n");
+			// 	rd[3] = '\0';
+				
+			// 	printf("%c | %ld\n\n ", rd[0],i);
+				
+			// 	// close(tmp_cmd->fd_input)
+			// 	tmp = tmp->next;
+			// }
+
+
+			
 			if (tmp && tmp->type == HER)
 			{
 				tmp = tmp->next;
 				if (tmp && tmp->type == SPACE)
 					tmp = tmp->next;
-				// tmp_cmd->fd_out == open(tmp->next->s,O_CREAT | O_RDWR, 777);
-				tmp = tmp->next;
-			}
+				int fd[2];
+				if (pipe(fd) == -1)
+				{
+					perror("pipe");
+					return NULL;
+				}
+			
+				y.pid = fork();
+				if (y.pid  == -1)
+				{
+					perror("fork");
+					return NULL;
+				} 
+				else if (y.pid == 0)
+				{
+					close(fd[0]); // close read end of pipe
+					// Send input to write end of pipe
+					y.ss = readline("> ");
+					while (y.ss && y.ss[0] != 'l')
+					{
+						write(fd[1], y.ss, ft_strlen(y.ss));
+						write(fd[1], "\n", 1);
+						free(y.ss);
+						y.ss = readline("> ");
+					}
+					close(fd[1]); // close write end of pipe
+					exit(0);
+				} 
+				else 
+				{
+					close(fd[1]); // close write end of pipe
+					wait(0);
+					// Read output from read end of pipe
+					char rd[100];
+					ssize_t bytes_read = read(fd[0], rd, 100);
+					if (bytes_read == -1) {
+						perror("read");
+						return NULL;
+					}
+					rd[bytes_read] = '\0';
+					printf("%s | %ld\n\n ", rd, bytes_read);
+					close(fd[0]); // close read end of pipe
+					tmp = tmp->next;
+				}
+		}
+
+
+
+
+		
 			if (tmp && tmp->type == SPACE)
 				tmp = tmp->next;
 			t_shell *r;

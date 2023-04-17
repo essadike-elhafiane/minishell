@@ -4,8 +4,8 @@ RM = rm -f
 
 SRC = main.c parsing/lexer.c parsing/parser.c parsing/creat_files_cmd.c libft/ft_strlen.c libft/ft_substr.c \
 	libft/ft_strjoin.c libft/ft_strdup.c libft/ft_strnstr.c \
-	libft/ft_isdigit.c libft/ft_isalpha.c\
-	parsing/free/free.c
+	libft/ft_isdigit.c libft/ft_isalpha.c libft/ft_putstr_fd.c libft/ft_putchar_fd.c \
+	parsing/free/free.c libft/ft_strchr.c
 
 FILES = ft_striteri.c ft_memcmp.c  ft_bzero.c ft_putnbr_fd.c ft_strmapi.c ft_itoa.c \
 	ft_putendl_fd.c ft_putchar_fd.c ft_putstr_fd.c ft_strtrim.c   \
