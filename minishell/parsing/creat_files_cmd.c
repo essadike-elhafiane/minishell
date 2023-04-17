@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/16 20:08:08 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/04/17 02:56:54 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/04/17 10:31:15 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ t_cmd    *creat_cmd(t_shell *data)
 	tmp = data;
 	cmds = (t_cmd *)malloc(sizeof(t_cmd));
 	cmds->fd_input = 0;
+	cmds->env = data->env;
 	cmds->cmd = NULL;
 	cmds->fd_out = 1;
 	cmds->next = NULL;
@@ -200,15 +201,16 @@ t_cmd    *creat_cmd(t_shell *data)
 					close(fd[1]); // close write end of pipe
 					wait(0);
 					// Read output from read end of pipe
-					char rd[100];
-					ssize_t bytes_read = read(fd[0], rd, 100);
-					if (bytes_read == -1) {
-						perror("read");
-						return NULL;
-					}
-					rd[bytes_read] = '\0';
-					printf("%s | %ld\n\n ", rd, bytes_read);
-					close(fd[0]); // close read end of pipe
+					// char rd[100];
+					// ssize_t bytes_read = read(fd[0], rd, 100);
+					// if (bytes_read == -1) {
+					// 	perror("read");
+					// 	return NULL;
+					// }
+					// rd[bytes_read] = '\0';
+					// printf("%s | %ld\n\n ", rd, bytes_read);
+					// close(fd[0]); // close read end of pipe
+					tmp_cmd->fd_input = fd[0];
 					tmp = tmp->next;
 				}
 		}
@@ -260,6 +262,7 @@ t_cmd    *creat_cmd(t_shell *data)
 			tmp_cmd->next = (t_cmd *)malloc(sizeof(t_cmd));
 			tmp_cmd = tmp_cmd->next;
 			tmp_cmd->fd_input = 0;
+			tmp_cmd->env = data->env;
 			tmp_cmd->fd_out = 1;
 			tmp_cmd->next = NULL;
 		}

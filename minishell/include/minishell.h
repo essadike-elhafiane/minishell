@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 16:38:31 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/04/17 02:54:35 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/04/17 09:11:56 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,19 +33,21 @@
 # define HER 'H'
 # define APPEND 'A'
 
-typedef struct s_cmd
-{
-	char			**cmd;
-	int				fd_out;
-	int				fd_input;
-	struct s_cmd 	*next;
-} t_cmd;
-
 typedef struct s_env
 {
 	char			*env;
 	struct s_env  *next;
 } t_env;
+
+typedef struct s_cmd
+{
+	char			**cmd;
+	char			**path;
+	t_env			*env;
+	int				fd_out;
+	int				fd_input;
+	struct s_cmd 	*next;
+} t_cmd;
 
 typedef struct s_shell
 {
@@ -76,4 +78,6 @@ int    		parser(t_shell *data, t_env *env);
 void		fun_free_env(t_env **a);
 t_cmd    	*creat_cmd(t_shell *data);
 void		fun_free_cmd(t_cmd **a);
+
+void		exection(t_cmd *cmd);
 #endif

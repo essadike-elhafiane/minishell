@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 18:07:00 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/04/17 02:29:42 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/04/17 10:30:10 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -168,7 +168,9 @@ void    lexer(char *str, char **env)
 	t_cmd *cmd;
 	t_cmd *cmdd;
 	cmd = creat_cmd(y.data_cmd);
+	// cmd->env = y.data_cmd->env;
 	// printf("asafa\n");
+	exection(cmd);
 	cmdd = cmd;
 	while(cmdd)
 	{
