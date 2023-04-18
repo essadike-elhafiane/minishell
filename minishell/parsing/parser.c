@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 18:06:57 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/04/16 20:10:51 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/04/18 01:06:59 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,7 +127,9 @@ int    parser(t_shell *data, t_env *env)
 		{
 			if (tmp->s[y.i] == 39 && tmp->type != 'D')
 				break;
-			if (tmp->s[y.i] == '$')
+			if (tmp->s[y.i] == '$' && (tmp->s[y.i + 1] == '$'))
+				y.i++;
+			if (tmp->s[y.i] == '$' && tmp->s[y.i +1] != '\0' && (tmp->s[y.i + 1] != '$' && tmp->s[y.i + 1] != ' '))
 			{
 				y.i++;
 				y.b = y.i;

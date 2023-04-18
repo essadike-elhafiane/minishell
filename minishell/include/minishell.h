@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 16:38:31 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/04/17 22:32:36 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/04/18 02:22:50 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,11 @@ typedef struct s_env
 typedef struct s_cmd
 {
 	char			**cmd;
-	char			**path;
+	char			**paths;
+	char			*cmd_path;
 	t_env			*env;
+	int				fd[2];
+	pid_t			pid;
 	int				fd_out;
 	int				fd_input;
 	struct s_cmd 	*next;

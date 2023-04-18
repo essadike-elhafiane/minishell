@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exection.c                                         :+:      :+:    :+:   */
+/*   exection_c.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 23:03:21 by mserrouk          #+#    #+#             */
-/*   Updated: 2023/04/16 20:20:01 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/04/18 02:27:14 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
-
+#include <fcntl.h>
 
 void word(t_shell *tmp,t_cmd *cmd)
 {
@@ -55,19 +55,6 @@ void	error_message(char *str)
 }
 
 
-void	ft_command(t_cmd *cmd)
-{
-	dup2(cmd->fd_input , 0);
-	dup2(cmd->fd_out , 1);
-
-	// if (cmd->fd_input != 0)
-	// 	close(cmd->fd_input);
-	// if (cmd->fd_input != 1)
-	// 	close(cmd->fd_out);
-	execve(cmd->path, cmd->cmd, NULL);
-	error_message("Error execve");
-}
-
 void	ft_command_path(t_cmd *cmd , char **path)
 {
 	int	i;
@@ -82,7 +69,6 @@ void	ft_command_path(t_cmd *cmd , char **path)
 			tmp = ft_strjoin1(path[i], "/");
 			cmd->path = ft_strjoin1(tmp, cmd->cmd[j]);
 			free(tmp);
-			printf("%s\n", cmd->cmd[j]);
 			if (!access(cmd->path, X_OK))
 				return ;
 			free(cmd->path);
@@ -94,36 +80,81 @@ void	ft_command_path(t_cmd *cmd , char **path)
 	error_message("Error command not found\n");
 }
 
+// void cmd_pwd(t_cmd *cmd)
+// {
+// 	int i;
+
+// 	i = 0;
+// 	while(cmd->enve[i])
+// 	{
+// 		if(ft_strncmp(cmd->enve[i++], "pwd" ,5))
+// 			printf("%s", cmd->enve[i] + 4);
+// 	}	
+// }
+
+
+void	ft_command(t_cmd *cmd )
+{	
+	if(cmd->fd_input != 0)
+		dup2(cmd->fd_input , STDIN_FILENO);
+	if(cmd->fd_out != 1)	
+		dup2(cmd->fd_out , STDOUT_FILENO);
+	if (cmd->next)
+		close(cmd->fd[1]);
+	if(ft_strncmp (cmd->cmd[0], "pwd", 5))
+		cmd_pwd(cmd);
+	else
+		execve(cmd->path, cmd->cmd, NULL);
+	error_message("Error execve");
+}
+
+void creat_files(t_cmd *cmd, t_cmd *tmp2, int i)
+{
+	cmd->fd_input = 0;
+	cmd->fd_out = 1;
+	if(cmd->fd_out == 1 && cmd->next)
+		cmd->fd_out = cmd->fd[1];
+	if(cmd->fd_input == 0 && i != 0)
+		cmd->fd_input = tmp2->fd[0];
+}
+
 void ft_pipe(t_cmd *cmd , char **path)
 {
-	t_cmd *tmp;
-	t_shell *tmp2;
+	t_cmd	*tmp;
 	int i;
-
-	i = 0;
+	t_cmd *tmp2;
+	tmp2 = NULL;
+	cmd->i = 0;
 	tmp = cmd;
-	
-	tmp2 = cmd->data;
-	while(tmp)
+	while (tmp)
 	{
+		if (tmp->next)
+			pipe(tmp->fd);
 		tmp->pid = fork();
-		if(tmp->pid == 0)
+		if (tmp->pid == 0)
 		{
-			// exit (1);
-			ft_command_path(tmp ,path);	
-			creat_files(&tmp2, cmd);
+			if (tmp->next)
+				close(tmp->fd[0]);
+			ft_command_path(tmp ,path);
+			creat_files(tmp ,tmp2,cmd->i);
 			ft_command(tmp);
 		}
-		tmp = tmp->next;
-		i++;
+		else
+		{
+			if (tmp->next)
+				close(tmp->fd[1]);
+			if (tmp2)
+				close(tmp2->fd[0]);
+		}
+		tmp2 = tmp;
+		tmp = tmp->next;		
+		cmd->i +=1;
 	}
-	i = 1;
-	while(i > 0)
+	while (cmd->i > 0)
 	{
 		wait(NULL);
-		i--;
+		cmd->i -= 1;
 	}
-
 }
 
 char	**ft_all_paths(t_env *envp)
@@ -137,12 +168,7 @@ char	**ft_all_paths(t_env *envp)
 	return (NULL);
 }
 
-
-
-
-
-
-void    exection(t_shell *data , t_env *enve)
+void    exection(t_shell *data , t_env *enve ,char **env)
 {
     t_shell *tmp;
     t_shell *tmp2;
@@ -157,65 +183,37 @@ void    exection(t_shell *data , t_env *enve)
 	path = ft_all_paths(enve);
 	if(!path)
 		return;
-    tmp = data;
-	// while (tmp)
-	// {
-	// 	printf("%s\n", tmp->s);
-	// 	tmp = tmp->next;
-	// }
-	// tmp = data;
-	// while (tmp)
-	// {
-	// 	printf("%s\n", tmp->s);
-	// 	tmp = tmp->next;
-	// }
-    while (tmp && tmp->type == 'S')
-    tmp = tmp->next;
-	
-    cmd = (t_cmd *) malloc(sizeof(t_cmd));
+	cmd = (t_cmd *) malloc(sizeof(t_cmd));
 	cmd->next = NULL;
 	cmd->head = cmd;
 	cmd->data = data;
 	tmpc = cmd;
-	y.i = 0;
-	y.ss = NULL;
-	tmp2 = data;
-    while (tmp2)
-    {
-		while (tmp && tmp->type != PIPE)
-		{
-			if (tmp->type == SPACE)
-				tmp = tmp->next;
-			while (tmp && (tmp->type == WORD || tmp->type  == DOUBLE || tmp->type == SINGLE || tmp->type == SPACE))
-			{
-				if (tmp->type == SPACE)
-					tmp = tmp->next;
-				else
-				{
-					y.i++;
-					tmp = tmp->next;
-				}
-			}
-			cmd->cmd = (char **)malloc(sizeof(char *) * (i + 1));
-			cmd->cmd[i] = NULL;
-			i = 0;
-			while (i <= y.i)
-			{
-				cmd->cmd[i] = tmp2->s;
-				// printf("%s\n", tmp2->s);
-				tmp2 = tmp2->next;
-				i++;
-			}
-		}
-		if (tmp2)
-		{
-			tmp2 = tmp2->next;
-			tmpc->next = malloc(sizeof(t_cmd));
-			tmpc = tmpc ->next;
-			tmpc->head = cmd;
-			tmpc->next = NULL;
-		}
-		
-    }
-	// ft_pipe(cmd , path);
+	cmd->cmd = (char **)malloc((2 + 1) * sizeof(char *));
+	cmd->cmd[0] = (char *)malloc(ft_strlen("ls") + 1);
+	cmd->cmd[0] = ft_memcpy(cmd->cmd[0] , "ls", ft_strlen("ls"));
+	cmd->cmd[1] = (char *)malloc(ft_strlen("-la") + 1);
+	cmd->cmd[1] = ft_memcpy(cmd->cmd[1] , "-la", ft_strlen("-la"));
+	cmd->cmd[2] = NULL;
+	cmd->enve = env;
+
+	cmd->next = (t_cmd *) malloc(sizeof(t_cmd));
+	cmd->next->data = data;
+	cmd->next->cmd = (char **)malloc((2 + 1) * sizeof(char *));
+	cmd->next->cmd[0] = ft_strdup("cd");
+	cmd->next->cmd[1] = ft_strdup("libft");
+	cmd->next->cmd[2] = NULL;
+	cmd->next->enve = env;
+	cmd->next->next = NULL;
+	
+	
+	cmd->next->next = (t_cmd *) malloc(sizeof(t_cmd));
+	cmd->next->next->data = data;
+	cmd->next->next->cmd = (char **)malloc((2 ) * sizeof(char *));
+	cmd->next->next->cmd[0] = ft_strdup("pwd");
+	cmd->next->next->cmd[1] = NULL;
+	cmd->next->next->enve = env;
+	// cmd->next->next->cmd[2] = ft_strdup("");
+	cmd->next->next->next = NULL;
+	
+	ft_pipe(cmd , path);
 }
