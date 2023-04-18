@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 23:03:21 by mserrouk          #+#    #+#             */
-/*   Updated: 2023/04/18 02:30:24 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/04/18 18:07:47 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,50 @@ char	**get_path(t_env *env)
 // 			printf("%s", cmd->enve[i] + 4);
 // 	}	
 // }
+void	cmd_echo(t_cmd *cmd)
+{
+	int		flg_n;
 
+	t_stk	y;
+	// t_stk1	y;
+	y.i = 1;
+	flg_n = 0;
+	if (word_stop("echo", cmd->cmd[0]))
+	{
+		y.i = 1;
+		// if (cmd->fd_out != 1)
+		// {
+		// 	sd = dup(1);
+		// 	dup2(cmd->fd_out, 1);
+		// }
+		while (cmd->cmd[y.i])
+		{
+			y.j = 0;
+			if (word_stop("-n", cmd->cmd[y.i]))
+			{
+				flg_n = 1;
+				y.i++;
+			}
+			while (cmd->cmd[y.i][y.j])
+			{
+				write(cmd->fd_out, &cmd->cmd[y.i][y.j], 1);
+				y.j++;
+			}
+			y.i++;
+		}
+			// if (cmd->cmd[y.i])
+			// 	write(1, " ", 1);
+		}
+		if (!flg_n)
+			printf("\n");
+		// if (cmd->fd_out != 1)
+		// 	dup2(1, cmd->fd_out);
+		cmd = cmd->next;
+		// if (!cmd)
+		// 	return ;
+		// dup2(sd, cmd->fd_out);
+		// close(cmd->fd_out);
+}
 
 void	ft_command(t_cmd *cmd )
 {	
@@ -79,11 +122,15 @@ void	ft_command(t_cmd *cmd )
 		dup2(cmd->fd_out , STDOUT_FILENO);
 	if (cmd->next)
 		close(cmd->fd[1]);
+	if (ft_strncmp(cmd->cmd[0], "echo", 6))
+		cmd_echo(cmd);
 	// if(ft_strncmp (cmd->cmd[0], "pwd", 5))
 	// 	cmd_pwd(cmd);
-	// else
+	else
+	{
 		execve(cmd->cmd_path, cmd->cmd, NULL);
-	error_message("Error execve");
+		error_message("Error execve");
+	}
 }
 
 void creat_files(t_cmd *cmd, t_cmd *tmp2, int i)

@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 18:07:00 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/04/18 02:37:07 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/04/18 17:02:23 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -174,6 +174,7 @@ void    lexer(char *str, char **env)
 	// }
 	t_cmd *cmdd;
 	cmd = creat_cmd(y.data_cmd);
+	clean_cmd(cmd);
 	cmd->env = y.data_cmd->env;
 	// printf("asafa\n");
 	exection(cmd);
@@ -198,6 +199,6 @@ void    lexer(char *str, char **env)
 	// 	y.tmp = y.tmp->next;
 	// }
 	// fun_free_cmd(&cmd);
-	fun_free_env(&y.data_cmd->env);
-	fun_free(&y.data_cmd);
+	// fun_free_env(&y.data_cmd->env);
+	// fun_free(&y.data_cmd);
 }

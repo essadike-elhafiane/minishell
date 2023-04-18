@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/16 20:08:08 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/04/18 01:23:57 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/04/18 16:34:42 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -202,14 +202,15 @@ t_cmd    *creat_cmd(t_shell *data)
 					if (tmp && (tmp->type == WORD || tmp->type == DOUBLE || tmp->type == SINGLE ))
 					{
 						// printf("%s\n\n", tmp->s);
-						tmp = tmp->next;
 						y.i++;
+						while (tmp && (tmp->type == WORD || tmp->type == DOUBLE || tmp->type == SINGLE ))
+							tmp = tmp->next;
 					}
 				}
 				y.j = 0;
+				// printf("%d\n\n", y.i);
 				tmp_cmd->cmd = (char **)malloc(sizeof(char *) * (y.i + 1));
 				tmp_cmd->cmd[y.i] = NULL;
-				// printf("%d\n\n", y.i);
 				while (y.j < y.i && r)
 				{
 					if (r && (r->type == WORD || r->type == DOUBLE || r->type == SINGLE))
@@ -217,7 +218,14 @@ t_cmd    *creat_cmd(t_shell *data)
 						tmp_cmd->cmd[y.j] = ft_strdup(r->s);
 						// printf("%s\n\n", r->s);
 						r = r->next;
-						// if (r->next && r->next->type == SPACE)
+						while (r && (r->type == WORD || r->type == DOUBLE || r->type == SINGLE ))
+						{
+							// printf("%s\n", tmp_cmd->cmd[y.j]);
+							tmp_cmd->cmd[y.j] = ft_strjoin(tmp_cmd->cmd[y.j], ft_strdup(r->s));
+							r = r->next;
+						}
+						// printf("%s\n", tmp_cmd->cmd[y.j]);
+						// if (r->next && r->next->type != SPACE)
 						// 	tmp_cmd->flg_space = 1;
 						y.j++;
 					}
@@ -227,6 +235,7 @@ t_cmd    *creat_cmd(t_shell *data)
 				// if (tmp && tmp->type == SPACE)
 				// 		tmp = tmp->next;
 			}
+				// exit(0);
 		}
 		if (tmp)
 		{

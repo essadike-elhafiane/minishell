@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 16:38:31 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/04/18 02:22:50 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/04/18 16:42:51 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,8 @@ int    		parser(t_shell *data, t_env *env);
 void		fun_free_env(t_env **a);
 t_cmd    	*creat_cmd(t_shell *data);
 void		fun_free_cmd(t_cmd **a);
+void		clean_cmd(t_cmd *cmd);
+int			word_stop(char *word, char *str);
 
 void		exection(t_cmd *cmd);
-int			word_stop(char *word, char *str);
 #endif

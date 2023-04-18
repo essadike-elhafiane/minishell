@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/01 15:36:20 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/04/17 09:23:41 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/04/18 17:29:11 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,4 +66,5 @@ void	*ft_memcpy(void *dst, const void *src, size_t n);
 void	*ft_memmove(void *dst, const void *src, size_t len);
 char	**ft_split(char const *s, char c);
 char	*ft_strjoin_exe(char *s1, char *s2);
+char	*ft_strjoin_no_free(char *s1, char *s2);
 #endif
