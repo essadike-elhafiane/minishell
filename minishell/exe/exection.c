@@ -6,12 +6,11 @@
 /*   By: mserrouk <mserrouk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 23:03:21 by mserrouk          #+#    #+#             */
-/*   Updated: 2023/04/19 00:58:42 by mserrouk         ###   ########.fr       */
+/*   Updated: 2023/04/19 01:43:32 by mserrouk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
-
 
 void	error_message(char *str)
 {
@@ -19,16 +18,21 @@ void	error_message(char *str)
 	exit(1);
 }
 
-
 void	ft_command_path(t_cmd *cmd , char **path)
 {
 	int	i;
 	int j;
 	char *tmp;
 	j = 0;
+	
 	while(cmd->cmd[j])
 	{
 		i = 0;
+		if ( !access(cmd->cmd[j], X_OK))
+		{
+			cmd->cmd_path = cmd->cmd[j];
+				return;
+		}
 		while (path[i])
 		{
 			tmp = ft_strjoin_exe(path[i], "/");
@@ -119,15 +123,9 @@ void	cmd_echo(t_cmd *cmd)
 
 void cmd_pwd(t_cmd *cmd)
 {
-	t_env *tmp;
+	char cwd[1024];
 
-	tmp = cmd->env;
-	while(tmp)
-	{
-		if(ft_strnstr(tmp->env,"PWD", 4))
-			printf(">%s\n", tmp->env + 4);
-		tmp = tmp->next;
-	}
+	printf("%s\n",getcwd(cwd, sizeof(cwd)));
 	exit(0);
 }
 
@@ -145,8 +143,8 @@ void	ft_command(t_cmd *cmd )
 		close(cmd->fd_out);
 	if (ft_strnstr(cmd->cmd[0], "echo", 5))
 		cmd_echo(cmd);
-	// if(ft_strnstr (cmd->cmd[0], "pwd", 4))
-	// 	cmd_pwd(cmd);
+	if(ft_strnstr (cmd->cmd[0], "pwd", 4))
+		cmd_pwd(cmd);
 	else
 	{
 		execve(cmd->cmd_path, cmd->cmd, NULL);
@@ -260,10 +258,10 @@ void	exection(t_cmd *cmd)
 	t_cmd *tmp;
 	cmd->paths = get_path(cmd->env);
 	tmp = cmd;
-	if (cmd->paths == NULL)
-	{
-		printf("hhhhh\n");
-	}
+	// if (cmd->paths == NULL)
+	// {
+	// 	printf("hhhhh\n");
+	// }
 	while (tmp)
 	{
 		// if(tmp->cmd == ' ')
