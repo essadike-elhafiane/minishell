@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exection.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mserrouk <mserrouk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 23:03:21 by mserrouk          #+#    #+#             */
-/*   Updated: 2023/04/18 18:07:47 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/04/18 21:03:28 by mserrouk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,8 +111,19 @@ void	cmd_echo(t_cmd *cmd)
 		// if (!cmd)
 		// 	return ;
 		// dup2(sd, cmd->fd_out);
-		// close(cmd->fd_out);
+		close(cmd->fd_input);
+		close(cmd->fd_out);
+		
+		exit(0);
 }
+
+// void cmd_pwd(t_cmd *cmd)
+// {
+// 	int i;
+
+// 	i = 0;
+			
+// }
 
 void	ft_command(t_cmd *cmd )
 {	
@@ -122,9 +133,13 @@ void	ft_command(t_cmd *cmd )
 		dup2(cmd->fd_out , STDOUT_FILENO);
 	if (cmd->next)
 		close(cmd->fd[1]);
-	if (ft_strncmp(cmd->cmd[0], "echo", 6))
+	if(cmd->fd_input != 0)
+		close(cmd->fd_input);
+	if(cmd->fd_out != 1)
+		close(cmd->fd_out);
+	if (ft_strnstr(cmd->cmd[0], "echo", 5))
 		cmd_echo(cmd);
-	// if(ft_strncmp (cmd->cmd[0], "pwd", 5))
+	// if(ft_strnstr (cmd->cmd[0], "pwd", 4))
 	// 	cmd_pwd(cmd);
 	else
 	{
@@ -132,6 +147,7 @@ void	ft_command(t_cmd *cmd )
 		error_message("Error execve");
 	}
 }
+
 
 void creat_files(t_cmd *cmd, t_cmd *tmp2, int i)
 {	
@@ -199,7 +215,9 @@ void	exection(t_cmd *cmd)
 	cmd->paths = get_path(cmd->env);
 	tmp = cmd;
 	if (cmd->paths == NULL)
+	{
 		printf("hhhhh\n");
+	}
 	while (tmp)
 	{
 		// if(tmp->cmd == ' ')

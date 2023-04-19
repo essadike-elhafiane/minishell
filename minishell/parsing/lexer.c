@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 18:07:00 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/04/18 17:02:23 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/04/19 00:38:49 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,11 +33,11 @@ void	lexer_0(char *str, t_stk *y)
 	}
 	else if (str[y->i] == 34)
 	{
-		y->b = y->i;
 		y->i++;
+		y->b = y->i;
 		while(str[y->i] != 34)
 			y->i++;
-		y->ss = ft_substr(str, y->b, y->i - y->b +1);
+		y->ss = ft_substr(str, y->b, y->i - y->b);
 		y->tmp->next = init_data(y->ss, DOUBLE);
 		y->tmp = y->tmp->next;
 		free(y->ss);
@@ -82,11 +82,11 @@ void	lexer_2(char *str, t_stk *y)
 	}
 	if (str[y->i] == 39)
 	{
-		y->b = y->i;
 		y->i++;
+		y->b = y->i;
 		while(str[y->i] != 39)
 			y->i++;
-		y->ss = ft_substr(str, y->b, y->i - y->b +1);
+		y->ss = ft_substr(str, y->b, y->i - y->b);
 		y->tmp->next = init_data(y->ss, SINGLE);
 		y->tmp = y->tmp->next;
 		free(y->ss);
@@ -136,7 +136,7 @@ t_env *creat_env_list(char **env)
 	return (env_l);
 }
 
-void    lexer(char *str, char **env)
+void    lexer(char *str, t_env *envs)
 {
 	t_stk y;
 
@@ -162,7 +162,11 @@ void    lexer(char *str, char **env)
 	free(y.tmp->s);
 	free(y.tmp);
 	y.tmp = y.data_cmd;
-	y.data_cmd->env = creat_env_list(env);
+	// if (!env_creat)
+	// {
+		y.data_cmd->env = envs;
+	// 	env_creat++;
+	// }
     if (parser(y.data_cmd, y.data_cmd->env))
 		return ;
 	t_cmd *cmd;
@@ -174,7 +178,10 @@ void    lexer(char *str, char **env)
 	// }
 	t_cmd *cmdd;
 	cmd = creat_cmd(y.data_cmd);
-	clean_cmd(cmd);
+	if (!cmd)
+		return ;
+	// exit(1);
+	// clean_cmd(cmd);
 	cmd->env = y.data_cmd->env;
 	// printf("asafa\n");
 	exection(cmd);

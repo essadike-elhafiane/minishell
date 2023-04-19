@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/16 20:08:08 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/04/18 16:34:42 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/04/18 21:09:35 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,8 +56,8 @@ t_cmd    *creat_cmd(t_shell *data)
 				tmp_cmd->fd_input = open(tmp->s, O_RDONLY);
 				if (tmp_cmd->fd_input < 0)
 				{
-					printf("Minishell$: %s; No such file or directory\n", tmp->s);
-					return (NULL);
+					printf("Minishell$: %s: No such file or directory\n", tmp->s);
+					// return (NULL);
 				}
 				tmp = tmp->next;
 			}
@@ -66,7 +66,7 @@ t_cmd    *creat_cmd(t_shell *data)
 				tmp = tmp->next;
 				if (tmp && tmp->type == SPACE)
 					tmp = tmp->next;
-				tmp_cmd->fd_out = open(tmp->s, O_CREAT | O_RDWR | O_TRUNC, 777);
+				tmp_cmd->fd_out = open(tmp->s, O_CREAT | O_RDWR | O_TRUNC, 0777);
 				tmp = tmp->next;
 				// printf("%s", tmp->s);
 				// write (tmp_cmd->fd_out, "sdfgsfgasf\n", 11);
@@ -76,7 +76,7 @@ t_cmd    *creat_cmd(t_shell *data)
 				tmp = tmp->next;
 				if (tmp && tmp->type == SPACE)
 					tmp = tmp->next;
-				tmp_cmd->fd_out = open(tmp->s, O_CREAT | O_RDWR, 777);
+				tmp_cmd->fd_out = open(tmp->s, O_CREAT | O_RDWR | O_APPEND, 0777);
 				tmp = tmp->next;
 			}
 			// if (tmp && tmp->type == HER)

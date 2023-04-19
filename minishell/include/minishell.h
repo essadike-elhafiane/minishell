@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 16:38:31 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/04/18 16:42:51 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/04/19 00:39:13 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ typedef struct s_stk
 	int		b;
 } t_stk;
 
-void    	lexer(char *str, char **env);
+void		lexer(char *str, t_env *envs);
 t_shell		*init_data(char *ss, int type1);
 void		fun_free(t_shell **a);
 int			check_is_oper(char c);
@@ -83,6 +83,7 @@ t_cmd    	*creat_cmd(t_shell *data);
 void		fun_free_cmd(t_cmd **a);
 void		clean_cmd(t_cmd *cmd);
 int			word_stop(char *word, char *str);
+t_env		*creat_env_list(char **env);
 
 void		exection(t_cmd *cmd);
 #endif

@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 18:06:57 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/04/18 01:06:59 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/04/18 23:01:45 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,7 +123,16 @@ int    parser(t_shell *data, t_env *env)
 	{
 		
 		y.i = 0;
-		while(tmp->s[y.i])
+		if (tmp->type == HER)
+		{
+			tmp = tmp->next;
+			if (tmp->type == SPACE)
+				tmp = tmp->next;
+			if (tmp)
+				tmp = tmp->next;
+			// printf("%s\n", tmp->s);
+		}
+		while(tmp && tmp->s[y.i])
 		{
 			if (tmp->s[y.i] == 39 && tmp->type != 'D')
 				break;
@@ -146,7 +155,8 @@ int    parser(t_shell *data, t_env *env)
 			}
 			y.i++;
 		}
-		tmp = tmp->next;
+		if (tmp)
+			tmp = tmp->next;
 	}
 	if (check_double_oper(data))
 		return (1);
