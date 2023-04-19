@@ -1,4 +1,0 @@
--rw-r--r--   1 eelhafia  candidate    0 Apr 18 20:56 file.txt
--rw-r--r--   1 eelhafia  candidate    0 Apr 18 20:56 file2.txt
-drwxr-xr-x  15 eelhafia  candidate  510 Apr 18 20:55 minishell
-total 0
