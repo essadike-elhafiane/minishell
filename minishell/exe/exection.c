@@ -6,7 +6,7 @@
 /*   By: mserrouk <mserrouk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 23:03:21 by mserrouk          #+#    #+#             */
-/*   Updated: 2023/04/18 21:03:28 by mserrouk         ###   ########.fr       */
+/*   Updated: 2023/04/19 00:58:42 by mserrouk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,13 +117,19 @@ void	cmd_echo(t_cmd *cmd)
 		exit(0);
 }
 
-// void cmd_pwd(t_cmd *cmd)
-// {
-// 	int i;
+void cmd_pwd(t_cmd *cmd)
+{
+	t_env *tmp;
 
-// 	i = 0;
-			
-// }
+	tmp = cmd->env;
+	while(tmp)
+	{
+		if(ft_strnstr(tmp->env,"PWD", 4))
+			printf(">%s\n", tmp->env + 4);
+		tmp = tmp->next;
+	}
+	exit(0);
+}
 
 void	ft_command(t_cmd *cmd )
 {	
@@ -208,10 +214,50 @@ char	**ft_all_paths(t_env *envp)
 	return (NULL);
 }
 
+void cmd_cd(t_cmd *cmd)
+{
+	char *ss;
+	char *str;
+	char cwd[1024];
+
+	ss = NULL;
+	while(cmd->env)
+	{
+		if (ft_strnstr(cmd->env->env, "PWD", 4))
+		{
+			printf(">>>>%s\n",cmd->env->env);
+			ss = cmd->env->env + 4;
+			break;
+		}
+		cmd->env = cmd->env->next;
+	}
+	if (!ss)
+	{
+		printf("no pwd\n");
+		return ;
+	}
+	ss = ft_strjoin_no_free(ss ,"/");
+	str = ss;
+	ss = ft_strjoin_no_free(ss, cmd->cmd[1]);
+	free(str);
+	printf("ss == %s\n", ss);
+	if (!chdir(ss))
+	{
+		getcwd(cwd, sizeof(cwd));
+		printf("cwd>>>>%s\n",cwd);
+		free(cmd->env->env);
+		cmd->env->env = ft_strjoin_no_free("PWD=",cwd);
+		// free(ss);
+		// exit(0);
+	}
+	else
+		printf("chdir fail\n");
+}
+
+
 void	exection(t_cmd *cmd)
 {
 	t_cmd *tmp;
-
 	cmd->paths = get_path(cmd->env);
 	tmp = cmd;
 	if (cmd->paths == NULL)
@@ -225,5 +271,10 @@ void	exection(t_cmd *cmd)
 		tmp->paths = cmd->paths;
 		tmp = tmp->next;
 	}
+	if(!cmd->next && word_stop("cd", cmd->cmd[0]))
+	{
+		cmd_cd(cmd);
+	}
+	else
 	ft_pipe(cmd);
 }
