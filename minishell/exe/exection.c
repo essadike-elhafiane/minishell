@@ -6,7 +6,7 @@
 /*   By: mserrouk <mserrouk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 23:03:21 by mserrouk          #+#    #+#             */
-/*   Updated: 2023/04/19 01:43:32 by mserrouk         ###   ########.fr       */
+/*   Updated: 2023/04/19 02:25:20 by mserrouk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	ft_command_path(t_cmd *cmd , char **path)
 	while(cmd->cmd[j])
 	{
 		i = 0;
-		if ( !access(cmd->cmd[j], X_OK))
+		if (ft_strchr(cmd->cmd[j] ,'/') && !access(cmd->cmd[j], X_OK))
 		{
 			cmd->cmd_path = cmd->cmd[j];
 				return;
