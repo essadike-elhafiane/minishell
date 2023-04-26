@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 18:06:57 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/04/18 23:01:45 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/04/26 21:12:30 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,7 +154,7 @@ int    parser(t_shell *data, t_env *env)
 		if (tmp->type == HER)
 		{
 			tmp = tmp->next;
-			if (tmp->type == SPACE)
+			if (tmp && tmp->type == SPACE)
 				tmp = tmp->next;
 			if (tmp)
 				tmp = tmp->next;

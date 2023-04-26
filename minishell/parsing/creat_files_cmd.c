@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/16 20:08:08 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/04/18 21:09:35 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/04/26 22:30:02 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,20 @@ int	word_stop(char *word, char *str)
 	return (0);
 }
 
+int	check_is_token(int type)
+{
+	if (type == APPEND || type == HER || type == OUT || type == IN)
+		return (1);
+	return (0);
+}
+
 t_cmd    *creat_cmd(t_shell *data)
 {
 	t_shell *tmp;
 	t_stk   y;
 	t_cmd	*cmds;
 	t_cmd	*tmp_cmd;
+	void	*tmp_free;
 
 	tmp = data;
 	cmds = (t_cmd *)malloc(sizeof(t_cmd));
@@ -53,12 +61,18 @@ t_cmd    *creat_cmd(t_shell *data)
 				tmp = tmp->next;
 				if (tmp && tmp->type == SPACE)
 					tmp = tmp->next;
+				while (tmp && tmp->next && tmp->next->type != SPACE && !check_is_token(tmp->next->type))
+				{
+					tmp->next->s = ft_strjoin_no_free(tmp->s, tmp->next->s);
+					if (tmp->type != WORD)
+						tmp->next->type = SINGLE;
+					tmp = tmp->next;
+				}
+				printf("%s\n", tmp->s);
 				tmp_cmd->fd_input = open(tmp->s, O_RDONLY);
 				if (tmp_cmd->fd_input < 0)
-				{
 					printf("Minishell$: %s: No such file or directory\n", tmp->s);
 					// return (NULL);
-				}
 				tmp = tmp->next;
 			}
 			if (tmp && tmp->type == OUT)
@@ -66,6 +80,13 @@ t_cmd    *creat_cmd(t_shell *data)
 				tmp = tmp->next;
 				if (tmp && tmp->type == SPACE)
 					tmp = tmp->next;
+				while (tmp && tmp->next && tmp->next->type != SPACE && !check_is_token(tmp->next->type))
+				{
+					tmp->next->s = ft_strjoin_no_free(tmp->s, tmp->next->s);
+					if (tmp->type != WORD)
+						tmp->next->type = SINGLE;
+					tmp = tmp->next;
+				}
 				tmp_cmd->fd_out = open(tmp->s, O_CREAT | O_RDWR | O_TRUNC, 0777);
 				tmp = tmp->next;
 				// printf("%s", tmp->s);
@@ -76,6 +97,13 @@ t_cmd    *creat_cmd(t_shell *data)
 				tmp = tmp->next;
 				if (tmp && tmp->type == SPACE)
 					tmp = tmp->next;
+				while (tmp && tmp->next && tmp->next->type != SPACE && !check_is_token(tmp->next->type))
+				{
+					tmp->next->s = ft_strjoin_no_free(tmp->s, tmp->next->s);
+					if (tmp->type != WORD)
+						tmp->next->type = SINGLE;
+					tmp = tmp->next;
+				}
 				tmp_cmd->fd_out = open(tmp->s, O_CREAT | O_RDWR | O_APPEND, 0777);
 				tmp = tmp->next;
 			}
@@ -87,6 +115,13 @@ t_cmd    *creat_cmd(t_shell *data)
 				tmp = tmp->next;
 				if (tmp && tmp->type == SPACE)
 					tmp = tmp->next;
+				while (tmp && tmp->next && tmp->next->type != SPACE && !check_is_token(tmp->next->type))
+				{
+					tmp->next->s = ft_strjoin_no_free(tmp->s, tmp->next->s);
+					if (tmp->type != WORD)
+						tmp->next->type = SINGLE;
+					tmp = tmp->next;
+				}
 				int fd[2];
 				if (pipe(fd) == -1)
 				{

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mserrouk <mserrouk@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 21:27:02 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/04/19 01:40:09 by mserrouk         ###   ########.fr       */
+/*   Updated: 2023/04/26 20:02:49 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -168,8 +168,7 @@ int main(int ac, char **av, char **env)
 			else
 				break;
 		}
-		if (str[0] == 'c' && str[1] == 'l' && str[2] == 'e'
-			&& str[3] == 'a' && str[4] == 'r' && (str[5] == '\0' || str[5] == ' '))
+		if (ft_strnstr(str, "clear", 6))
 		{
 			printf("\033[2J");
 			printf("\033[1;1H");
