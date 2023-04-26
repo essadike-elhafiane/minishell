@@ -101,9 +101,9 @@ int	check_is_word_after_oper(t_shell *data)
 			tmp = tmp->next;
 			if  (tmp && tmp->type == SPACE)
 				tmp = tmp->next;
-			if(!tmp || tmp->type != WORD)
+			if(!tmp || (tmp->type != WORD && tmp->type != DOUBLE && tmp->type != SINGLE))
 			{
-				printf("syntax error !\n");
+				printf("➜ Minishell$: syntax error !\n");
 				return (1);
 			}
 		}
@@ -111,6 +111,34 @@ int	check_is_word_after_oper(t_shell *data)
 			tmp = tmp->next;
 	}
 	return (0);
+}
+
+void	check_expand(t_stk *y, t_shell *tmp, t_env *env)
+{
+	while(tmp && tmp->s[y->i])
+	{
+		if (tmp->type == SINGLE)
+			return ;
+		// printf("%c\n", tmp->type);
+		if (tmp->s[y->i] == '$' && (tmp->s[y->i + 1] == '$'))
+			y->i++;
+		if (tmp->s[y->i] == '$' && tmp->s[y->i +1] != '\0' && (tmp->s[y->i + 1] != '$' && tmp->s[y->i + 1] != ' '))
+		{
+			y->i++;
+			y->b = y->i;
+			while((ft_isalpha(tmp->s[y->i]) || ft_isdigit(tmp->s[y->i])))
+				y->i++;
+			y->ss = ft_substr(tmp->s, y->b, y->i - y->b);
+			y->ss = expand(y->ss, env);
+			y->back = ft_strdup(tmp->s + y->i);
+			y->front = ft_substr(tmp->s, 0, y->b -1);
+			free(tmp->s);
+			if (y->front)
+				tmp->s = ft_strjoin(y->front, y->ss);
+			tmp->s = ft_strjoin(tmp->s, y->back);
+		}
+		y->i++;
+	}
 }
 
 int    parser(t_shell *data, t_env *env)
@@ -132,29 +160,8 @@ int    parser(t_shell *data, t_env *env)
 				tmp = tmp->next;
 			// printf("%s\n", tmp->s);
 		}
-		while(tmp && tmp->s[y.i])
-		{
-			if (tmp->s[y.i] == 39 && tmp->type != 'D')
-				break;
-			if (tmp->s[y.i] == '$' && (tmp->s[y.i + 1] == '$'))
-				y.i++;
-			if (tmp->s[y.i] == '$' && tmp->s[y.i +1] != '\0' && (tmp->s[y.i + 1] != '$' && tmp->s[y.i + 1] != ' '))
-			{
-				y.i++;
-				y.b = y.i;
-				while((ft_isalpha(tmp->s[y.i]) || ft_isdigit(tmp->s[y.i])))
-					y.i++;
-				y.ss = ft_substr(tmp->s, y.b, y.i - y.b);
-				y.ss = expand(y.ss, env);
-				y.back = ft_strdup(tmp->s + y.i);
-				y.front = ft_substr(tmp->s, 0, y.b -1);
-				free(tmp->s);
-				if (y.front)
-					tmp->s = ft_strjoin(y.front, y.ss);
-				tmp->s = ft_strjoin(tmp->s, y.back);
-			}
-			y.i++;
-		}
+		if (tmp && tmp->s)
+			check_expand(&y, tmp, env);
 		if (tmp)
 			tmp = tmp->next;
 	}

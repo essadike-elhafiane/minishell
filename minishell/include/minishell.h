@@ -84,6 +84,8 @@ void		fun_free_cmd(t_cmd **a);
 void		clean_cmd(t_cmd *cmd);
 int			word_stop(char *word, char *str);
 t_env		*creat_env_list(char **env);
+void		check_expand(t_stk *y, t_shell *tmp, t_env *env);
+char		*expand(char *ss, t_env *env);
 
 void		exection(t_cmd *cmd);
 #endif

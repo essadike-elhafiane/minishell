@@ -35,8 +35,8 @@ void	ft_command_path(t_cmd *cmd , char **path)
 		}
 		while (path[i])
 		{
-			tmp = ft_strjoin_exe(path[i], "/");
-			cmd->cmd_path = ft_strjoin_exe(tmp, cmd->cmd[j]);
+			tmp = ft_strjoin_no_free(path[i], "/");
+			cmd->cmd_path = ft_strjoin_no_free(tmp, cmd->cmd[j]);
 			free(tmp);
 			if (!access(cmd->cmd_path, X_OK))
 				return ;
@@ -46,7 +46,7 @@ void	ft_command_path(t_cmd *cmd , char **path)
 		}
 		j++;
 	}
-	error_message("Error command not found\n");
+	error_message("➜ Minishell$: command not found\n");
 }
 
 char	**get_path(t_env *env)
@@ -103,9 +103,9 @@ void	cmd_echo(t_cmd *cmd)
 				y.j++;
 			}
 			y.i++;
+			if (cmd->cmd[y.i])
+				write(1, " ", 1);
 		}
-			// if (cmd->cmd[y.i])
-			// 	write(1, " ", 1);
 		}
 		if (!flg_n)
 			printf("\n");
@@ -148,7 +148,7 @@ void	ft_command(t_cmd *cmd )
 	else
 	{
 		execve(cmd->cmd_path, cmd->cmd, NULL);
-		error_message("Error execve");
+		perror("execve");
 	}
 }
 
@@ -223,7 +223,7 @@ void cmd_cd(t_cmd *cmd)
 	{
 		if (ft_strnstr(cmd->env->env, "PWD", 4))
 		{
-			printf(">>>>%s\n",cmd->env->env);
+			// printf(">>>>%s\n",cmd->env->env);
 			ss = cmd->env->env + 4;
 			break;
 		}
@@ -242,14 +242,15 @@ void cmd_cd(t_cmd *cmd)
 	if (!chdir(ss))
 	{
 		getcwd(cwd, sizeof(cwd));
-		printf("cwd>>>>%s\n",cwd);
+		// printf("cwd>>>>%s\n",cwd);
 		free(cmd->env->env);
 		cmd->env->env = ft_strjoin_no_free("PWD=",cwd);
 		// free(ss);
 		// exit(0);
 	}
 	else
-		printf("chdir fail\n");
+		perror("getcwd");
+		// printf("saf\n");
 }
 
 
@@ -269,10 +270,19 @@ void	exection(t_cmd *cmd)
 		tmp->paths = cmd->paths;
 		tmp = tmp->next;
 	}
-	if(!cmd->next && word_stop("cd", cmd->cmd[0]))
+	if(cmd->cmd && !cmd->next && word_stop("cd", cmd->cmd[0]))
 	{
 		cmd_cd(cmd);
 	}
 	else
-	ft_pipe(cmd);
+		ft_pipe(cmd);
+	// int i;
+
+	// i = 0;
+	// while (cmd->paths[i])
+	// {
+	// 	free(cmd->cmd_path[i]);
+	// 	i++;
+	// }
+	
 }

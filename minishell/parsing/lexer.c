@@ -205,7 +205,6 @@ void    lexer(char *str, t_env *envs)
 	// 	printf("%s\n", y.tmp->s);
 	// 	y.tmp = y.tmp->next;
 	// }
-	// fun_free_cmd(&cmd);
-	// fun_free_env(&y.data_cmd->env);
-	// fun_free(&y.data_cmd);
+	fun_free_cmd(&cmd);
+	fun_free(&y.data_cmd);
 }

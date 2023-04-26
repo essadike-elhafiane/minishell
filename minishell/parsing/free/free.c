@@ -44,23 +44,25 @@ void    fun_free_cmd(t_cmd **a)
 {
 	t_cmd	*tmp;
 	int		i;
-
+	if (!a || !*a)
+		return;
 	while (*a)
 	{
 		i = 0;
 		tmp = *a;
 		*a = (*a)->next;
-		if (tmp->cmd)
+		if (tmp->cmd && tmp->cmd[0])
 		{
 			while(tmp->cmd[i])
 				free(tmp->cmd[i++]);
 		}
-		if (tmp->paths)
-		{
-			while(tmp->paths[i])
-				free(tmp->paths[i++]);
-		}
 		free(tmp->cmd);
+		// if (tmp->paths)
+		// {
+		// 	i = 0;
+		// 	while(tmp->paths[i])
+		// 		free(tmp->paths[i++]);
+		// }
 		free(tmp);
 	}
 	a = NULL;

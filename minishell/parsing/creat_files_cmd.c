@@ -79,66 +79,7 @@ t_cmd    *creat_cmd(t_shell *data)
 				tmp_cmd->fd_out = open(tmp->s, O_CREAT | O_RDWR | O_APPEND, 0777);
 				tmp = tmp->next;
 			}
-			// if (tmp && tmp->type == HER)
-			// {
-			// 	tmp = tmp->next;
-			// 	if (tmp && tmp->type == SPACE)
-			// 		tmp = tmp->next;
-			// 	// tmp_cmd->fd_input = open("src", O_CREAT | O_RDWR | O_TRUNC, 777);
-			// 	// if (tmp_cmd->fd_input < 0)
-			// 	// {
-			// 	// 	printf("Minishell$: %s; error in file herdoc\n", tmp->s);
-			// 	// 	return (NULL);
-			// 	// }
-			// 	int fd[2];
-				
-			// 	// pipe(fd);
-			// 	fd[1] = open("src", O_CREAT | O_RDWR | O_TRUNC, 777);
-				
-			// 	// pid_t forr = fork();
-			// 	// if (!forr)
-			// 	// {
-			// 	// 	y.ss = readline("> ");
-					
-			// 	// 	while(y.ss && y.ss[0] != 'l')
-			// 	// 	{
-			// 	// 		// dup2(fd, 1);
-			// 	// 		// dup2(fd[1], 1);
-			// 	// 		// printf("%s\n", y.ss);
-			// 	// 		ft_putstr_fd(y.ss, fd[1]);
-			// 	// 		write(fd[1], "\n", 1);
-			// 	// 		// close(fd[1]);
-			// 	// 		// kill(forr, SIGTERM);
-			// 	// 		free(y.ss);
-			// 	// 		y.ss = readline("> ");
-			// 	// 	}
-			// 	// 	close(fd[1]);
-			// 	// 	exit(0);
-					
-			// 	// }
-			// 	// wait(0);
-			// 	// close(fd[1]);
-			// 	printf ("%d\n",fd[1]);
-			// 	// write(fd[1], "fhdhhshsh\n", 10);
-			// 	ft_putstr_fd("saddik\n", fd[1]);
-			// 	// close(fd[1]);
-			// 	// tmp_cmd->fd_input = fd[1];
-			// 	char	*rd;
-			// 	rd = malloc((4) * sizeof(char));
-			// 	if (!rd)
-			// 		return (NULL);
-		
-			// 	size_t i = read(fd[1], rd, 3);
-			// 	if (i < 0)
-			// 		printf("dfsfs\n");
-			// 	rd[3] = '\0';
-				
-			// 	printf("%c | %ld\n\n ", rd[0],i);
-				
-			// 	// close(tmp_cmd->fd_input)
-			// 	tmp = tmp->next;
-			// }
-
+			
 
 			
 			if (tmp && tmp->type == HER)
@@ -166,6 +107,34 @@ t_cmd    *creat_cmd(t_shell *data)
 					y.ss = readline("> ");
 					while (y.ss && !word_stop(tmp->s, y.ss))
 					{
+						// printf("%c\n", tmp->type);
+						if (tmp->type != SINGLE)
+						{
+							char *ex;
+							
+							y.i = 0;
+							while(y.ss && y.ss[y.i])
+							{
+								if (y.ss[y.i] == '$' && (y.ss[y.i + 1] == '$'))
+									y.i++;
+								if (y.ss[y.i] == '$' && y.ss[y.i +1] != '\0' && (y.ss[y.i + 1] != '$' && y.ss[y.i + 1] != ' '))
+								{
+									y.i++;
+									y.b = y.i;
+									while((ft_isalpha(y.ss[y.i]) || ft_isdigit(y.ss[y.i])))
+										y.i++;
+									ex = ft_substr(y.ss, y.b, y.i - y.b);
+									ex = expand(ex, data->env);
+									y.back = ft_strdup(y.ss + y.i);
+									y.front = ft_substr(y.ss, 0, y.b -1);
+									free(y.ss);
+									if (y.front)
+										y.ss = ft_strjoin(y.front, ex);
+									y.ss = ft_strjoin(y.ss, y.back);
+								}
+								y.i++;
+							}
+						}
 						write(fd[1], y.ss, ft_strlen(y.ss));
 						write(fd[1], "\n", 1);
 						free(y.ss);
@@ -173,8 +142,8 @@ t_cmd    *creat_cmd(t_shell *data)
 					}
 					close(fd[1]); // close write end of pipe
 					exit(0);
-				} 
-				else 
+				}
+				else
 				{
 					close(fd[1]); // close write end of pipe
 					wait(0);

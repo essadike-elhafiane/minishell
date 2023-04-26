@@ -182,6 +182,7 @@ int main(int ac, char **av, char **env)
 		free(str);
 		str = readline("\033[1;32m➜  \033[0m\033[1;36mMinishell\033[0m\033[0;35m$\033[0m ");
 	}
+	fun_free_env(&envs);
 }
 
 // < j| ls seg fault
