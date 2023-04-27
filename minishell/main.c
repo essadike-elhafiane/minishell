@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 21:27:02 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/04/26 20:02:49 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/04/27 16:36:44 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,6 +136,14 @@ int	check_error(char *str)
 	return (0);
 }
 
+void signal_handler(int signal) {
+    // readline("\033[1;32m➜  \033[0m\033[1;36mMinishell\033[0m\033[0;35m$\033[0m ");
+	if (signal == SIGQUIT)
+		exit(0);
+    // exit(1);
+	// return ;
+}
+
 int main(int ac, char **av, char **env)
 {
 	char *str;
@@ -147,8 +155,9 @@ int main(int ac, char **av, char **env)
 	(void )ac;
 	(void )av[0];
 	envs = creat_env_list(env);
+	signal(SIGINT, signal_handler);
 	str = readline("\033[1;32m➜  \033[0m\033[1;36mMinishell\033[0m\033[0;35m$\033[0m ");
-	while(str)
+	while(1)
 	{
 		error = check_error(str);
 		while (1 && !error)
@@ -179,6 +188,9 @@ int main(int ac, char **av, char **env)
 			lexer(str, envs);
 		}
 		free(str);
+		// rl_on_new_line();
+		//  rl_replace_line("Enter something else: ", 0);
+		// rl_redisplay();
 		str = readline("\033[1;32m➜  \033[0m\033[1;36mMinishell\033[0m\033[0;35m$\033[0m ");
 	}
 	fun_free_env(&envs);

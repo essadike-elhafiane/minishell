@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/16 20:08:08 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/04/26 22:30:02 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/04/27 14:27:01 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,7 +143,7 @@ t_cmd    *creat_cmd(t_shell *data)
 					while (y.ss && !word_stop(tmp->s, y.ss))
 					{
 						// printf("%c\n", tmp->type);
-						if (tmp->type != SINGLE)
+						if (tmp->type != SINGLE && tmp->type != DOUBLE)
 						{
 							char *ex;
 							
