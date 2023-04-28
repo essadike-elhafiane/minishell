@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 21:27:02 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/04/27 16:36:44 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/04/28 15:19:45 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,6 +140,8 @@ void signal_handler(int signal) {
     // readline("\033[1;32m➜  \033[0m\033[1;36mMinishell\033[0m\033[0;35m$\033[0m ");
 	if (signal == SIGQUIT)
 		exit(0);
+	ft_putchar_fd('\n', 1);
+	return ;
     // exit(1);
 	// return ;
 }
@@ -157,7 +159,7 @@ int main(int ac, char **av, char **env)
 	envs = creat_env_list(env);
 	signal(SIGINT, signal_handler);
 	str = readline("\033[1;32m➜  \033[0m\033[1;36mMinishell\033[0m\033[0;35m$\033[0m ");
-	while(1)
+	while(str)
 	{
 		error = check_error(str);
 		while (1 && !error)
@@ -197,3 +199,12 @@ int main(int ac, char **av, char **env)
 }
 
 // < j| ls seg fault
+
+// <inp >out :inp file doesnt exist
+// <<ok|<<ok : it takes ok| as dilimiter
+// echo -nnn -n -n -n  hello
+// always print error in stderr not stdout
+// echo $_ : handle _ in variables names and number shouldnt be in first char in var name
+// echo $VAR1$VAR2$VAR3
+// echo $.
+// <ok <<ok

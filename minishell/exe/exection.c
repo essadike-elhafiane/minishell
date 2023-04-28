@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exection.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mserrouk <mserrouk@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 23:03:21 by mserrouk          #+#    #+#             */
-/*   Updated: 2023/04/19 02:25:20 by mserrouk         ###   ########.fr       */
+/*   Updated: 2023/04/28 17:37:06 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,49 +76,31 @@ char	**get_path(t_env *env)
 void	cmd_echo(t_cmd *cmd)
 {
 	int		flg_n;
-
 	t_stk	y;
-	// t_stk1	y;
+
 	y.i = 1;
 	flg_n = 0;
 	if (word_stop("echo", cmd->cmd[0]))
 	{
-		y.i = 1;
-		// if (cmd->fd_out != 1)
-		// {
-		// 	sd = dup(1);
-		// 	dup2(cmd->fd_out, 1);
-		// }
 		while (cmd->cmd[y.i])
 		{
-			y.j = 0;
-			if (word_stop("-n", cmd->cmd[y.i]))
+			while (cmd->cmd[y.i][0] == '-' && cmd->cmd[y.i][1] == 'n')
 			{
 				flg_n = 1;
 				y.i++;
 			}
-			while (cmd->cmd[y.i][y.j])
-			{
-				write(cmd->fd_out, &cmd->cmd[y.i][y.j], 1);
-				y.j++;
-			}
+			ft_putstr_fd(cmd->cmd[y.i], 1);
 			y.i++;
 			if (cmd->cmd[y.i])
 				write(1, " ", 1);
 		}
-		}
-		if (!flg_n)
-			printf("\n");
-		// if (cmd->fd_out != 1)
-		// 	dup2(1, cmd->fd_out);
-		cmd = cmd->next;
-		// if (!cmd)
-		// 	return ;
-		// dup2(sd, cmd->fd_out);
-		close(cmd->fd_input);
-		close(cmd->fd_out);
-		
-		exit(0);
+	}
+	if (!flg_n)
+		printf("\n");
+	cmd = cmd->next;
+	close(cmd->fd_input);
+	close(cmd->fd_out);
+	exit(0);
 }
 
 void cmd_pwd(t_cmd *cmd)
