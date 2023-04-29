@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mserrouk <mserrouk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 18:07:00 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/04/29 15:01:43 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/04/29 21:50:39 by mserrouk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,6 +133,7 @@ t_env *creat_env_list(char **env)
 		tmp = tmp->next;
 		i++;
 	}
+	env_l->size = i - 2;
 	return (env_l);
 }
 

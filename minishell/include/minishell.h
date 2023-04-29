@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mserrouk <mserrouk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 16:38:31 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/04/29 20:19:05 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/04/29 21:54:23 by mserrouk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,11 +33,24 @@
 # define HER 'H'
 # define APPEND 'A'
 
+
+
+typedef struct s_export
+{
+	int				size;
+	char			*export;
+	struct s_export  *next;
+	struct s_export  *head;
+} t_export;
+
 typedef struct s_env
 {
+	int				size;
+	t_export		*export;
 	char			*env;
 	struct s_env  *next;
 } t_env;
+
 
 typedef struct s_cmd
 {
@@ -91,4 +104,5 @@ int			check_is_token(int type);
 void		clean_cmd_help(t_cmd *cmd, t_stk	*y, char **spl, int flg);
 
 void		exection(t_cmd *cmd);
+t_export	*creat_export(t_env *envs);
 #endif

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mserrouk <mserrouk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 21:27:02 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/04/29 20:08:23 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/04/29 21:52:29 by mserrouk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -184,6 +184,7 @@ int	main(int ac, char **av, char **env)
 	(void )ac;
 	(void )av[0];
 	envs = creat_env_list(env);
+	envs->export = creat_export(envs);
 	signal(SIGINT, signal_handler);
 	str = readline(
 			"\033[1;32m➜  \033[0m\033[1;36mMinishell\033[0m\033[0;35m$\033[0m ");
