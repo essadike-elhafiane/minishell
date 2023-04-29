@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/16 20:08:08 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/04/27 14:27:01 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/04/29 15:09:56 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	word_stop(char *word, char *str)
 
 int	check_is_token(int type)
 {
-	if (type == APPEND || type == HER || type == OUT || type == IN)
+	if (type == APPEND || type == HER || type == OUT || type == IN || type == PIPE)
 		return (1);
 	return (0);
 }
@@ -68,7 +68,7 @@ t_cmd    *creat_cmd(t_shell *data)
 						tmp->next->type = SINGLE;
 					tmp = tmp->next;
 				}
-				printf("%s\n", tmp->s);
+				// printf("%s\n", tmp->s);
 				tmp_cmd->fd_input = open(tmp->s, O_RDONLY);
 				if (tmp_cmd->fd_input < 0)
 					printf("Minishell$: %s: No such file or directory\n", tmp->s);
@@ -246,6 +246,7 @@ t_cmd    *creat_cmd(t_shell *data)
 			tmp = tmp->next;
 			tmp_cmd->next = (t_cmd *)malloc(sizeof(t_cmd));
 			tmp_cmd = tmp_cmd->next;
+			tmp_cmd->cmd = NULL;
 			tmp_cmd->fd_input = 0;
 			tmp_cmd->env = data->env;
 			tmp_cmd->fd_out = 1;

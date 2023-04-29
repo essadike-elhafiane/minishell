@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 16:38:31 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/04/26 20:54:05 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/04/28 19:53:44 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,7 @@ t_env		*creat_env_list(char **env);
 void		check_expand(t_stk *y, t_shell *tmp, t_env *env);
 char		*expand(char *ss, t_env *env);
 int			check_is_oper_error(char c);
+int			check_is_token(int type);
 
 void		exection(t_cmd *cmd);
 #endif

@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 18:06:57 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/04/26 21:12:30 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/04/29 13:45:25 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,29 +115,32 @@ int	check_is_word_after_oper(t_shell *data)
 
 void	check_expand(t_stk *y, t_shell *tmp, t_env *env)
 {
+	y->i = 0;
+	if (tmp->type == SINGLE)
+		return ;
 	while(tmp && tmp->s[y->i])
 	{
-		if (tmp->type == SINGLE)
-			return ;
-		// printf("%c\n", tmp->type);
 		if (tmp->s[y->i] == '$' && (tmp->s[y->i + 1] == '$'))
 			y->i++;
 		if (tmp->s[y->i] == '$' && tmp->s[y->i +1] != '\0' && (tmp->s[y->i + 1] != '$' && tmp->s[y->i + 1] != ' '))
 		{
 			y->i++;
 			y->b = y->i;
-			while((ft_isalpha(tmp->s[y->i]) || ft_isdigit(tmp->s[y->i])))
+			while(ft_isalpha(tmp->s[y->i]) || ft_isdigit(tmp->s[y->i]) || tmp->s[y->i] == '_')
 				y->i++;
 			y->ss = ft_substr(tmp->s, y->b, y->i - y->b);
 			y->ss = expand(y->ss, env);
 			y->back = ft_strdup(tmp->s + y->i);
+			if (!y->ss && tmp->s[y->i] && y->back)
+				y->i = 0;
 			y->front = ft_substr(tmp->s, 0, y->b -1);
 			free(tmp->s);
 			if (y->front)
 				tmp->s = ft_strjoin(y->front, y->ss);
 			tmp->s = ft_strjoin(tmp->s, y->back);
 		}
-		y->i++;
+		else
+			y->i++;
 	}
 }
 
@@ -156,7 +159,7 @@ int    parser(t_shell *data, t_env *env)
 			tmp = tmp->next;
 			if (tmp && tmp->type == SPACE)
 				tmp = tmp->next;
-			if (tmp)
+			while (tmp && !check_is_token(tmp->type))
 				tmp = tmp->next;
 			// printf("%s\n", tmp->s);
 		}
