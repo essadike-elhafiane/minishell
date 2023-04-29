@@ -6,18 +6,18 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 21:27:02 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/04/28 15:19:45 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/04/29 20:08:23 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "include/minishell.h"
 
-t_shell *init_data(char *ss, int type1)
+t_shell	*init_data(char *ss, int type1)
 {
-	t_shell *data;
+	t_shell	*data;
 
-	data =(t_shell *) malloc(sizeof(t_shell));
-	if(!data)
+	data = (t_shell *) malloc(sizeof(t_shell));
+	if (!data)
 		exit(1);
 	data->type = type1;
 	data->s = ft_strdup(ss);
@@ -38,15 +38,16 @@ int	check_is_oper(char c)
 {
 	if (c == '>' || c == '<' || c == '|' || c == 34 || c == 39)
 		return (1);
-	return (0);		
+	return (0);
 }
 
 int	check_is_oper_error(char c)
 {
 	if (c == '>' || c == '<' || c == '|')
 		return (1);
-	return (0);		
+	return (0);
 }
+
 int	checke_pipe(char *str)
 {
 	int	i;
@@ -54,9 +55,9 @@ int	checke_pipe(char *str)
 
 	i = 0;
 	flg = 0;
-	while(str[i])
+	while (str[i])
 	{
-		if(str[i] == '|')
+		if (str[i] == '|')
 		{
 			i++;
 			while (str[i] == ' ')
@@ -69,7 +70,7 @@ int	checke_pipe(char *str)
 	}
 	return (flg);
 }
-	
+
 int	checke_double(char *str)
 {
 	int	i;
@@ -77,9 +78,9 @@ int	checke_double(char *str)
 
 	i = 0;
 	flg = 0;
-	while(str[i])
+	while (str[i])
 	{
-		if(str[i] == 34)
+		if (str[i] == 34)
 			flg++;
 		i++;
 	}
@@ -93,9 +94,9 @@ int	checke_single(char *str)
 
 	i = 0;
 	flg = 0;
-	while(str[i])
+	while (str[i])
 	{
-		if(str[i] == 39)
+		if (str[i] == 39)
 			flg++;
 		i++;
 	}
@@ -108,7 +109,8 @@ int	check_error(char *str)
 	i = 0;
 	if (str[i] == '\0')
 		return (0);
-	while (str[i] == ' ' || str[i] == '\t' || str[i] == '>' || str[i] == '<' || str[i] == '|')
+	while (str[i] == ' ' || str[i] == '\t'
+		|| str[i] == '>' || str[i] == '<' || str[i] == '|')
 		i++;
 	if (str[i] == '\0')
 	{
@@ -117,7 +119,7 @@ int	check_error(char *str)
 	}
 	else
 		i = 0;
-	while(str[i] == ' ' || str[i] == '\t')
+	while (str[i] == ' ' || str[i] == '\t')
 		i++;
 	if (str[i] == '|')
 	{
@@ -126,7 +128,7 @@ int	check_error(char *str)
 	}
 	while (str[i] == '>' || str[i] == '<')
 		i++;
-	while(str[i] == ' ' || str[i] == '\t')
+	while (str[i] == ' ' || str[i] == '\t')
 		i++;
 	if (str[i] == '\0')
 	{
@@ -136,30 +138,56 @@ int	check_error(char *str)
 	return (0);
 }
 
-void signal_handler(int signal) {
+void	signal_handler(int signal)
+{
     // readline("\033[1;32m➜  \033[0m\033[1;36mMinishell\033[0m\033[0;35m$\033[0m ");
 	if (signal == SIGQUIT)
 		exit(0);
 	ft_putchar_fd('\n', 1);
 	return ;
-    // exit(1);
-	// return ;
 }
 
-int main(int ac, char **av, char **env)
+void	loop_str(char *str, int error, t_env *envs)
 {
-	char *str;
 	int	flg_d;
 	int	flg_s;
-	int	error;
-	t_env *envs;
+
+	while (1 && !error)
+	{
+		flg_d = checke_double(str);
+		flg_s = checke_single(str);
+		if (flg_d % 2 != 0 || flg_s % 2 != 0)
+			str = ft_strjoin(str, readline("quote> "));
+		else
+			break ;
+	}
+	if (ft_strnstr(str, "clear", 6))
+	{
+		printf("\033[2J");
+		printf("\033[1;1H");
+	}
+	else if (str && !error)
+	{
+		add_history(str);
+		lexer(str, envs);
+	}
+	free(str);
+}
+
+int	main(int ac, char **av, char **env)
+{
+	char	*str;
+	int		error;
+	int		flg_d;
+	t_env	*envs;
 
 	(void )ac;
 	(void )av[0];
 	envs = creat_env_list(env);
 	signal(SIGINT, signal_handler);
-	str = readline("\033[1;32m➜  \033[0m\033[1;36mMinishell\033[0m\033[0;35m$\033[0m ");
-	while(str)
+	str = readline(
+			"\033[1;32m➜  \033[0m\033[1;36mMinishell\033[0m\033[0;35m$\033[0m ");
+	while (str)
 	{
 		error = check_error(str);
 		while (1 && !error)
@@ -168,32 +196,14 @@ int main(int ac, char **av, char **env)
 			if (flg_d)
 				str = ft_strjoin(str, readline("pipe> "));
 			else
-				break;
+				break ;
 		}
-		while (1 && !error)
-		{
-			flg_d = checke_double(str);
-			flg_s = checke_single(str);
-			if (flg_d % 2 != 0 || flg_s % 2 != 0)
-				str = ft_strjoin(str, readline("quote> "));
-			else
-				break;
-		}
-		if (ft_strnstr(str, "clear", 6))
-		{
-			printf("\033[2J");
-			printf("\033[1;1H");
-		}
-		else if(str && !error)
-		{
-			add_history(str);
-			lexer(str, envs);
-		}
-		free(str);
+		loop_str(str, error, envs);
 		// rl_on_new_line();
 		//  rl_replace_line("Enter something else: ", 0);
 		// rl_redisplay();
-		str = readline("\033[1;32m➜  \033[0m\033[1;36mMinishell\033[0m\033[0;35m$\033[0m ");
+		str = readline(
+				"\033[1;32m➜  \033[0m\033[1;36mMinishell\033[0m\033[0;35m$\033[0m ");
 	}
 	fun_free_env(&envs);
 }
@@ -201,10 +211,9 @@ int main(int ac, char **av, char **env)
 // < j| ls seg fault
 
 // <inp >out :inp file doesnt exist
-// <<ok|<<ok : it takes ok| as dilimiter
-// echo -nnn -n -n -n  hello
+
 // always print error in stderr not stdout
 // echo $_ : handle _ in variables names and number shouldnt be in first char in var name
-// echo $VAR1$VAR2$VAR3
 // echo $.
 // <ok <<ok
+// $$$USER

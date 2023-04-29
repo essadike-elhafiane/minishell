@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 23:03:21 by mserrouk          #+#    #+#             */
-/*   Updated: 2023/04/29 16:16:07 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/04/29 16:58:32 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -174,6 +174,11 @@ void ft_pipe(t_cmd *cmd)
 		if (tmp->next)
 			pipe(tmp->fd);
 		tmp->pid = fork();
+		if (tmp->pid < 0)
+		{
+			perror("fork");
+			return;
+		}
 		if (tmp->pid == 0)
 		{
 			if (tmp->next)

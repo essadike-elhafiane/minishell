@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 18:06:57 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/04/29 13:45:25 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/04/29 20:24:16 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,18 +14,18 @@
 
 char	*expand(char *ss, t_env *env)
 {
-	char *s;
-	int	i;
-	int	len;
-	
+	char	*s;
+	int		i;
+	int		len;
+
 	i = 0;
 	len = ft_strlen(ss);
 	s = NULL;
-	while(env)
+	while (env)
 	{
-		if(ft_strnstr(env->env, ss, len))
+		if (ft_strnstr(env->env, ss, len))
 		{
-			if(env->env[len] == '=')
+			if (env->env[len] == '=')
 				s = ft_strdup(env->env + len +1);
 		}
 		env = env->next;
@@ -34,6 +34,7 @@ char	*expand(char *ss, t_env *env)
 	ss = NULL;
 	return (s);
 }
+
 int	check_double_oper(t_shell *data)
 {
 	t_shell *tmp;
