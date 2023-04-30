@@ -6,7 +6,7 @@
 /*   By: mserrouk <mserrouk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 23:03:21 by mserrouk          #+#    #+#             */
-/*   Updated: 2023/04/29 21:57:00 by mserrouk         ###   ########.fr       */
+/*   Updated: 2023/04/30 17:27:14 by mserrouk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	ft_command_path(t_cmd *cmd , char **path)
 	int j;
 	char *tmp;
 	j = 0;
-	
+
 	while(cmd->cmd[j])
 	{
 		i = 0;
@@ -182,6 +182,108 @@ t_export *creat_export(t_env *envs)
 	export_sort(export);
 	return (export);
 }
+// void	cmd_unset(t_env **envs, t_cmd *cmd)
+// {
+	
+// }
+
+
+int ft_strcchr(char *str, char c)
+{
+	int i;
+
+	i =0;
+	while(str[i])
+	{
+		if(str[i] == c)
+			return(i);
+		i++;
+	}
+	return(-1);
+}
+
+
+int	string_find(char *word, char *str)
+{
+	int	i;
+	int j;
+	i = 0;
+	
+	j = ft_strlen(word);
+	// printf("%d\n",j);
+	while(word[i] == str[i] && i < j)
+	{
+		if(word[i] != str[i])
+			return (0);
+		i++;
+		if(i == j - 1)
+		{
+			
+			return 1;
+		}
+	}
+	// printf("%d\n",i);
+	return (0);
+}
+
+
+// void check_export(t_export *tmp, t_cmd *cmd)
+// {
+// 	int i;
+
+// 	i = 0;
+// 	while(tmp)
+// 	{
+// 		if((i = ft_strcchr(tmp->export ,'=')) != - 1 && ft_strnstr(tmp->export,cmd->cmd[1] ,i))
+// 		{
+			
+// 		}
+// 		else if(i = -1 && string_find(tmp->export,cmd->cmd[1]))
+// 		{
+
+// 		}
+// 		tmp = tmp->next;
+// 	}
+// }
+
+
+int  check_export(t_env *envs, t_cmd *cmd)
+{
+	t_export *tmp;
+
+	tmp = envs->export;
+	while(envs)
+	{
+		if ((ft_strcchr(cmd->cmd[1] ,'=') == -1  && string_find(cmd->cmd[1] , tmp->export)))
+			return (1);
+		tmp = tmp->next;
+	}
+	return (0);
+}
+
+
+void	cmd_export_fork(t_env *envs, t_cmd *cmd)
+{
+		t_export *tmp;
+	t_env		*tmp2;
+	int i;
+	
+	i = 0;
+	tmp = envs->export;
+	tmp2 = envs;
+	// printf("if\n");
+	if(cmd->cmd[1] == NULL || (i = check_export(envs , cmd)) != 0)
+	{
+		if (i != 0)
+			exit(0);
+		while(tmp)
+		{
+			printf("declare -x %s\n", tmp->export);
+			tmp = tmp->next;
+		}
+		exit(0);
+	}
+}
 
 void	cmd_export(t_env *envs, t_cmd *cmd)
 {
@@ -190,17 +292,11 @@ void	cmd_export(t_env *envs, t_cmd *cmd)
 
 	tmp = envs->export;
 	tmp2 = envs;
-	if(cmd->cmd[1] == NULL)
-	{
-		while(tmp)
-		{
-			printf("declare -x %s\n", tmp->export);
-			tmp = tmp->next;
-		}
-		exit(0);
-	}
-	else
-	{
+	// printf("if\n");
+	
+		// printf("else\n");
+		// check_export_carataire(cmd->cmd[1]);	
+		
 		while(tmp->next)
 			tmp = tmp->next;
 		tmp->next = (t_export *) malloc(sizeof(t_export));
@@ -217,7 +313,6 @@ void	cmd_export(t_env *envs, t_cmd *cmd)
 			tmp2->next = NULL;
 			tmp2->env = ft_strdup(cmd->cmd[1]);
 		}
-	}
 }
 
 void	cmd_env(t_env *envs)
@@ -234,8 +329,50 @@ void	cmd_env(t_env *envs)
 	exit(0);
 }
 
-void	ft_command(t_cmd *cmd )
+
+char **envs_tab(t_env *envs)
+{
+	char **tab;
+	t_env *tmp;
+	int i;
+
+	i = 1;
+	tmp = envs;
+	while(tmp)
+	{
+		i++;	
+		tmp = tmp->next;
+	}
+	tab = (char **)malloc(sizeof(char *) * i);
+	if(!tab)
+	{
+		printf("error\n");
+		exit(0);
+	}
+	tmp = envs;
+	i = 0;
+	while(tmp)
+	{
+		tab[i] = ft_strdup(tmp->env);
+		tmp = tmp->next;
+		i++;
+	}
+	tab[i] = NULL;
+	// i = 0;
+	// printf("ll\n");
+	// exit(0);
+	// while(tab[i])
+	// {
+	// 	printf("%s\n",tab[i]);
+	// 	i++;
+	// }
+	return(tab);
+}
+
+void	ft_command(t_cmd *cmd)
 {	
+	char **tab;
+
 	if(cmd->fd_input != 0)
 		dup2(cmd->fd_input , STDIN_FILENO);
 	if(cmd->fd_out != 1)	
@@ -250,31 +387,35 @@ void	ft_command(t_cmd *cmd )
 		cmd_echo(cmd);
 	else if(ft_strnstr (cmd->cmd[0], "pwd", 4))
 		cmd_pwd(cmd);
-	else if(ft_strnstr (cmd->cmd[0], "export", 7) && cmd->cmd[1] == NULL)
-		cmd_export(cmd->env, cmd);
+	else if(ft_strnstr (cmd->cmd[0], "export", 7))
+		cmd_export_fork(cmd->env, cmd);
 	else if(ft_strnstr (cmd->cmd[0], "env", 7))
 		cmd_env(cmd->env);
 	else
 	{
 		ft_command_path(cmd ,cmd->paths);
-		execve(cmd->cmd_path, cmd->cmd, NULL);
+		tab = envs_tab(cmd->env);
+		execve(cmd->cmd_path, cmd->cmd, tab);
 		perror("execve");
 	}
 }
 
 void creat_files(t_cmd *cmd, t_cmd *tmp2, int i)
-{	
+{
 	if(cmd->fd_out == 1 && cmd->next)
 		cmd->fd_out = cmd->fd[1];
 	if(cmd->fd_input == 0 && i != 0)
 		cmd->fd_input = tmp2->fd[0];
 }
 
-int is_not_fork(t_cmd *tmp)
+int is_not_fork(t_cmd *cmd)
 {
-	if (tmp->cmd && ft_strnstr (tmp->cmd[0], "export", 7) && tmp->cmd[1] != NULL)
-		return (1);
-	else if (tmp->cmd && ft_strnstr (tmp->cmd[0], "unset", 7) && tmp->cmd[1] != NULL)
+	if (cmd->cmd && ft_strnstr(cmd->cmd[0], "export", 7))
+	{
+		if ( (cmd->cmd[1] != NULL &&  !check_export(cmd->env , cmd)))
+			return (1);
+	}
+	else if (cmd->cmd && ft_strnstr (cmd->cmd[0], "unset", 7) && cmd->cmd[1] != NULL)
 		return (1);
 	return (0);
 }
@@ -296,6 +437,7 @@ void ft_pipe(t_cmd *cmd)
 		y.i += 1;	
 	}
 	// printf("%d\n",y.i);
+	// printf("gg\n");
 	y.i = 0;
 	tmp = cmd;
 	while (tmp)
@@ -306,7 +448,7 @@ void ft_pipe(t_cmd *cmd)
 			pipe(tmp->fd);
 			// printf("3333333\n");
 		}
-		if (tmp->cmd && ft_strnstr (tmp->cmd[0], "export", 7) && tmp->cmd[1] != NULL)
+		if (is_not_fork(tmp))
 		{
 			// printf("2  %d\n", y.i);
 			creat_files(tmp ,tmp2, y.i);
@@ -331,6 +473,8 @@ void ft_pipe(t_cmd *cmd)
 				close(cmd->fd_out);
 			if (ft_strnstr (cmd->cmd[0], "export", 7))
 				cmd_export(cmd->env, cmd);
+			// else if (ft_strnstr (cmd->cmd[0], "unset", 6))
+			// 	cmd_unset(cmd->env, cmd);
 			// if(cmd->fd_input != 0)
 			// {	
 			// 	dup2(input , STDIN_FILENO);
@@ -457,4 +601,3 @@ void	exection(t_cmd *cmd)
 	// 	i++;
 	// }
 }
-
