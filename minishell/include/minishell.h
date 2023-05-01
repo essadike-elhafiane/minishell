@@ -6,7 +6,7 @@
 /*   By: mserrouk <mserrouk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 16:38:31 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/04/29 21:54:23 by mserrouk         ###   ########.fr       */
+/*   Updated: 2023/04/30 23:24:37 by mserrouk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,4 +105,5 @@ void		clean_cmd_help(t_cmd *cmd, t_stk	*y, char **spl, int flg);
 
 void		exection(t_cmd *cmd);
 t_export	*creat_export(t_env *envs);
+void		cmd_export(t_env *envs, char *cmd);
 #endif

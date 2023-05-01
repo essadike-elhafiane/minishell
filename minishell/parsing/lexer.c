@@ -6,7 +6,7 @@
 /*   By: mserrouk <mserrouk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 18:07:00 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/04/29 21:50:39 by mserrouk         ###   ########.fr       */
+/*   Updated: 2023/04/30 17:20:07 by mserrouk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,7 +133,7 @@ t_env *creat_env_list(char **env)
 		tmp = tmp->next;
 		i++;
 	}
-	env_l->size = i - 2;
+	env_l->size = i ;
 	return (env_l);
 }
 
@@ -206,6 +206,6 @@ void    lexer(char *str, t_env *envs)
 	// 	printf("%s\n", y.tmp->s);
 	// 	y.tmp = y.tmp->next;
 	// }
-	fun_free_cmd(&cmd);
-	fun_free(&y.data_cmd);
+	// fun_free_cmd(&cmd);
+	// fun_free(&y.data_cmd);
 }

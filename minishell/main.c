@@ -6,7 +6,7 @@
 /*   By: mserrouk <mserrouk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 21:27:02 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/04/29 21:52:29 by mserrouk         ###   ########.fr       */
+/*   Updated: 2023/04/30 17:20:11 by mserrouk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -206,7 +206,7 @@ int	main(int ac, char **av, char **env)
 		str = readline(
 				"\033[1;32m➜  \033[0m\033[1;36mMinishell\033[0m\033[0;35m$\033[0m ");
 	}
-	fun_free_env(&envs);
+	// fun_free_env(&envs);
 }
 
 // < j| ls seg fault

@@ -6,7 +6,7 @@
 /*   By: mserrouk <mserrouk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 23:03:21 by mserrouk          #+#    #+#             */
-/*   Updated: 2023/04/29 21:57:00 by mserrouk         ###   ########.fr       */
+/*   Updated: 2023/05/01 01:02:21 by mserrouk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	ft_command_path(t_cmd *cmd , char **path)
 	int j;
 	char *tmp;
 	j = 0;
-	
+
 	while(cmd->cmd[j])
 	{
 		i = 0;
@@ -49,6 +49,8 @@ void	ft_command_path(t_cmd *cmd , char **path)
 	error_message("➜ Minishell$: command not found\n");
 }
 
+
+
 char	**get_path(t_env *env)
 {
 	int	i;
@@ -61,6 +63,14 @@ char	**get_path(t_env *env)
 		env = env->next;
 	}
 	return (NULL);
+}
+
+void creat_files(t_cmd *cmd, t_cmd *tmp2, int i)
+{
+	if(cmd->fd_out == 1 && cmd->next)
+		cmd->fd_out = cmd->fd[1];
+	if(cmd->fd_input == 0 && i != 0)
+		cmd->fd_input = tmp2->fd[0];
 }
 
 // void cmd_pwd(t_cmd *cmd)
@@ -148,12 +158,6 @@ void export_sort(t_export *export)
 		}
 		tmp = tmp->next;
 	}
-	// tmp = export;
-	// while(tmp)
-	// {
-	// 	printf("declare -x %s\n", tmp->export);
-	// 	tmp = tmp->next;
-	// }
 }
 
 t_export *creat_export(t_env *envs)
@@ -182,42 +186,192 @@ t_export *creat_export(t_env *envs)
 	export_sort(export);
 	return (export);
 }
+// void	cmd_unset(t_env **envs, t_cmd *cmd)
+// {
+	
+// }
 
-void	cmd_export(t_env *envs, t_cmd *cmd)
+
+int ft_strcchr(char *str, char c)
+{
+	int i;
+
+	i =0;
+	while(str[i])
+	{
+		if(str[i] == c)
+			return(i);
+		i++;
+	}
+	return(-1);
+}
+
+
+int	string_find(char *word, char *str)
+{
+	int	i;
+	int j;
+	i = 0;
+	
+	j = ft_strlen(word);
+	while(word[i] == str[i] && i < j)
+	{
+		if(word[i] != str[i])
+			return (0);
+		i++;
+		if(i == j - 1)
+		{	
+			return 1;
+		}
+	}
+	return (0);
+}
+
+// void check_export(t_export *tmp, t_cmd *cmd)
+// {
+// 	int i;
+
+// 	i = 0;
+// 	while(tmp)
+// 	{
+// 		if((i = ft_strcchr(tmp->export ,'=')) != - 1 && ft_strnstr(tmp->export,cmd->cmd[1] ,i))
+// 		{
+			
+// 		}
+// 		else if(i = -1 && string_find(tmp->export,cmd->cmd[1]))
+// 		{
+
+// 		}
+// 		tmp = tmp->next;
+// 	}
+// }
+
+
+#include <string.h>
+int  check_export(t_env *envs, t_cmd *cmd)
 {
 	t_export *tmp;
-	t_env		*tmp2;
+	int i;
+	int a;
+	int flg;
+	int b;
+	char *s;
 
+	a = 1;
+	while(cmd && cmd->cmd[a])
+	{
+		flg = 0;
+		i = -1;
+		b = 0;
+		tmp = envs->export;
+		i = ft_strcchr(cmd->cmd[a] ,'=');
+		s = ft_substr(cmd->cmd[a], 0, i);
+		if (!cmd->cmd[a + 1] && cmd->cmd[a][0] == '\0')
+			return (1);
+		while (cmd->cmd[a] && cmd->cmd[a][b] && cmd->cmd[a][b] != '=')
+		{
+			if (ft_isdigit(cmd->cmd[a][0]) || (!ft_isalpha(cmd->cmd[a][b]) && !ft_isdigit(cmd->cmd[a][b] && cmd->cmd[a][b] != '_' )))
+			{
+				ft_putstr_fd("minishell: not a valid identifier", 2);
+				b = -1;
+				break;
+			}
+			b++;
+		}
+		while(tmp && cmd->cmd[a] && b > -1)
+		{
+			if ( i > 0 && strnstr(tmp->export, s, ft_strlen(s)))
+			{
+				// if (tmp->export[ft_strlen(s) -1] != '\0' && tmp->export[ft_strlen(s) -1] != '=')
+				// 	break;
+				free(tmp->export);
+				tmp->export = ft_strdup(cmd->cmd[a]);
+				flg = 1;
+			}
+			else if (ft_strnstr(tmp->export, cmd->cmd[a], ft_strlen(cmd->cmd[a])))
+			{
+				if (tmp->export[ft_strlen(s)] != '\0' && tmp->export[ft_strlen(s)] != '=')
+					break;
+				flg = 1;
+			}
+			tmp = tmp->next;
+		}
+		free(s);
+		if (!flg && b > -1)
+			cmd_export(cmd->env, cmd->cmd[a]);
+		a++;
+	}
+	return (0); 
+}
+
+
+// int  check_exp_sp(t_env *envs, t_cmd *cmd, char c)
+// {
+// 	t_export *tmp;
+
+// 	tmp = envs->export;
+// 	while(envs)
+// 	{
+// 		if ((ft_strcchr(cmd->cmd[1] ,'=') == -1  && string_find(cmd->cmd[1][1] , tmp->export)))
+// 			return (1);
+// 		tmp = tmp->next;
+// 	}
+// 	return (0);
+// }
+
+void	cmd_export_fork(t_env *envs, t_cmd *cmd)
+{
+		t_export *tmp;
+	t_env		*tmp2;
+	int i;
+	
+	i = 0;
 	tmp = envs->export;
 	tmp2 = envs;
-	if(cmd->cmd[1] == NULL)
-	{
+	// printf("if\n");
+	// if(cmd->cmd[1] == NULL || cmd->cmd[2] == NULL)
+	// {
 		while(tmp)
 		{
 			printf("declare -x %s\n", tmp->export);
 			tmp = tmp->next;
 		}
 		exit(0);
-	}
-	else
-	{
+	// }
+	// printf("ERROR\n");
+	// exit(0);
+}
+
+void	cmd_export(t_env *envs, char *cmd)
+{
+	t_export *tmp;
+	t_env		*tmp2;
+
+	tmp = envs->export;
+	tmp2 = envs;
+	// printf("if\n");
+	
+		// printf("else\n");
+		// check_export_carataire(cmd->cmd[1]);	
+	// if (ft_isalpha(cmd->cmd[1][y->i]) || ft_isdigitcmd->cmd[1][y->i]) || cmd->cmd[1][y->i] == '_')
+	
 		while(tmp->next)
 			tmp = tmp->next;
 		tmp->next = (t_export *) malloc(sizeof(t_export));
 		tmp = tmp->next;
 		tmp->next = NULL;
-		tmp->export = ft_strdup(cmd->cmd[1]);
+		tmp->export = ft_strdup(cmd);
 		// printf("%s\n",tmp->export);
-		if(ft_strchr(cmd->cmd[1], '='))
+		if(ft_strchr(cmd, '='))
 		{
 			while(tmp2->next)
 				tmp2 = tmp2->next;
 			tmp2->next = (t_env *) malloc(sizeof(t_env));
 			tmp2 = tmp2->next;
 			tmp2->next = NULL;
-			tmp2->env = ft_strdup(cmd->cmd[1]);
+			tmp2->env = ft_strdup(cmd);
 		}
-	}
+		export_sort(envs->export);
 }
 
 void	cmd_env(t_env *envs)
@@ -234,8 +388,43 @@ void	cmd_env(t_env *envs)
 	exit(0);
 }
 
-void	ft_command(t_cmd *cmd )
+
+char **envs_tab(t_env *envs)
+{
+	char **tab;
+	t_env *tmp;
+	int i;
+
+	i = 1;
+	tmp = envs;
+	while(tmp)
+	{
+		i++;	
+		tmp = tmp->next;
+	}
+	tab = (char **)malloc(sizeof(char *) * i);
+	if(!tab)
+	{
+		printf("error\n");
+		exit(0);
+	}
+	tmp = envs;
+	i = 0;
+	while(tmp)
+	{
+		tab[i] = ft_strdup(tmp->env);
+		tmp = tmp->next;
+		i++;
+	}
+	tab[i] = NULL;
+	return(tab);
+}
+
+
+void	ft_command(t_cmd *cmd)
 {	
+	char **tab;
+
 	if(cmd->fd_input != 0)
 		dup2(cmd->fd_input , STDIN_FILENO);
 	if(cmd->fd_out != 1)	
@@ -250,35 +439,40 @@ void	ft_command(t_cmd *cmd )
 		cmd_echo(cmd);
 	else if(ft_strnstr (cmd->cmd[0], "pwd", 4))
 		cmd_pwd(cmd);
-	else if(ft_strnstr (cmd->cmd[0], "export", 7) && cmd->cmd[1] == NULL)
-		cmd_export(cmd->env, cmd);
+	else if(ft_strnstr (cmd->cmd[0], "export", 7))
+		cmd_export_fork(cmd->env, cmd);
 	else if(ft_strnstr (cmd->cmd[0], "env", 7))
 		cmd_env(cmd->env);
 	else
 	{
 		ft_command_path(cmd ,cmd->paths);
-		execve(cmd->cmd_path, cmd->cmd, NULL);
+		tab = envs_tab(cmd->env);
+		execve(cmd->cmd_path, cmd->cmd, tab);
 		perror("execve");
 	}
 }
 
-void creat_files(t_cmd *cmd, t_cmd *tmp2, int i)
-{	
-	if(cmd->fd_out == 1 && cmd->next)
-		cmd->fd_out = cmd->fd[1];
-	if(cmd->fd_input == 0 && i != 0)
-		cmd->fd_input = tmp2->fd[0];
-}
-
-int is_not_fork(t_cmd *tmp)
+// !check_export(cmd->env , cmd))
+int is_not_fork(t_cmd *cmd)
 {
-	if (tmp->cmd && ft_strnstr (tmp->cmd[0], "export", 7) && tmp->cmd[1] != NULL)
-		return (1);
-	else if (tmp->cmd && ft_strnstr (tmp->cmd[0], "unset", 7) && tmp->cmd[1] != NULL)
+	
+	if (cmd->cmd && ft_strnstr(cmd->cmd[0], "export", 7))
+	{
+		// printf("fff\n");
+		if (cmd->cmd[1] == NULL)
+			return (0); 
+		else
+		{
+			// printf("fff2\n");
+			if (check_export(cmd->env , cmd))
+				return (0);
+			return (1);
+		}
+	}
+	else if (cmd->cmd && ft_strnstr (cmd->cmd[0], "unset", 7) && cmd->cmd[1] != NULL)
 		return (1);
 	return (0);
 }
-
 
 void ft_pipe(t_cmd *cmd)
 {
@@ -296,6 +490,7 @@ void ft_pipe(t_cmd *cmd)
 		y.i += 1;	
 	}
 	// printf("%d\n",y.i);
+	// printf("gg\n");
 	y.i = 0;
 	tmp = cmd;
 	while (tmp)
@@ -306,8 +501,10 @@ void ft_pipe(t_cmd *cmd)
 			pipe(tmp->fd);
 			// printf("3333333\n");
 		}
-		if (tmp->cmd && ft_strnstr (tmp->cmd[0], "export", 7) && tmp->cmd[1] != NULL)
+		// ft_putstr_fd("error\n", 2);
+		if (is_not_fork(tmp))
 		{
+			// ft_putstr_fd("error12\n", 2);
 			// printf("2  %d\n", y.i);
 			creat_files(tmp ,tmp2, y.i);
 			if(cmd->fd_input == -1)
@@ -329,8 +526,10 @@ void ft_pipe(t_cmd *cmd)
 			// 	close(cmd->fd_input);
 			if (cmd->fd_out != 1)
 				close(cmd->fd_out);
-			if (ft_strnstr (cmd->cmd[0], "export", 7))
-				cmd_export(cmd->env, cmd);
+			// if (ft_strnstr (cmd->cmd[0], "export", 7))
+				
+			// else if (ft_strnstr (cmd->cmd[0], "unset", 6))
+			// 	cmd_unset(cmd->env, cmd);
 			// if(cmd->fd_input != 0)
 			// {	
 			// 	dup2(input , STDIN_FILENO);
@@ -344,6 +543,7 @@ void ft_pipe(t_cmd *cmd)
 		}
 		else
 		{
+			// ft_putstr_fd("error2\n", 2);
 			// printf("3333333\n");
 			tmp->pid = fork();
 			if (tmp->pid == 0)
@@ -425,7 +625,6 @@ void cmd_cd(t_cmd *cmd)
 		// printf("saf\n");
 }
 
-
 void	exection(t_cmd *cmd)
 {
 	t_cmd *tmp;
@@ -457,4 +656,3 @@ void	exection(t_cmd *cmd)
 	// 	i++;
 	// }
 }
-

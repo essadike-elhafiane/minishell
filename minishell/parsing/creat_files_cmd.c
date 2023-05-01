@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   creat_files_cmd.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mserrouk <mserrouk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/16 20:08:08 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/04/29 16:24:09 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/05/01 01:11:16 by mserrouk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,10 +186,6 @@ t_cmd    *creat_cmd(t_shell *data)
 					tmp = tmp->next;
 				}
 		}
-
-
-
-
 		
 			if (tmp && tmp->type == SPACE)
 				tmp = tmp->next;
