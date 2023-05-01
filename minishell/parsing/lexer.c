@@ -6,11 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 18:07:00 by eelhafia          #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2023/04/30 17:20:07 by mserrouk         ###   ########.fr       */
-=======
-/*   Updated: 2023/04/29 22:06:44 by eelhafia         ###   ########.fr       */
->>>>>>> 8411a54c49b5d0782cd196e56b1c8dceb5a52e7e
+/*   Updated: 2023/05/01 18:47:29 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,7 +133,7 @@ t_env	*creat_env_list(char **env)
 		tmp = tmp->next;
 		i++;
 	}
-	env_l->size = i ;
+	env_l->size = i - 2;
 	return (env_l);
 }
 
@@ -169,18 +165,19 @@ void	lexer(char *str, t_env *envs)
 	y.tmp = y.data_cmd;
 	// if (!env_creat)
 	// {
-		y.data_cmd->env = envs;
+	y.data_cmd->env = envs;
 	// 	env_creat++;
 	// }
+	// while(y.tmp && y.tmp->s)
+	// {
+	// 	printf("%s type %c\n", y.tmp->s, y.tmp->type);
+	// 	y.tmp = y.tmp->next;
+	// }
+	// exit(1);
     if (parser(y.data_cmd, y.data_cmd->env))
 		return ;
 	t_cmd *cmd;
-	// y.tmp = y.data_cmd;
-	// while(y.tmp && y.tmp->s)
-	// {
-	// 	printf("%s\n", y.tmp->s);
-	// 	y.tmp = y.tmp->next;
-	// }
+	y.tmp = y.data_cmd;
 	t_cmd *cmdd;
 	cmd = creat_cmd(y.data_cmd);
 	if (!cmd)
@@ -210,6 +207,6 @@ void	lexer(char *str, t_env *envs)
 	// 	printf("%s\n", y.tmp->s);
 	// 	y.tmp = y.tmp->next;
 	// }
-	// fun_free_cmd(&cmd);
-	// fun_free(&y.data_cmd);
+	fun_free_cmd(&cmd);
+	fun_free(&y.data_cmd);
 }

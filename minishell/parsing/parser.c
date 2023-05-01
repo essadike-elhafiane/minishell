@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 18:06:57 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/04/30 14:53:25 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/05/01 18:46:02 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,13 +146,15 @@ void	check_expand(t_stk *y, t_shell *tmp, t_env *env)
 		else
 			y->i++;
 	}
-	if (flg && tmp->s && ft_strchr(tmp->s, ' '))
+	if (flg && tmp->type != DOUBLE && tmp->s && ft_strchr(tmp->s, ' '))
 	{
 		t_shell *tmp2;
 		char **spl;
 		int i;
+		int type;
 
 		i = 1;
+		type = tmp->type;
 		tmp2 = tmp->next;
 		spl = ft_split(tmp->s, ' ');
 		tmp->s = spl[0];
