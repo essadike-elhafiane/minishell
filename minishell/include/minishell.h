@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 16:38:31 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/05/01 16:53:47 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/05/01 22:32:00 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,8 @@ typedef struct s_shell
 	char			*s;
 	t_env			*env;
 	int				type;
+	int				var_re;
+	int				len_spl;
 	struct s_shell  *next;
 } t_shell;
 

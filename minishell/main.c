@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 21:27:02 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/04/30 17:44:25 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/05/01 22:32:17 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ t_shell	*init_data(char *ss, int type1)
 	if (!data)
 		exit(1);
 	data->type = type1;
+	data->var_re = 0;
+	data->len_spl = 0;
 	data->s = ft_strdup(ss);
 	data->next = NULL;
 	return (data);

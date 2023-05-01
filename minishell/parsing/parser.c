@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 18:06:57 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/05/01 18:46:02 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/05/01 23:29:37 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,6 +133,11 @@ void	check_expand(t_stk *y, t_shell *tmp, t_env *env)
 				y->i++;
 			y->ss = ft_substr(tmp->s, y->b, y->i - y->b);
 			y->ss = expand(y->ss, env);
+			if (!y->ss)
+			{
+				tmp->var_re = 1;
+				tmp->len_spl = 2;
+			}
 			y->back = ft_strdup(tmp->s + y->i);
 			if (!y->ss && tmp->s[y->i] && y->back)
 				y->i = 0;
@@ -149,12 +154,15 @@ void	check_expand(t_stk *y, t_shell *tmp, t_env *env)
 	if (flg && tmp->type != DOUBLE && tmp->s && ft_strchr(tmp->s, ' '))
 	{
 		t_shell *tmp2;
+		t_shell *tmp1;
 		char **spl;
 		int i;
 		int type;
 
 		i = 1;
 		type = tmp->type;
+		tmp1 = tmp;
+		tmp->var_re = 1;
 		tmp2 = tmp->next;
 		spl = ft_split(tmp->s, ' ');
 		tmp->s = spl[0];
@@ -164,6 +172,7 @@ void	check_expand(t_stk *y, t_shell *tmp, t_env *env)
 			tmp = tmp->next;
 			tmp->s = ft_strdup(" ");
 			tmp->type = SPACE;
+			tmp->var_re = 1;
 			tmp->next = NULL;
 		}
 		while (spl[i])
@@ -172,6 +181,7 @@ void	check_expand(t_stk *y, t_shell *tmp, t_env *env)
 			tmp = tmp->next;
 			tmp->s = spl[i];
 			tmp->type = WORD;
+			tmp->var_re = 1;
 			tmp->next = NULL;
 			i++;
 			if (spl[i])
@@ -180,9 +190,11 @@ void	check_expand(t_stk *y, t_shell *tmp, t_env *env)
 				tmp = tmp->next;
 				tmp->s = ft_strdup(" ");
 				tmp->type = SPACE;
+				tmp->var_re = 1;
 				tmp->next = NULL;
 			}
 		}
+		tmp1->len_spl = i;
 		tmp->next = tmp2;
 	}
 }

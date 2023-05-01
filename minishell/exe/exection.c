@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 23:03:21 by mserrouk          #+#    #+#             */
-/*   Updated: 2023/05/01 18:21:51 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/05/01 22:26:20 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -279,18 +279,18 @@ int  check_export(t_env *envs, t_cmd *cmd)
 		printf("%s\n", cmd->cmd[a]);
 		if (!cmd->cmd[a + 1] && cmd->cmd[a][0] == '\0')
 			return (1);
-		// while (cmd->cmd[a] && cmd->cmd[a][b] && cmd->cmd[a][b] != '=' && cmd->cmd[a][b] != '+')
-		// {
-		// 	printf("%c\n", cmd->cmd[a][b]);
-		// 	if (ft_isdigit(cmd->cmd[a][0]) || (!ft_isalpha(cmd->cmd[a][b])
-		// 		&& !ft_isdigit(cmd->cmd[a][b] && cmd->cmd[a][b] != '_' )))
-		// 	{
-		// 		ft_putstr_fd("minishell: not a valid identifier\n", 2);
-		// 		b = -1;
-		// 		break;
-		// 	}
-		// 	b++;
-		// }
+		while (cmd->cmd[a] && cmd->cmd[a][b] && cmd->cmd[a][b] != '=' && cmd->cmd[a][b] != '+')
+		{
+			printf("%c\n", cmd->cmd[a][b]);
+			if (ft_isdigit(cmd->cmd[a][0]) || (!ft_isalpha(cmd->cmd[a][b])
+				&& !ft_isdigit(cmd->cmd[a][b] && cmd->cmd[a][b] != '_' )))
+			{
+				ft_putstr_fd("minishell: not a valid identifier\n", 2);
+				b = -1;
+				break;
+			}
+			b++;
+		}
 		// while (cmd->cmd[a] && cmd->cmd[a][b] && cmd->cmd[a][b] != '=' && cmd->cmd[a][b] != '+')
 		// {
 		// 	printf("%c\n", cmd->cmd[a][b]);
