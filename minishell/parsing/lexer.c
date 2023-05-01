@@ -3,10 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mserrouk <mserrouk@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 18:07:00 by eelhafia          #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2023/04/30 17:20:07 by mserrouk         ###   ########.fr       */
+=======
+/*   Updated: 2023/04/29 22:06:44 by eelhafia         ###   ########.fr       */
+>>>>>>> 8411a54c49b5d0782cd196e56b1c8dceb5a52e7e
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +39,7 @@ void	lexer_0(char *str, t_stk *y)
 	{
 		y->i++;
 		y->b = y->i;
-		while(str[y->i] != 34)
+		while (str[y->i] != 34)
 			y->i++;
 		y->ss = ft_substr(str, y->b, y->i - y->b);
 		y->tmp->next = init_data(y->ss, DOUBLE);
@@ -94,7 +98,7 @@ void	lexer_2(char *str, t_stk *y)
 	else if (!check_is_oper(str[y->i]) && str[y->i] != ' ')
 	{
 		y->j = y->i;
-		while(!check_is_oper(str[y->i]) && str[y->i] && str[y->i] != ' ')
+		while (!check_is_oper(str[y->i]) && str[y->i] && str[y->i] != ' ')
 			y->i++;
 		y->ss = ft_substr(str, y->j, y->i - y->j);
 		y->tmp->next = init_data(y->ss, WORD);
@@ -104,30 +108,30 @@ void	lexer_2(char *str, t_stk *y)
 	}
 }
 
-t_env *init_env(char *env)
+t_env	*init_env(char *env)
 {
-	t_env *data;
+	t_env	*data;
 
-	data =(t_env *) malloc(sizeof(t_env));
-	if(!data)
+	data = (t_env *) malloc(sizeof(t_env));
+	if (!data)
 		exit(1);
 	data->env = ft_strdup(env);
 	data->next = NULL;
 	return (data);
 }
 
-t_env *creat_env_list(char **env)
+t_env	*creat_env_list(char **env)
 {
-	int	i;
-	t_env *env_l;
-	t_env *tmp;
+	int		i;
+	t_env	*env_l;
+	t_env	*tmp;
 	
-	if(!*env)
+	if (!*env)
 		return (NULL);
 	env_l = init_env(env[0]);
 	tmp = env_l;
 	i = 1;
-	while(env[i])
+	while (env[i])
 	{
 		tmp->next = init_env(env[i]);
 		tmp = tmp->next;
@@ -137,9 +141,9 @@ t_env *creat_env_list(char **env)
 	return (env_l);
 }
 
-void    lexer(char *str, t_env *envs)
+void	lexer(char *str, t_env *envs)
 {
-	t_stk y;
+	t_stk	y;
 
 	y.i = 0;
 	if (!str || str[0] == '\0')

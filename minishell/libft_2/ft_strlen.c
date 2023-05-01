@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/08 17:41:39 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/04/15 01:17:26 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/04/30 14:26:26 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ size_t	ft_strlen(const char *s)
 	int	i;
 
 	i = 0;
+	if (!s)
+		return (i);
 	while (*s != '\0')
 	{
 		s++;

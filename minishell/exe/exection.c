@@ -6,7 +6,11 @@
 /*   By: mserrouk <mserrouk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 23:03:21 by mserrouk          #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2023/05/01 01:02:21 by mserrouk         ###   ########.fr       */
+=======
+/*   Updated: 2023/04/30 17:27:14 by mserrouk         ###   ########.fr       */
+>>>>>>> 8411a54c49b5d0782cd196e56b1c8dceb5a52e7e
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -190,6 +194,7 @@ t_export *creat_export(t_env *envs)
 // {
 	
 // }
+<<<<<<< HEAD
 
 
 int ft_strcchr(char *str, char c)
@@ -207,6 +212,25 @@ int ft_strcchr(char *str, char c)
 }
 
 
+=======
+
+
+int ft_strcchr(char *str, char c)
+{
+	int i;
+
+	i =0;
+	while(str[i])
+	{
+		if(str[i] == c)
+			return(i);
+		i++;
+	}
+	return(-1);
+}
+
+
+>>>>>>> 8411a54c49b5d0782cd196e56b1c8dceb5a52e7e
 int	string_find(char *word, char *str)
 {
 	int	i;
@@ -214,12 +238,17 @@ int	string_find(char *word, char *str)
 	i = 0;
 	
 	j = ft_strlen(word);
+<<<<<<< HEAD
+=======
+	// printf("%d\n",j);
+>>>>>>> 8411a54c49b5d0782cd196e56b1c8dceb5a52e7e
 	while(word[i] == str[i] && i < j)
 	{
 		if(word[i] != str[i])
 			return (0);
 		i++;
 		if(i == j - 1)
+<<<<<<< HEAD
 		{	
 			return 1;
 		}
@@ -227,6 +256,18 @@ int	string_find(char *word, char *str)
 	return (0);
 }
 
+=======
+		{
+			
+			return 1;
+		}
+	}
+	// printf("%d\n",i);
+	return (0);
+}
+
+
+>>>>>>> 8411a54c49b5d0782cd196e56b1c8dceb5a52e7e
 // void check_export(t_export *tmp, t_cmd *cmd)
 // {
 // 	int i;
@@ -247,6 +288,7 @@ int	string_find(char *word, char *str)
 // }
 
 
+<<<<<<< HEAD
 #include <string.h>
 int  check_export(t_env *envs, t_cmd *cmd)
 {
@@ -318,6 +360,29 @@ int  check_export(t_env *envs, t_cmd *cmd)
 // 	}
 // 	return (0);
 // }
+=======
+int  check_export(t_env *envs, t_cmd *cmd)
+{
+	t_export *tmp;
+>>>>>>> 8411a54c49b5d0782cd196e56b1c8dceb5a52e7e
+
+void	cmd_export_fork(t_env *envs, t_cmd *cmd)
+{
+		t_export *tmp;
+	t_env		*tmp2;
+	int i;
+	
+	i = 0;
+	tmp = envs->export;
+	while(envs)
+	{
+		if ((ft_strcchr(cmd->cmd[1] ,'=') == -1  && string_find(cmd->cmd[1] , tmp->export)))
+			return (1);
+		tmp = tmp->next;
+	}
+	return (0);
+}
+
 
 void	cmd_export_fork(t_env *envs, t_cmd *cmd)
 {
@@ -329,20 +394,34 @@ void	cmd_export_fork(t_env *envs, t_cmd *cmd)
 	tmp = envs->export;
 	tmp2 = envs;
 	// printf("if\n");
+<<<<<<< HEAD
 	// if(cmd->cmd[1] == NULL || cmd->cmd[2] == NULL)
 	// {
+=======
+	if(cmd->cmd[1] == NULL || (i = check_export(envs , cmd)) != 0)
+	{
+		if (i != 0)
+			exit(0);
+>>>>>>> 8411a54c49b5d0782cd196e56b1c8dceb5a52e7e
 		while(tmp)
 		{
 			printf("declare -x %s\n", tmp->export);
 			tmp = tmp->next;
 		}
 		exit(0);
+<<<<<<< HEAD
 	// }
 	// printf("ERROR\n");
 	// exit(0);
 }
 
 void	cmd_export(t_env *envs, char *cmd)
+=======
+	}
+}
+
+void	cmd_export(t_env *envs, t_cmd *cmd)
+>>>>>>> 8411a54c49b5d0782cd196e56b1c8dceb5a52e7e
 {
 	t_export *tmp;
 	t_env		*tmp2;
@@ -353,8 +432,12 @@ void	cmd_export(t_env *envs, char *cmd)
 	
 		// printf("else\n");
 		// check_export_carataire(cmd->cmd[1]);	
+<<<<<<< HEAD
 	// if (ft_isalpha(cmd->cmd[1][y->i]) || ft_isdigitcmd->cmd[1][y->i]) || cmd->cmd[1][y->i] == '_')
 	
+=======
+		
+>>>>>>> 8411a54c49b5d0782cd196e56b1c8dceb5a52e7e
 		while(tmp->next)
 			tmp = tmp->next;
 		tmp->next = (t_export *) malloc(sizeof(t_export));
@@ -371,7 +454,10 @@ void	cmd_export(t_env *envs, char *cmd)
 			tmp2->next = NULL;
 			tmp2->env = ft_strdup(cmd);
 		}
+<<<<<<< HEAD
 		export_sort(envs->export);
+=======
+>>>>>>> 8411a54c49b5d0782cd196e56b1c8dceb5a52e7e
 }
 
 void	cmd_env(t_env *envs)
@@ -417,10 +503,24 @@ char **envs_tab(t_env *envs)
 		i++;
 	}
 	tab[i] = NULL;
+<<<<<<< HEAD
 	return(tab);
 }
 
 
+=======
+	// i = 0;
+	// printf("ll\n");
+	// exit(0);
+	// while(tab[i])
+	// {
+	// 	printf("%s\n",tab[i]);
+	// 	i++;
+	// }
+	return(tab);
+}
+
+>>>>>>> 8411a54c49b5d0782cd196e56b1c8dceb5a52e7e
 void	ft_command(t_cmd *cmd)
 {	
 	char **tab;
@@ -452,6 +552,7 @@ void	ft_command(t_cmd *cmd)
 	}
 }
 
+<<<<<<< HEAD
 // !check_export(cmd->env , cmd))
 int is_not_fork(t_cmd *cmd)
 {
@@ -468,6 +569,22 @@ int is_not_fork(t_cmd *cmd)
 				return (0);
 			return (1);
 		}
+=======
+void creat_files(t_cmd *cmd, t_cmd *tmp2, int i)
+{
+	if(cmd->fd_out == 1 && cmd->next)
+		cmd->fd_out = cmd->fd[1];
+	if(cmd->fd_input == 0 && i != 0)
+		cmd->fd_input = tmp2->fd[0];
+}
+
+int is_not_fork(t_cmd *cmd)
+{
+	if (cmd->cmd && ft_strnstr(cmd->cmd[0], "export", 7))
+	{
+		if ( (cmd->cmd[1] != NULL &&  !check_export(cmd->env , cmd)))
+			return (1);
+>>>>>>> 8411a54c49b5d0782cd196e56b1c8dceb5a52e7e
 	}
 	else if (cmd->cmd && ft_strnstr (cmd->cmd[0], "unset", 7) && cmd->cmd[1] != NULL)
 		return (1);
@@ -501,7 +618,10 @@ void ft_pipe(t_cmd *cmd)
 			pipe(tmp->fd);
 			// printf("3333333\n");
 		}
+<<<<<<< HEAD
 		// ft_putstr_fd("error\n", 2);
+=======
+>>>>>>> 8411a54c49b5d0782cd196e56b1c8dceb5a52e7e
 		if (is_not_fork(tmp))
 		{
 			// ft_putstr_fd("error12\n", 2);
@@ -526,8 +646,13 @@ void ft_pipe(t_cmd *cmd)
 			// 	close(cmd->fd_input);
 			if (cmd->fd_out != 1)
 				close(cmd->fd_out);
+<<<<<<< HEAD
 			// if (ft_strnstr (cmd->cmd[0], "export", 7))
 				
+=======
+			if (ft_strnstr (cmd->cmd[0], "export", 7))
+				cmd_export(cmd->env, cmd);
+>>>>>>> 8411a54c49b5d0782cd196e56b1c8dceb5a52e7e
 			// else if (ft_strnstr (cmd->cmd[0], "unset", 6))
 			// 	cmd_unset(cmd->env, cmd);
 			// if(cmd->fd_input != 0)
