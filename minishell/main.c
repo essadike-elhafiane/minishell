@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 21:27:02 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/05/01 22:32:17 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/05/02 16:50:18 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -221,3 +221,6 @@ int	main(int ac, char **av, char **env)
 // echo $.
 // <ok <<ok
 // $$$USER
+// < ss | ls
+// lsof -c minishell
+// hmeftah

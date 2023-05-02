@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/16 20:08:08 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/05/01 23:38:33 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/05/02 16:06:59 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,12 +80,13 @@ t_cmd    *creat_cmd(t_shell *data)
 				if (tmp_cmd->fd_input < 0)
 				{
 					printf("Minishell$: %s: No such file or directory\n", tmp->s);
-					while (tmp && tmp->type != PIPE)
+					while (tmp && tmp->type != PIPE && tmp->type != HER)
 						tmp = tmp->next;
-					break;
+					if ((tmp && tmp->type != HER) || !tmp)
+						break;
 				}
-					// return (NULL);
-				tmp = tmp->next;
+				if (tmp->type != HER)	// return (NULL);
+					tmp = tmp->next;
 			}
 			if (tmp && tmp->type == OUT)
 			{
