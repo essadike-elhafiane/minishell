@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 23:03:21 by mserrouk          #+#    #+#             */
-/*   Updated: 2023/05/02 17:32:15 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/05/06 18:25:56 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -275,6 +275,12 @@ int  check_export(t_env *envs, t_cmd *cmd)
 				i = plus;
 		}
 		s = ft_substr(cmd->cmd[a], 0, i);
+		// if (!s || s[0] == '+')
+		// {
+		// 	a++;
+		// 	ft_putstr_fd("minishell: not a valid identifier\n", 2);
+		// }
+		
 		// printf("%s\n", s);
 		// printf("%s\n", cmd->cmd[a]);
 		if (i < 0 && plus)
@@ -283,17 +289,21 @@ int  check_export(t_env *envs, t_cmd *cmd)
 		}
 		if (!cmd->cmd[a + 1] && cmd->cmd[a][0] == '\0')
 			return (1);
-		while (cmd->cmd[a] && cmd->cmd[a][b] && cmd->cmd[a][b] != '=' && cmd->cmd[a][b] != '+')
+		while (cmd->cmd[a] && cmd->cmd[a][b] && cmd->cmd[a][b] != '=')
 		{
-			printf("%c\n", cmd->cmd[a][b]);
-			if (ft_isdigit(cmd->cmd[a][0]) || (!ft_isalpha(cmd->cmd[a][b])
+			if (cmd->cmd[a][b] == '+' && cmd->cmd[a][b + 1] == '=' && b > 0)
+				b++;
+			else if (ft_isdigit(cmd->cmd[a][0]) || (!ft_isalpha(cmd->cmd[a][b])
 				&& !ft_isdigit(cmd->cmd[a][b]) && cmd->cmd[a][b] != '_' ))
 			{
-				ft_putstr_fd("minishell: not a valid identifier\n", 2);
+				ft_putstr_fd("minishell: ", 2);
+				ft_putstr_fd(s, 2);
+				ft_putstr_fd(" :not a valid identifier\n", 2);
 				b = -1;
 				break;
 			}
-			b++;
+			else
+				b++;
 		}
 		// while (cmd->cmd[a] && cmd->cmd[a][b] && cmd->cmd[a][b] != '=' && cmd->cmd[a][b] != '+')
 		// {
@@ -367,11 +377,11 @@ int  check_export(t_env *envs, t_cmd *cmd)
 
 void	cmd_export_fork(t_env *envs, t_cmd *cmd)
 {
-		t_export *tmp;
+	t_export *tmp;
 	t_env		*tmp2;
 	int i;
+	int flg;
 	
-	i = 0;
 	tmp = envs->export;
 	tmp2 = envs;
 	// printf("if\n");
@@ -379,7 +389,24 @@ void	cmd_export_fork(t_env *envs, t_cmd *cmd)
 	// {
 		while(tmp)
 		{
-			printf("declare -x %s\n", tmp->export);
+			i = 0;
+			flg = 0;
+			write(1, "declare -x ", 11);
+			while (tmp->export[i])
+			{
+				write(1, &tmp->export[i], 1);
+				if (tmp->export[i] == '=' && !flg)
+				{
+					write(1 , "\"", 1);
+					flg++;
+				}	
+				i++;
+			}
+			if (flg)
+				write(1 , "\"\n", 2);
+			else
+				write(1 , "\n", 1);
+			// printf("%s\"\n", tmp->export);
 			tmp = tmp->next;
 		}
 		exit(0);
@@ -505,13 +532,18 @@ int is_not_fork(t_cmd *cmd)
 	if (cmd->cmd && ft_strnstr(cmd->cmd[0], "export", 7))
 	{
 		// printf("fff\n");
-		if (cmd->cmd[1] == NULL)
-			return (0); 
+		if (!cmd->cmd[1])
+			return (0);
+		if (cmd->cmd[1] && cmd->cmd[1][0] == '\0')
+		{
+			ft_putstr_fd("minishell: export: `': not a valid identifier\n", 2);
+			return (1);
+		}
 		else
 		{
-			// printf("fff2\n");
 			if (check_export(cmd->env , cmd))
 				return (0);
+			add_env(cmd->env , cmd);
 			return (1);
 		}
 	}

@@ -1,0 +1,7 @@
+export hello+=+++++
+export hello+=world+
+export ""
+export ''
+========================
+env -i bash
+bash-3.2$ ./minishell

@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 16:38:31 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/05/02 15:47:32 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/05/06 18:31:00 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,11 @@ int			check_is_oper_error(char c);
 int			check_is_token(int type);
 void		clean_cmd_help(t_cmd *cmd, t_stk	*y, char **spl, int flg);
 
+
 void		exection(t_cmd *cmd);
 t_export	*creat_export(t_env *envs);
 void		cmd_export(t_env *envs, char *cmd);
+void		add_env (t_env*envs, t_cmd *cmd);
+int			ft_strcchr(char *str, char c);
+// void    exection(t_cmd *cmd, t_env *envs);
 #endif

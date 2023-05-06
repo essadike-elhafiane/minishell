@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 21:27:02 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/05/02 16:50:18 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/05/05 21:03:16 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,7 +170,8 @@ void	loop_str(char *str, int error, t_env *envs)
 	}
 	else if (str && !error)
 	{
-		add_history(str);
+		if (str[0] != '\0')
+			add_history(str);
 		lexer(str, envs);
 	}
 	free(str);
@@ -224,3 +225,7 @@ int	main(int ac, char **av, char **env)
 // < ss | ls
 // lsof -c minishell
 // hmeftah
+// int main(int ac, char **av)
+// {
+	
+// }
