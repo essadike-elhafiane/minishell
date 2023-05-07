@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 18:07:00 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/05/05 19:17:21 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/05/08 00:45:57 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	lexer_0(char *str, t_stk *y)
 	if (str[y->i] == 32)
 	{
 		y->ss = ft_strdup(" ");
-		y->tmp->next = init_data(y->ss, SPACE);
+		y->tmp->next = init_data(y->ss, WSPACE);
 		y->tmp = y->tmp->next;
 		free(y->ss);
 		while (str[y->i] == ' ')

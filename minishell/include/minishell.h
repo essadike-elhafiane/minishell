@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 16:38:31 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/05/06 18:31:00 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/05/08 00:30:01 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 #include <signal.h>
 #include "../libft/libft.h"
 
-# define SPACE 'S'
+# define WSPACE 'S'
 # define WORD 'W'
 # define DOUBLE 'D'
 # define SINGLE 'N'
@@ -91,7 +91,6 @@ typedef struct s_stk
 void		lexer(char *str, t_env *envs);
 t_shell		*init_data(char *ss, int type1);
 void		fun_free(t_shell **a);
-int			check_is_oper(char c);
 int			parser(t_shell *data, t_env *env);
 void		fun_free_env(t_env **a);
 t_cmd		*creat_cmd(t_shell *data);
@@ -103,6 +102,10 @@ void		check_expand(t_stk *y, t_shell *tmp, t_env *env);
 char		*expand(char *ss, t_env *env);
 int			check_is_oper_error(char c);
 int			check_is_token(int type);
+int			checke_pipe(char *str);
+int			check_is_oper(char c);
+int			checke_double(char *str);
+int			checke_single(char *str);
 void		clean_cmd_help(t_cmd *cmd, t_stk	*y, char **spl, int flg);
 
 

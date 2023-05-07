@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 23:03:21 by mserrouk          #+#    #+#             */
-/*   Updated: 2023/05/06 18:25:56 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/05/08 00:49:44 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,7 +170,7 @@ t_export *creat_export(t_env *envs)
 	export->size=envs->size;
 	export->next = NULL;
 	if(envs->env)
-		export->export = envs->env;
+		export->export = ft_strdup(envs->env);
 	tmp = export;
 	export->head = export;
 	envs = envs->next;

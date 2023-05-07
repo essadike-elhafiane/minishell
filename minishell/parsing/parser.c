@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 18:06:57 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/05/01 23:29:37 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/05/07 22:03:46 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int	check_double_oper(t_shell *data)
 	y.j = 0;
 	while(tmp)
 	{
-		if (tmp->type == SPACE)
+		if (tmp->type == WSPACE)
 			tmp = tmp->next;
 		if (tmp)
 		{
@@ -63,7 +63,7 @@ int	check_double_oper(t_shell *data)
 			if (tmp->type == IN || tmp->type == OUT || tmp->type == HER || tmp->type == APPEND)
 			{
 				y.j++;
-				if ((tmp->next && tmp->next->type != WORD && tmp->next->type != DOUBLE && tmp->next->type != SINGLE && tmp->next->type != SPACE && tmp->next->type != PIPE) || !tmp->next)
+				if ((tmp->next && tmp->next->type != WORD && tmp->next->type != DOUBLE && tmp->next->type != SINGLE && tmp->next->type != WSPACE && tmp->next->type != PIPE) || !tmp->next)
 				{
 					if (tmp->type == '>' && tmp->next->type == PIPE)
 						y.i = y.i;
@@ -100,7 +100,7 @@ int	check_is_word_after_oper(t_shell *data)
 		if  (tmp->type == IN ||tmp->type == OUT || tmp->type == HER || tmp->type == APPEND)
 		{
 			tmp = tmp->next;
-			if  (tmp && tmp->type == SPACE)
+			if  (tmp && tmp->type == WSPACE)
 				tmp = tmp->next;
 			if(!tmp || (tmp->type != WORD && tmp->type != DOUBLE && tmp->type != SINGLE))
 			{
@@ -171,7 +171,7 @@ void	check_expand(t_stk *y, t_shell *tmp, t_env *env)
 			tmp->next = malloc(sizeof(t_shell));
 			tmp = tmp->next;
 			tmp->s = ft_strdup(" ");
-			tmp->type = SPACE;
+			tmp->type = WSPACE;
 			tmp->var_re = 1;
 			tmp->next = NULL;
 		}
@@ -189,7 +189,7 @@ void	check_expand(t_stk *y, t_shell *tmp, t_env *env)
 				tmp->next = malloc(sizeof(t_shell));
 				tmp = tmp->next;
 				tmp->s = ft_strdup(" ");
-				tmp->type = SPACE;
+				tmp->type = WSPACE;
 				tmp->var_re = 1;
 				tmp->next = NULL;
 			}
@@ -214,7 +214,7 @@ void	check_expand(t_stk *y, t_shell *tmp, t_env *env)
 	// 		tmp->next = malloc(sizeof(t_shell));
 	// 		tmp = tmp->next;
 	// 		tmp->s = ft_strdup(" ");
-	// 		tmp->type = SPACE;
+	// 		tmp->type = WSPACE;
 	// 		tmp->next = NULL;
 	// 	}
 	// 	while (spl[i])
@@ -231,7 +231,7 @@ void	check_expand(t_stk *y, t_shell *tmp, t_env *env)
 	// 			tmp->next = malloc(sizeof(t_shell));
 	// 			tmp = tmp->next;
 	// 			tmp->s = ft_strdup(" ");
-	// 			tmp->type = SPACE;
+	// 			tmp->type = WSPACE;
 	// 			tmp->next = NULL;
 	// 		}
 	// 	}
@@ -251,7 +251,7 @@ int    parser(t_shell *data, t_env *env)
 		if (tmp->type == HER)
 		{
 			tmp = tmp->next;
-			if (tmp && tmp->type == SPACE)
+			if (tmp && tmp->type == WSPACE)
 				tmp = tmp->next;
 			while (tmp && !check_is_token(tmp->type))
 				tmp = tmp->next;

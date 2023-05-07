@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/16 20:08:08 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/05/03 16:29:32 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/05/07 22:03:44 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,14 +54,14 @@ t_cmd    *creat_cmd(t_shell *data)
 	{
 		while(tmp && tmp->type != PIPE)
 		{
-			if (tmp && tmp->type == SPACE)
+			if (tmp && tmp->type == WSPACE)
 				tmp = tmp->next;
 			if (tmp && tmp->type == IN)
 			{
 				tmp = tmp->next;
-				if (tmp && tmp->type == SPACE)
+				if (tmp && tmp->type == WSPACE)
 					tmp = tmp->next;
-				while (tmp && tmp->next && tmp->next->type != SPACE && !check_is_token(tmp->next->type))
+				while (tmp && tmp->next && tmp->next->type != WSPACE && !check_is_token(tmp->next->type))
 				{
 					tmp->next->s = ft_strjoin_no_free(tmp->s, tmp->next->s);
 					if (tmp->type != WORD)
@@ -91,9 +91,9 @@ t_cmd    *creat_cmd(t_shell *data)
 			if (tmp && tmp->type == OUT)
 			{
 				tmp = tmp->next;
-				if (tmp && tmp->type == SPACE)
+				if (tmp && tmp->type == WSPACE)
 					tmp = tmp->next;
-				while (tmp && tmp->next && tmp->next->type != SPACE && !check_is_token(tmp->next->type))
+				while (tmp && tmp->next && tmp->next->type != WSPACE && !check_is_token(tmp->next->type))
 				{
 					tmp->next->s = ft_strjoin_no_free(tmp->s, tmp->next->s);
 					if (tmp->type != WORD)
@@ -108,9 +108,9 @@ t_cmd    *creat_cmd(t_shell *data)
 			if (tmp && tmp->type == APPEND)
 			{
 				tmp = tmp->next;
-				if (tmp && tmp->type == SPACE)
+				if (tmp && tmp->type == WSPACE)
 					tmp = tmp->next;
-				while (tmp && tmp->next && tmp->next->type != SPACE && !check_is_token(tmp->next->type))
+				while (tmp && tmp->next && tmp->next->type != WSPACE && !check_is_token(tmp->next->type))
 				{
 					tmp->next->s = ft_strjoin_no_free(tmp->s, tmp->next->s);
 					if (tmp->type != WORD)
@@ -126,9 +126,9 @@ t_cmd    *creat_cmd(t_shell *data)
 			if (tmp && tmp->type == HER)
 			{
 				tmp = tmp->next;
-				if (tmp && tmp->type == SPACE)
+				if (tmp && tmp->type == WSPACE)
 					tmp = tmp->next;
-				while (tmp && tmp->next && tmp->next->type != SPACE && !check_is_token(tmp->next->type))
+				while (tmp && tmp->next && tmp->next->type != WSPACE && !check_is_token(tmp->next->type))
 				{
 					tmp->next->s = ft_strjoin_no_free(tmp->s, tmp->next->s);
 					if (tmp->type != WORD)
@@ -204,17 +204,17 @@ t_cmd    *creat_cmd(t_shell *data)
 
 
 		
-			if (tmp && tmp->type == SPACE)
+			if (tmp && tmp->type == WSPACE)
 				tmp = tmp->next;
 			t_shell *r;
 			r = tmp;
 			while(tmp && (tmp->type == WORD || tmp->type == DOUBLE || tmp->type == SINGLE))
 			{
 				y.i = 0;
-				while(tmp && (tmp->type == WORD || tmp->type == DOUBLE || tmp->type == SINGLE || tmp->type == SPACE))
+				while(tmp && (tmp->type == WORD || tmp->type == DOUBLE || tmp->type == SINGLE || tmp->type == WSPACE))
 				{
 					
-					if (tmp && tmp->type == SPACE)
+					if (tmp && tmp->type == WSPACE)
 						tmp = tmp->next;
 					if (tmp && (tmp->type == WORD || tmp->type == DOUBLE || tmp->type == SINGLE ))
 					{
@@ -242,14 +242,14 @@ t_cmd    *creat_cmd(t_shell *data)
 							r = r->next;
 						}
 						// printf("%s\n", tmp_cmd->cmd[y.j]);
-						// if (r->next && r->next->type != SPACE)
+						// if (r->next && r->next->type != WSPACE)
 						// 	tmp_cmd->flg_space = 1;
 						y.j++;
 					}
 					else
 						r = r->next;
 				}
-				// if (tmp && tmp->type == SPACE)
+				// if (tmp && tmp->type == WSPACE)
 				// 		tmp = tmp->next;
 			}
 				// exit(0);

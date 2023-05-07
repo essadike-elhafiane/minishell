@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 21:27:02 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/05/05 21:03:16 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/05/08 00:54:12 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,92 +35,8 @@ t_shell	*lstlast(t_shell *lst)
 		lst = lst->next;
 	return (lst);
 }
-
-int	check_is_oper(char c)
+int check_error_help(char *str, int i)
 {
-	if (c == '>' || c == '<' || c == '|' || c == 34 || c == 39)
-		return (1);
-	return (0);
-}
-
-int	check_is_oper_error(char c)
-{
-	if (c == '>' || c == '<' || c == '|')
-		return (1);
-	return (0);
-}
-
-int	checke_pipe(char *str)
-{
-	int	i;
-	int	flg;
-
-	i = 0;
-	flg = 0;
-	while (str[i])
-	{
-		if (str[i] == '|')
-		{
-			i++;
-			while (str[i] == ' ')
-				i++;
-			if (str[i] == '\0')
-				return (1);
-		}
-		else
-			i++;
-	}
-	return (flg);
-}
-
-int	checke_double(char *str)
-{
-	int	i;
-	int	flg;
-
-	i = 0;
-	flg = 0;
-	while (str[i])
-	{
-		if (str[i] == 34)
-			flg++;
-		i++;
-	}
-	return (flg);
-}
-
-int	checke_single(char *str)
-{
-	int	i;
-	int	flg;
-
-	i = 0;
-	flg = 0;
-	while (str[i])
-	{
-		if (str[i] == 39)
-			flg++;
-		i++;
-	}
-	return (flg);
-}
-int	check_error(char *str)
-{
-	int	i;
-
-	i = 0;
-	if (str[i] == '\0')
-		return (0);
-	while (str[i] == ' ' || str[i] == '\t'
-		|| str[i] == '>' || str[i] == '<' || str[i] == '|')
-		i++;
-	if (str[i] == '\0')
-	{
-		printf("Minishell$: syntax error !\n");
-		return (1);
-	}
-	else
-		i = 0;
 	while (str[i] == ' ' || str[i] == '\t')
 		i++;
 	if (str[i] == '|')
@@ -140,13 +56,39 @@ int	check_error(char *str)
 	return (0);
 }
 
-void	signal_handler(int signal)
+int	check_error(char *str)
 {
-    // readline("\033[1;32m➜  \033[0m\033[1;36mMinishell\033[0m\033[0;35m$\033[0m ");
-	if (signal == SIGQUIT)
-		return ;
-	ft_putchar_fd('\n', 1);
-	return ;
+	int	i;
+
+	i = 0;
+	if (str[i] == '\0')
+		return (0);
+	while (str[i] == ' ' || str[i] == '\t'
+		|| str[i] == '>' || str[i] == '<' || str[i] == '|')
+		i++;
+	if (str[i] == '\0')
+	{
+		printf("Minishell$: syntax error !\n");
+		return (1);
+	}
+	else
+		i = 0;
+	if (check_error_help(str, i))
+		return (1);
+	return (0);
+}
+
+void signal_handler(int signal) {
+   if (signal == SIGINT) 
+	{
+		if (waitpid(-1, NULL, WNOHANG))
+		{
+			printf("\n");
+			rl_replace_line("", 0);
+			rl_on_new_line();
+			rl_redisplay();
+		}
+    }
 }
 
 void	loop_str(char *str, int error, t_env *envs)
@@ -154,7 +96,7 @@ void	loop_str(char *str, int error, t_env *envs)
 	int	flg_d;
 	int	flg_s;
 
-	while (1 && !error)
+	while (!error)
 	{
 		flg_d = checke_double(str);
 		flg_s = checke_single(str);
@@ -176,7 +118,10 @@ void	loop_str(char *str, int error, t_env *envs)
 	}
 	free(str);
 }
-
+void h(void)
+{
+	system("leaks minishell");
+}
 int	main(int ac, char **av, char **env)
 {
 	char	*str;
@@ -189,13 +134,14 @@ int	main(int ac, char **av, char **env)
 	envs = creat_env_list(env);
 	envs->export = creat_export(envs);
 	signal(SIGINT, signal_handler);
-	signal(SIGQUIT, signal_handler);
+	signal(SIGQUIT, SIG_IGN);
 	str = readline(
 			"\033[1;32m➜  \033[0m\033[1;36mMinishell\033[0m\033[0;35m$\033[0m ");
+	// atexit(h);
 	while (str)
 	{
 		error = check_error(str);
-		while (1 && !error)
+		while (!error)
 		{
 			flg_d = checke_pipe(str);
 			if (flg_d)
@@ -204,13 +150,26 @@ int	main(int ac, char **av, char **env)
 				break ;
 		}
 		loop_str(str, error, envs);
-		// rl_on_new_line();
-		//  rl_replace_line("Enter something else: ", 0);
-		// rl_redisplay();
 		str = readline(
 				"\033[1;32m➜  \033[0m\033[1;36mMinishell\033[0m\033[0;35m$\033[0m ");
 	}
+	// t_export *tmpp;
+	
+	// while (envs->export)
+	// {
+	// 	tmpp = envs->export;
+	// 	envs->export = envs->export->next;
+	// 	free(tmpp->export);
+	// 	free(tmpp);
+	// 	/* code */
+	// }
+	
 	fun_free_env(&envs);
+	// while (1)
+	// {
+	// 	/* code */
+	// }
+	
 }
 
 // < j| ls seg fault
