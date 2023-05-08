@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 23:03:21 by mserrouk          #+#    #+#             */
-/*   Updated: 2023/05/08 00:49:44 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/05/08 01:22:46 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -705,17 +705,14 @@ void cmd_cd(t_cmd *cmd)
 
 void	exection(t_cmd *cmd)
 {
-	t_cmd *tmp;
+	t_cmd	*tmp;
+	int		i;
+
 	cmd->paths = get_path(cmd->env);
 	tmp = cmd;
-	// if (cmd->paths == NULL)
-	// {
-	// 	printf("hhhhh\n");
-	// }
+
 	while (tmp)
 	{
-		// if(tmp->cmd == ' ')
-		// 	tmp = tmp->next;
 		tmp->paths = cmd->paths;
 		tmp = tmp->next;
 	}
@@ -725,12 +722,11 @@ void	exection(t_cmd *cmd)
 	}
 	else
 		ft_pipe(cmd);
-	// int i;
-
-	// i = 0;
-	// while (cmd->paths[i])
-	// {
-	// 	free(cmd->cmd_path[i]);
-	// 	i++;
-	// }
+	i = 0;
+	while (cmd->paths && cmd->paths[i])
+	{
+		free(cmd->paths[i]);
+		i++;
+	}
+	free(cmd->paths);
 }

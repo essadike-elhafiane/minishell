@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 21:27:02 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/05/08 00:54:12 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/05/08 01:24:52 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,7 +137,7 @@ int	main(int ac, char **av, char **env)
 	signal(SIGQUIT, SIG_IGN);
 	str = readline(
 			"\033[1;32m➜  \033[0m\033[1;36mMinishell\033[0m\033[0;35m$\033[0m ");
-	// atexit(h);
+	atexit(h);
 	while (str)
 	{
 		error = check_error(str);
@@ -166,7 +166,7 @@ int	main(int ac, char **av, char **env)
 	
 	fun_free_env(&envs);
 	// while (1)
-	// {
+	// {	
 	// 	/* code */
 	// }
 	
