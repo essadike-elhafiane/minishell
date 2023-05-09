@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 21:27:02 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/05/08 01:24:52 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/05/09 22:44:16 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,7 +137,6 @@ int	main(int ac, char **av, char **env)
 	signal(SIGQUIT, SIG_IGN);
 	str = readline(
 			"\033[1;32m➜  \033[0m\033[1;36mMinishell\033[0m\033[0;35m$\033[0m ");
-	atexit(h);
 	while (str)
 	{
 		error = check_error(str);
@@ -153,18 +152,25 @@ int	main(int ac, char **av, char **env)
 		str = readline(
 				"\033[1;32m➜  \033[0m\033[1;36mMinishell\033[0m\033[0;35m$\033[0m ");
 	}
+	fun_free_env(&envs);
 	// t_export *tmpp;
 	
 	// while (envs->export)
 	// {
-	// 	tmpp = envs->export;
+	// 	// tmpp = envs->export;
+	// 	printf("%s\n", envs->export->export);
 	// 	envs->export = envs->export->next;
-	// 	free(tmpp->export);
-	// 	free(tmpp);
+	// 	// free(tmpp->export);
+	// 	// free(tmpp);
 	// 	/* code */
 	// }
+	// while (envs)
+	// {
+	// 	printf("%s\n", envs->env);
+	// 	envs = envs->next;
+	// }
 	
-	fun_free_env(&envs);
+	
 	// while (1)
 	// {	
 	// 	/* code */

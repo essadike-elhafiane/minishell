@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 23:03:21 by mserrouk          #+#    #+#             */
-/*   Updated: 2023/05/08 01:22:46 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/05/09 22:45:32 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,11 +167,15 @@ t_export *creat_export(t_env *envs)
 
 	export = malloc(sizeof(t_export*));
 	export->export = NULL;
-	export->size=envs->size;
+	export->size = envs->size;
 	export->next = NULL;
-	if(envs->env)
+	if(envs)
 		export->export = ft_strdup(envs->env);
+	else		
+		export->export = NULL;
 	tmp = export;
+	
+	printf("%s\n\n",export->export);
 	export->head = export;
 	envs = envs->next;
 	while(envs)
@@ -183,7 +187,8 @@ t_export *creat_export(t_env *envs)
 		tmp->export = ft_strdup(envs->env);
 		envs = envs->next;
 	}
-	export_sort(export);
+
+	// export_sort(export);
 	return (export);
 }
 // void	cmd_unset(t_env **envs, t_cmd *cmd)
@@ -275,18 +280,9 @@ int  check_export(t_env *envs, t_cmd *cmd)
 				i = plus;
 		}
 		s = ft_substr(cmd->cmd[a], 0, i);
-		// if (!s || s[0] == '+')
-		// {
-		// 	a++;
-		// 	ft_putstr_fd("minishell: not a valid identifier\n", 2);
-		// }
-		
-		// printf("%s\n", s);
-		// printf("%s\n", cmd->cmd[a]);
 		if (i < 0 && plus)
-		{
 			b = -1;
-		}
+
 		if (!cmd->cmd[a + 1] && cmd->cmd[a][0] == '\0')
 			return (1);
 		while (cmd->cmd[a] && cmd->cmd[a][b] && cmd->cmd[a][b] != '=')
@@ -305,18 +301,6 @@ int  check_export(t_env *envs, t_cmd *cmd)
 			else
 				b++;
 		}
-		// while (cmd->cmd[a] && cmd->cmd[a][b] && cmd->cmd[a][b] != '=' && cmd->cmd[a][b] != '+')
-		// {
-		// 	printf("%c\n", cmd->cmd[a][b]);
-		// 	if (ft_isdigit(cmd->cmd[a][0]) || (!ft_isalpha(cmd->cmd[a][b])
-		// 		&& !ft_isdigit(cmd->cmd[a][b] && cmd->cmd[a][b] != '_' )))
-		// 	{
-		// 		ft_putstr_fd("minishell: not a valid identifier\n", 2);
-		// 		b = -1;
-		// 		break;
-		// 	}
-		// 	b++;
-		// }
 		while(tmp && cmd->cmd[a] && b > -1)
 		{
 			if ( i > 0 && strnstr(tmp->export, s, ft_strlen(s)) && i != plus)
@@ -339,18 +323,13 @@ int  check_export(t_env *envs, t_cmd *cmd)
 				if (tmp->export[ft_strlen(s)] != '\0' && tmp->export[ft_strlen(s)] != '=')
 					break;
 				flg = 1;
-			}
-			// else if(i == plus && s && i > 0 && !flg)
-			// {
-			// 	cmd->cmd[a] = ft_strjoin(ft_strdup(s), ft_strdup(cmd->cmd[a] + i + 1));
-			// 
-			// }	
+			}	
 			tmp = tmp->next;
 		}
-		if(i == plus && s && i > 0 && !flg)
+		if(cmd->cmd[a] && i == plus && s && i > 0 && !flg)
 		{
+			free(cmd->cmd[a]);
 			cmd->cmd[a] = ft_strjoin(ft_strdup(s), ft_strdup(cmd->cmd[a] + i + 1));
-		
 		}
 		free(s);
 		if (!flg && b > -1)
@@ -410,9 +389,6 @@ void	cmd_export_fork(t_env *envs, t_cmd *cmd)
 			tmp = tmp->next;
 		}
 		exit(0);
-	// }
-	// printf("ERROR\n");
-	// exit(0);
 }
 
 void	cmd_export(t_env *envs, char *cmd)
@@ -444,7 +420,7 @@ void	cmd_export(t_env *envs, char *cmd)
 			tmp2->next = NULL;
 			tmp2->env = ft_strdup(cmd);
 		}
-		export_sort(envs->export);
+		// export_sort(envs->export);
 }
 
 void	cmd_env(t_env *envs)
@@ -520,6 +496,7 @@ void	ft_command(t_cmd *cmd)
 	{
 		ft_command_path(cmd ,cmd->paths);
 		tab = envs_tab(cmd->env);
+		fun_free_env(&cmd->env);
 		execve(cmd->cmd_path, cmd->cmd, tab);
 		perror("execve");
 	}
