@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 18:07:00 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/05/09 23:21:02 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/05/10 02:50:20 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,7 +133,6 @@ t_env	*creat_env_list(char **env)
 		tmp = tmp->next;
 		i++;
 	}
-	env_l->size = i - 2;
 	return (env_l);
 }
 
@@ -203,6 +202,7 @@ void	lexer(char *str, t_env *envs)
 	// 	cmdd = cmdd->next;
 	// }
 	exection(cmd);
+	
 	// while(y.tmp)
 	// {
 	// 	printf("%c || %d\n\n", y.tmp->type, y.i++);

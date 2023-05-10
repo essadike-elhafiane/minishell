@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/16 22:48:31 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/05/08 23:02:28 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/05/10 02:42:04 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,22 +29,10 @@ void	fun_free(t_shell **a)
 void	fun_free_env(t_env **a)
 {
 	t_env	*tmp;
-	t_export *tmp_ex;
-
-	if (!*a)
-		return ;
-	while ((*a)->export)
-	{
-		tmp_ex = (*a)->export;
-		(*a)->export = (*a)->export->next;
-		free(tmp_ex->export);
-		free(tmp_ex);
-	}
 	while (*a)
 	{
 		tmp = *a;
 		*a = (*a)->next;
-		// free(tmp->export);
 		free(tmp->env);
 		free(tmp);
 	}

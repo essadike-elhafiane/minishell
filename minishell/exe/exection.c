@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 23:03:21 by mserrouk          #+#    #+#             */
-/*   Updated: 2023/05/09 22:45:32 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/05/10 02:46:22 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,68 +129,74 @@ void	cmd_echo(t_cmd *cmd)
 
 void cmd_pwd(t_cmd *cmd)
 {
-	char cwd[1024];
-
-	printf("%s\n",getcwd(cwd, sizeof(cwd)));
+	while(cmd->env)
+	{
+		if(ft_strnstr(cmd->env->env, "PWD", 3))
+		{
+			printf("%s\n",cmd->env->env + 4);
+			break;
+		}
+		cmd->env = cmd->env->next;
+	}
 	exit(0);
 }
 
-void export_sort(t_export *export)
-{
-	t_export *tmp;
-	t_export *tmp2;
-	char *swap;
+// void export_sort(t_export *export)
+// {
+// 	t_export *tmp;
+// 	t_export *tmp2;
+// 	char *swap;
 
-	tmp = export;
-	tmp2 = export;
-	while(tmp)
-	{
-		tmp2 = tmp->next;
-		while(tmp2)
-		{
-			if((ft_strncmp(tmp->export, tmp2->export, ft_strlen(tmp->export) + 2)) > 0)
-			{
-				swap = tmp->export;
-				tmp->export = tmp2->export;
-				tmp2->export = swap;
-			}
-			tmp2 = tmp2->next;
-		}
-		tmp = tmp->next;
-	}
-}
+// 	tmp = export;
+// 	tmp2 = export;
+// 	while(tmp)
+// 	{
+// 		tmp2 = tmp->next;
+// 		while(tmp2)
+// 		{
+// 			if((ft_strncmp(tmp->export, tmp2->export, ft_strlen(tmp->export) + 2)) > 0)
+// 			{
+// 				swap = tmp->export;
+// 				tmp->export = tmp2->export;
+// 				tmp2->export = swap;
+// 			}
+// 			tmp2 = tmp2->next;
+// 		}
+// 		tmp = tmp->next;
+// 	}
+// }
 
-t_export *creat_export(t_env *envs)
-{
-	t_export *export;
-	t_export *tmp;
+// t_export *creat_export(t_env *envs)
+// {
+// 	t_export *export;
+// 	t_export *tmp;
 
-	export = malloc(sizeof(t_export*));
-	export->export = NULL;
-	export->size = envs->size;
-	export->next = NULL;
-	if(envs)
-		export->export = ft_strdup(envs->env);
-	else		
-		export->export = NULL;
-	tmp = export;
+// 	export = malloc(sizeof(t_export*));
+// 	export->export = NULL;
+// 	export->size = envs->size;
+// 	export->next = NULL;
+// 	if(envs)
+// 		export->export = ft_strdup(envs->env);
+// 	else		
+// 		export->export = NULL;
+// 	tmp = export;
 	
-	printf("%s\n\n",export->export);
-	export->head = export;
-	envs = envs->next;
-	while(envs)
-	{
-		tmp->next =(t_export*) malloc(sizeof(t_export));
-		tmp = tmp->next;
-		tmp->head = export;
-		tmp->next = NULL;
-		tmp->export = ft_strdup(envs->env);
-		envs = envs->next;
-	}
+// 	printf("%s\n\n",export->export);
+// 	export->head = export;
+// 	envs = envs->next;
+// 	while(envs)
+// 	{
+// 		tmp->next =(t_export*) malloc(sizeof(t_export));
+// 		tmp = tmp->next;
+// 		tmp->head = export;
+// 		tmp->next = NULL;
+// 		tmp->export = ft_strdup(envs->env);
+// 		envs = envs->next;
+// 	}
 
-	// export_sort(export);
-	return (export);
-}
+// 	// export_sort(export);
+// 	return (export);
+// }
 // void	cmd_unset(t_env **envs, t_cmd *cmd)
 // {
 	
@@ -252,11 +258,10 @@ int	string_find(char *word, char *str)
 // }
 
 
-#include <string.h>
 
 int  check_export(t_env *envs, t_cmd *cmd)
 {
-	t_export *tmp;
+	t_env *tmp;
 	int i;
 	int plus;
 	int a;
@@ -271,7 +276,7 @@ int  check_export(t_env *envs, t_cmd *cmd)
 		i = -1;
 		b = 0;
 		plus = 0;
-		tmp = envs->export;
+		tmp = envs;
 		i = ft_strcchr(cmd->cmd[a] ,'=');
 		if (i > 0)
 		{
@@ -303,27 +308,27 @@ int  check_export(t_env *envs, t_cmd *cmd)
 		}
 		while(tmp && cmd->cmd[a] && b > -1)
 		{
-			if ( i > 0 && strnstr(tmp->export, s, ft_strlen(s)) && i != plus)
+			if ( i > 0 && ft_strnstr(tmp->env, s, ft_strlen(s)) && i != plus)
 			{
 				// if (tmp->export[ft_strlen(s) -1] != '\0' && tmp->export[ft_strlen(s) -1] != '=')
 				// 	break;
-				free(tmp->export);
-				tmp->export = ft_strdup(cmd->cmd[a]);
+				free(tmp->env);
+				tmp->env = ft_strdup(cmd->cmd[a]);
 				flg = 1;
 			}
-			else if ( i > 0 && strnstr(tmp->export, s, ft_strlen(s)) && i == plus)
+			else if ( i > 0 && ft_strnstr(tmp->env, s, ft_strlen(s)) && i == plus)
 			{
-				if (ft_strcchr(tmp->export, '=') < 0)
-					tmp->export = ft_strjoin(tmp->export, ft_strdup("="));
-				tmp->export =ft_strjoin(tmp->export, ft_strdup(cmd->cmd[a] + i + 2));
+				if (ft_strcchr(tmp->env, '=') < 0)
+					tmp->env = ft_strjoin(tmp->env, ft_strdup("="));
+				tmp->env =ft_strjoin(tmp->env, ft_strdup(cmd->cmd[a] + i + 2));
 				flg = 1;
 			}
-			else if (ft_strnstr(tmp->export, cmd->cmd[a], ft_strlen(cmd->cmd[a])))
+			else if (ft_strnstr(tmp->env, cmd->cmd[a], ft_strlen(cmd->cmd[a])))
 			{
-				if (tmp->export[ft_strlen(s)] != '\0' && tmp->export[ft_strlen(s)] != '=')
+				if (tmp->env[ft_strlen(s)] != '\0' && tmp->env[ft_strlen(s)] != '=')
 					break;
 				flg = 1;
-			}	
+			}
 			tmp = tmp->next;
 		}
 		if(cmd->cmd[a] && i == plus && s && i > 0 && !flg)
@@ -356,13 +361,11 @@ int  check_export(t_env *envs, t_cmd *cmd)
 
 void	cmd_export_fork(t_env *envs, t_cmd *cmd)
 {
-	t_export *tmp;
-	t_env		*tmp2;
+	t_env *tmp;
 	int i;
 	int flg;
 	
-	tmp = envs->export;
-	tmp2 = envs;
+	tmp = envs;
 	// printf("if\n");
 	// if(cmd->cmd[1] == NULL || cmd->cmd[2] == NULL)
 	// {
@@ -371,10 +374,10 @@ void	cmd_export_fork(t_env *envs, t_cmd *cmd)
 			i = 0;
 			flg = 0;
 			write(1, "declare -x ", 11);
-			while (tmp->export[i])
+			while (tmp->env[i])
 			{
-				write(1, &tmp->export[i], 1);
-				if (tmp->export[i] == '=' && !flg)
+				write(1, &tmp->env[i], 1);
+				if (tmp->env[i] == '=' && !flg)
 				{
 					write(1 , "\"", 1);
 					flg++;
@@ -393,34 +396,20 @@ void	cmd_export_fork(t_env *envs, t_cmd *cmd)
 
 void	cmd_export(t_env *envs, char *cmd)
 {
-	t_export *tmp;
+	t_env *tmp;
 	t_env		*tmp2;
 
-	tmp = envs->export;
+	if (!envs)
+		return ;
+	tmp = envs;
 	tmp2 = envs;
-	// printf("if\n");
 	
-		// printf("else\n");
-		// check_export_carataire(cmd->cmd[1]);	
-	// if (ft_isalpha(cmd->cmd[1][y->i]) || ft_isdigitcmd->cmd[1][y->i]) || cmd->cmd[1][y->i] == '_')
-	
-		while(tmp->next)
-			tmp = tmp->next;
-		tmp->next = (t_export *) malloc(sizeof(t_export));
+	while(tmp->next)
 		tmp = tmp->next;
-		tmp->next = NULL;
-		tmp->export = ft_strdup(cmd);
-		// printf("%s\n",tmp->export);
-		if(ft_strchr(cmd, '='))
-		{
-			while(tmp2->next)
-				tmp2 = tmp2->next;
-			tmp2->next = (t_env *) malloc(sizeof(t_env));
-			tmp2 = tmp2->next;
-			tmp2->next = NULL;
-			tmp2->env = ft_strdup(cmd);
-		}
-		// export_sort(envs->export);
+	tmp->next = (t_env *) malloc(sizeof(t_env));
+	tmp = tmp->next;
+	tmp->next = NULL;
+	tmp->env = ft_strdup(cmd);
 }
 
 void	cmd_env(t_env *envs)
@@ -428,12 +417,12 @@ void	cmd_env(t_env *envs)
 	t_env *tmp;
 
 	tmp = envs;
-		while(tmp)
-		{
+	while(tmp)
+	{
+		if (ft_strchr(tmp->env, '='))
 			printf("%s\n", tmp->env);
-			tmp = tmp->next;
-		}
-		
+		tmp = tmp->next;
+	}
 	exit(0);
 }
 
@@ -496,10 +485,87 @@ void	ft_command(t_cmd *cmd)
 	{
 		ft_command_path(cmd ,cmd->paths);
 		tab = envs_tab(cmd->env);
-		fun_free_env(&cmd->env);
+		// fun_free_env(&cmd->env);
 		execve(cmd->cmd_path, cmd->cmd, tab);
 		perror("execve");
 	}
+}
+
+
+void cmd_cd(t_cmd *cmd)
+{
+	char *ss;
+	char *str;
+	char *str3;
+	char cwd[1024];
+	t_env *tmp;
+	static int flg;
+	
+
+	tmp = cmd->env;
+	ss = NULL;
+	str= NULL;
+	while(tmp)
+	{
+		if (ft_strnstr(tmp->env, "PWD", 4))
+		{
+			ss = tmp->env + 4;
+		}
+		if (ft_strnstr(tmp->env, "HOME", 5))
+		{
+			str3 = tmp->env + 5;
+		}
+		tmp = tmp->next;
+	}
+	if (!ss)
+	{
+		printf("variable PWD not fond !\n");
+		return ;
+	}
+	if (cmd->cmd[1] == NULL || cmd->cmd[1][0] == '\0')
+		chdir(str3);
+	else 
+		chdir(cmd->cmd[1]);
+	if (!getcwd(cwd, sizeof(cwd)))
+	{
+		printf("cd: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory\n");
+		if (!flg)
+		{
+			flg++;
+			printf("new pwd%s\n", ss);
+			str =ft_strjoin_no_free("OLDPWD=", ss + 4);
+		}
+		ss = ft_strjoin_no_free("PWD=", ss);
+		ss = ft_strjoin_no_free(ss, "/");
+		ss = ft_strjoin_no_free(ss, cmd->cmd[1]);
+		// printf("%s\n", ss);
+	}
+	else
+	{
+		// printf("hhh\n");
+		if (!flg && ss[ft_strlen(ss) - 1] != '.')
+			str = ft_strjoin_no_free("OLDPWD=", ft_strdup(ss));
+		// printf("%s\n",str);
+		ss = ft_strjoin_no_free("PWD=", getcwd(cwd, sizeof(cwd)));
+		flg = 0;
+		// printf("%s\n",ss);
+	}
+	tmp = cmd->env;
+	while(tmp)
+	{
+		if (ft_strnstr(tmp->env, "PWD", 3))
+		{
+			free(tmp->env);
+			tmp->env = ss;
+		}
+		if (ft_strnstr(tmp->env, "OLDPWD=", 8) && !flg && str != NULL)
+		{
+			free(tmp->env);
+			tmp->env = str;
+		}
+		tmp = tmp->next;
+	}
+	
 }
 
 // !check_export(cmd->env , cmd))
@@ -508,7 +574,6 @@ int is_not_fork(t_cmd *cmd)
 	
 	if (cmd->cmd && ft_strnstr(cmd->cmd[0], "export", 7))
 	{
-		// printf("fff\n");
 		if (!cmd->cmd[1])
 			return (0);
 		if (cmd->cmd[1] && cmd->cmd[1][0] == '\0')
@@ -520,12 +585,15 @@ int is_not_fork(t_cmd *cmd)
 		{
 			if (check_export(cmd->env , cmd))
 				return (0);
-			add_env(cmd->env , cmd);
 			return (1);
 		}
 	}
-	else if (cmd->cmd && ft_strnstr (cmd->cmd[0], "unset", 7) && cmd->cmd[1] != NULL)
-		return (1);
+	else if(cmd->cmd && cmd->cmd[0] && ft_strnstr (cmd->cmd[0], "cd", 2))
+		return(1);
+	// else if (cmd->cmd && ft_strnstr (cmd->cmd[0], "unset", 7) && cmd->cmd[1] == NULL)
+	// 	return (1);
+	// else if(ft_strnstr (cmd->cmd[0], "unset", 2) && cmd->cmd[1] != NULL)
+	// 	cmd_unset(cmd);
 	return (0);
 }
 
@@ -637,47 +705,6 @@ char	**ft_all_paths(t_env *envp)
 		envp = envp->next;
 	}
 	return (NULL);
-}
-
-void cmd_cd(t_cmd *cmd)
-{
-	char *ss;
-	char *str;
-	char cwd[1024];
-
-	ss = NULL;
-	while(cmd->env)
-	{
-		if (ft_strnstr(cmd->env->env, "PWD", 4))
-		{
-			// printf(">>>>%s\n",cmd->env->env);
-			ss = cmd->env->env + 4;
-			break;
-		}
-		cmd->env = cmd->env->next;
-	}
-	if (!ss)
-	{
-		printf("no pwd\n");
-		return ;
-	}
-	ss = ft_strjoin_no_free(ss ,"/");
-	str = ss;
-	ss = ft_strjoin_no_free(ss, cmd->cmd[1]);
-	free(str);
-	printf("ss == %s\n", ss);
-	if (!chdir(ss))
-	{
-		getcwd(cwd, sizeof(cwd));
-		// printf("cwd>>>>%s\n",cwd);
-		free(cmd->env->env);
-		cmd->env->env = ft_strjoin_no_free("PWD=",cwd);
-		// free(ss);
-		// exit(0);
-	}
-	else
-		perror("getcwd");
-		// printf("saf\n");
 }
 
 void	exection(t_cmd *cmd)

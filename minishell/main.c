@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 21:27:02 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/05/09 22:44:16 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/05/10 02:42:19 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,7 +132,6 @@ int	main(int ac, char **av, char **env)
 	(void )ac;
 	(void )av[0];
 	envs = creat_env_list(env);
-	envs->export = creat_export(envs);
 	signal(SIGINT, signal_handler);
 	signal(SIGQUIT, SIG_IGN);
 	str = readline(
@@ -153,29 +152,6 @@ int	main(int ac, char **av, char **env)
 				"\033[1;32m➜  \033[0m\033[1;36mMinishell\033[0m\033[0;35m$\033[0m ");
 	}
 	fun_free_env(&envs);
-	// t_export *tmpp;
-	
-	// while (envs->export)
-	// {
-	// 	// tmpp = envs->export;
-	// 	printf("%s\n", envs->export->export);
-	// 	envs->export = envs->export->next;
-	// 	// free(tmpp->export);
-	// 	// free(tmpp);
-	// 	/* code */
-	// }
-	// while (envs)
-	// {
-	// 	printf("%s\n", envs->env);
-	// 	envs = envs->next;
-	// }
-	
-	
-	// while (1)
-	// {	
-	// 	/* code */
-	// }
-	
 }
 
 // < j| ls seg fault
