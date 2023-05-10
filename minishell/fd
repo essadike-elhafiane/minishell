@@ -1,0 +1,6 @@
+Filesystem   512-blocks      Used  Available Capacity iused               ifree %iused  Mounted on
+/dev/disk2s1 2007188504 801952664 1191163944    41% 1940376 9223372036852835431    0%   /
+devfs               405       405          0   100%     701                   0  100%   /dev
+/dev/disk2s4 2007188504   4194352 1191163944     1%       1 9223372036854775806    0%   /private/var/vm
+map auto_nfs          0         0          0   100%       0                   0  100%   /sgoinfre
+/dev/disk3     10485760   7363016    3122744    71%   61813          4294905466    0%   /Users/mserrouk

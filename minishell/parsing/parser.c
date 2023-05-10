@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mserrouk <mserrouk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 18:06:57 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/05/09 23:19:23 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/05/10 19:57:20 by mserrouk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,8 +143,9 @@ void	check_expand(t_stk *y, t_shell *tmp, t_env *env)
 				y->i = 0;
 			y->front = ft_substr(tmp->s, 0, y->b -1);
 			free(tmp->s);
-			if (y->front)
-				tmp->s = ft_strjoin(y->front, y->ss);
+			tmp->s = ft_strjoin(y->front, y->ss);
+			if (y->front[0] == '\0')
+				free(y->front);
 			tmp->s = ft_strjoin(tmp->s, y->back);
 			flg = 1;
 		}

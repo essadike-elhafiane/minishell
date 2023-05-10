@@ -1,5 +1,5 @@
 NAME = minishell
-CC = cc -I/goinfre/eelhafia/.brew/opt/readline/include -g
+CC = cc -I/goinfre/mserrouk/.brew/opt/readline/include -g
 RM = rm -f
 
 SRC = main.c parsing/lexer.c parsing/parser.c parsing/creat_files_cmd.c libft/ft_strlen.c libft/ft_substr.c \
@@ -26,7 +26,7 @@ OBJ = $(SRC:.c=.o)
 all:$(NAME)
 
 $(NAME): $(OBJ)
-	$(CC) $(OBJ) -lreadline -L/goinfre/eelhafia/.brew/opt/readline/lib -lhistory -o $(NAME)
+	$(CC) $(OBJ) -lreadline -L/goinfre/mserrouk/.brew/opt/readline/lib -lhistory -o $(NAME)
 
 %o: %c minishell.h
 	$(CC) -c $< -o $@

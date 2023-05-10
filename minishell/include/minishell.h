@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mserrouk <mserrouk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 16:38:31 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/05/10 02:49:46 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/05/10 19:48:55 by mserrouk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ typedef struct s_cmd
 	char			**cmd;
 	char			**paths;
 	char			*cmd_path;
-	t_env			*env;
+	t_env			**env;
 	int				fd[2];
 	pid_t			pid;
 	int				fd_out;
@@ -56,7 +56,7 @@ typedef struct s_cmd
 typedef struct s_shell
 {
 	char			*s;
-	t_env			*env;
+	t_env			**env;
 	int				type;
 	int				var_re;
 	int				len_spl;
@@ -76,7 +76,7 @@ typedef struct s_stk
 	int		b;
 } t_stk;
 
-void		lexer(char *str, t_env *envs);
+void		lexer(char *str, t_env **envs);
 t_shell		*init_data(char *ss, int type1);
 void		fun_free(t_shell **a);
 int			parser(t_shell *data, t_env *env);
@@ -101,5 +101,6 @@ void		exection(t_cmd *cmd);
 void		cmd_export(t_env *envs, char *cmd);
 void		add_env (t_env*envs, t_cmd *cmd);
 int			ft_strcchr(char *str, char c);
+void	cmd_unset(t_env **envs, t_cmd *cmd);
 // void    exection(t_cmd *cmd, t_env *envs);
 #endif

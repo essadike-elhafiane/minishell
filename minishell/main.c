@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mserrouk <mserrouk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 21:27:02 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/05/10 02:42:19 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/05/10 19:39:40 by mserrouk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ void signal_handler(int signal) {
     }
 }
 
-void	loop_str(char *str, int error, t_env *envs)
+void	loop_str(char *str, int error, t_env **envs)
 {
 	int	flg_d;
 	int	flg_s;
@@ -147,7 +147,7 @@ int	main(int ac, char **av, char **env)
 			else
 				break ;
 		}
-		loop_str(str, error, envs);
+		loop_str(str, error, &envs);
 		str = readline(
 				"\033[1;32m➜  \033[0m\033[1;36mMinishell\033[0m\033[0;35m$\033[0m ");
 	}

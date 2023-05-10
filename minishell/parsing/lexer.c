@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mserrouk <mserrouk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 18:07:00 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/05/10 02:50:20 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/05/10 19:49:48 by mserrouk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,7 +136,7 @@ t_env	*creat_env_list(char **env)
 	return (env_l);
 }
 
-void	lexer(char *str, t_env *envs)
+void	lexer(char *str, t_env **envs)
 {
 	t_stk	y;
 
@@ -173,7 +173,7 @@ void	lexer(char *str, t_env *envs)
 	// 	y.tmp = y.tmp->next;
 	// }
 	// // exit(1);
-    if (parser(y.data_cmd, y.data_cmd->env))
+    if (parser(y.data_cmd, *(y.data_cmd->env)))
 		return ;
 	t_cmd *cmd;
 	y.tmp = y.data_cmd;
@@ -200,6 +200,12 @@ void	lexer(char *str, t_env *envs)
 	// 		}
 	// 	}
 	// 	cmdd = cmdd->next;
+	// }
+	// if (word_stop(cmd->cmd[0], "unset") && cmd->cmd[1] != NULL)
+	// {
+	// 	cmd_unset(envs, cmd);
+	// 	printf("asfafa\n");
+	// 	// return(1);
 	// }
 	exection(cmd);
 	

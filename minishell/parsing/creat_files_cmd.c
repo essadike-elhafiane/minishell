@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   creat_files_cmd.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mserrouk <mserrouk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/16 20:08:08 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/05/07 22:03:44 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/05/10 20:25:58 by mserrouk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,6 @@ t_cmd    *creat_cmd(t_shell *data)
 				tmp_cmd->fd_input = open(tmp->s, O_RDONLY);
 				if (tmp_cmd->fd_input < 0)
 				{
-					printf("Minishell$: %s: No such file or directory\n", tmp->s);
 					while (tmp && tmp->type != PIPE && tmp->type != HER)
 						tmp = tmp->next;
 					if ((tmp && tmp->type != HER) || !tmp)
@@ -172,7 +171,7 @@ t_cmd    *creat_cmd(t_shell *data)
 									while((ft_isalpha(y.ss[y.i]) || ft_isdigit(y.ss[y.i])))
 										y.i++;
 									ex = ft_substr(y.ss, y.b, y.i - y.b);
-									ex = expand(ex, data->env);
+									ex = expand(ex, *data->env);
 									y.back = ft_strdup(y.ss + y.i);
 									y.front = ft_substr(y.ss, 0, y.b -1);
 									free(y.ss);

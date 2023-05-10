@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exection.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mserrouk <mserrouk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 23:03:21 by mserrouk          #+#    #+#             */
-/*   Updated: 2023/05/10 02:46:22 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/05/10 20:25:36 by mserrouk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,14 +129,14 @@ void	cmd_echo(t_cmd *cmd)
 
 void cmd_pwd(t_cmd *cmd)
 {
-	while(cmd->env)
+	while(*cmd->env)
 	{
-		if(ft_strnstr(cmd->env->env, "PWD", 3))
+		if(ft_strnstr((*cmd->env)->env, "PWD", 3))
 		{
-			printf("%s\n",cmd->env->env + 4);
+			printf("%s\n",(*cmd->env)->env + 4);
 			break;
 		}
-		cmd->env = cmd->env->next;
+		*cmd->env = (*cmd->env)->next;
 	}
 	exit(0);
 }
@@ -197,11 +197,43 @@ void cmd_pwd(t_cmd *cmd)
 // 	// export_sort(export);
 // 	return (export);
 // }
-// void	cmd_unset(t_env **envs, t_cmd *cmd)
-// {
-	
-// }
 
+void	cmd_unset(t_env **envs, t_cmd *cmd)
+{
+	t_env *tmp;
+	t_env *tmp1;
+	int		i;
+	int len;
+
+	i = 1;
+	len = 0;
+	while (cmd && cmd->cmd && cmd->cmd[i])
+	{
+		tmp = *envs;
+		tmp1 = *envs;
+		len = ft_strlen(cmd->cmd[i]);
+		if (tmp && ft_strnstr(tmp->env, cmd->cmd[i], len) && (tmp->env[len] == '=' || tmp->env[len] == '\0'))
+		{
+			*envs = (*envs)->next;
+			free(tmp->env);
+			free(tmp);
+			tmp = NULL;
+		}
+		while (tmp)
+		{
+			tmp1 = tmp;
+			tmp = tmp->next;
+			if (tmp && ft_strnstr(tmp->env, cmd->cmd[i], len) && (tmp->env[len] == '=' || tmp->env[len] == '\0'))
+			{
+				tmp1->next = tmp->next;
+				free(tmp->env);
+				free(tmp);
+				break;
+			}
+		}
+		i++;
+	}
+}
 
 int ft_strcchr(char *str, char c)
 {
@@ -338,7 +370,7 @@ int  check_export(t_env *envs, t_cmd *cmd)
 		}
 		free(s);
 		if (!flg && b > -1)
-			cmd_export(cmd->env, cmd->cmd[a]);
+			cmd_export(*cmd->env, cmd->cmd[a]);
 		a++;
 	}
 	return (0); 
@@ -478,13 +510,13 @@ void	ft_command(t_cmd *cmd)
 	else if(ft_strnstr (cmd->cmd[0], "pwd", 4))
 		cmd_pwd(cmd);
 	else if(ft_strnstr (cmd->cmd[0], "export", 7))
-		cmd_export_fork(cmd->env, cmd);
+		cmd_export_fork(*cmd->env, cmd);
 	else if(ft_strnstr (cmd->cmd[0], "env", 7))
-		cmd_env(cmd->env);
+		cmd_env(*cmd->env);
 	else
 	{
 		ft_command_path(cmd ,cmd->paths);
-		tab = envs_tab(cmd->env);
+		tab = envs_tab(*cmd->env);
 		// fun_free_env(&cmd->env);
 		execve(cmd->cmd_path, cmd->cmd, tab);
 		perror("execve");
@@ -502,16 +534,16 @@ void cmd_cd(t_cmd *cmd)
 	static int flg;
 	
 
-	tmp = cmd->env;
+	tmp = *cmd->env;
 	ss = NULL;
-	str= NULL;
+	str3= NULL;
 	while(tmp)
 	{
-		if (ft_strnstr(tmp->env, "PWD", 4))
+		if (ft_strnstr(tmp->env, "PWD", 3)  && (tmp->env[3] == '=' || tmp->env[3] == '\0'))
 		{
 			ss = tmp->env + 4;
 		}
-		if (ft_strnstr(tmp->env, "HOME", 5))
+		if (ft_strnstr(tmp->env, "HOME", 4) && (tmp->env[4] == '=' || tmp->env[4] == '\0'))
 		{
 			str3 = tmp->env + 5;
 		}
@@ -523,34 +555,36 @@ void cmd_cd(t_cmd *cmd)
 		return ;
 	}
 	if (cmd->cmd[1] == NULL || cmd->cmd[1][0] == '\0')
+	{
+		printf("%s\n", str3);
 		chdir(str3);
+	}
 	else 
 		chdir(cmd->cmd[1]);
 	if (!getcwd(cwd, sizeof(cwd)))
 	{
-		printf("cd: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory\n");
+		printf("cd: error retrieving current directory: getcwd: \
+			cannot access parent directories: No such file or directory\n");
 		if (!flg)
 		{
 			flg++;
-			printf("new pwd%s\n", ss);
-			str =ft_strjoin_no_free("OLDPWD=", ss + 4);
+			str =ft_strjoin_exe(ft_strdup("OLDPWD="), ss + 4);
 		}
-		ss = ft_strjoin_no_free("PWD=", ss);
-		ss = ft_strjoin_no_free(ss, "/");
-		ss = ft_strjoin_no_free(ss, cmd->cmd[1]);
-		// printf("%s\n", ss);
+		ss = ft_strjoin(ft_strdup("PWD="), ft_strdup(ss));
+		ss = ft_strjoin(ss, ft_strdup("/"));
+		ss = ft_strjoin(ss, ft_strdup(cmd->cmd[1]));
 	}
 	else
 	{
 		// printf("hhh\n");
 		if (!flg && ss[ft_strlen(ss) - 1] != '.')
-			str = ft_strjoin_no_free("OLDPWD=", ft_strdup(ss));
+			str = ft_strjoin(ft_strdup("OLDPWD="), ft_strdup(ss));
 		// printf("%s\n",str);
 		ss = ft_strjoin_no_free("PWD=", getcwd(cwd, sizeof(cwd)));
 		flg = 0;
 		// printf("%s\n",ss);
 	}
-	tmp = cmd->env;
+	tmp = *cmd->env;
 	while(tmp)
 	{
 		if (ft_strnstr(tmp->env, "PWD", 3))
@@ -583,17 +617,21 @@ int is_not_fork(t_cmd *cmd)
 		}
 		else
 		{
-			if (check_export(cmd->env , cmd))
+			if (check_export(*cmd->env , cmd))
 				return (0);
 			return (1);
 		}
 	}
 	else if(cmd->cmd && cmd->cmd[0] && ft_strnstr (cmd->cmd[0], "cd", 2))
 		return(1);
-	// else if (cmd->cmd && ft_strnstr (cmd->cmd[0], "unset", 7) && cmd->cmd[1] == NULL)
-	// 	return (1);
-	// else if(ft_strnstr (cmd->cmd[0], "unset", 2) && cmd->cmd[1] != NULL)
-	// 	cmd_unset(cmd);
+	else if (cmd->cmd && word_stop(cmd->cmd[0], "unset") && cmd->cmd[1] == NULL)
+		return (1);
+	else if (cmd->cmd && word_stop(cmd->cmd[0], "unset") && cmd->cmd[1] != NULL)
+	{
+		cmd_unset(cmd->env, cmd);
+		printf("asfafa\n");
+		return(1);
+	}
 	return (0);
 }
 
@@ -603,6 +641,7 @@ void ft_pipe(t_cmd *cmd)
 	t_stk	y;
 	int input;
 	int out;
+	int j = 0;
 	t_cmd *tmp2;
 	tmp2 = NULL;
 	y.i = 0;
@@ -623,63 +662,30 @@ void ft_pipe(t_cmd *cmd)
 			// printf("1  %d\n", y.i);
 			pipe(tmp->fd);
 			// printf("3333333\n");
+			write(2,"hh\n",3);
 		}
 		// ft_putstr_fd("error\n", 2);
 		if (is_not_fork(tmp))
 		{
-			// ft_putstr_fd("error12\n", 2);
-			// printf("2  %d\n", y.i);
-			creat_files(tmp ,tmp2, y.i);
-			if(cmd->fd_input == -1)
-				return;
-			if(cmd->fd_input != 0)
-			{
-				// input = dup(STDIN_FILENO);
-				// dup2(cmd->fd_input , STDIN_FILENO);
-				close(cmd->fd_input);
-			}
-			if (cmd->fd_out != 1)
-			{	
-				out = dup(STDOUT_FILENO);	
-				dup2(cmd->fd_out , STDOUT_FILENO);
-			}
-			if (cmd->next)
-				close(cmd->fd[1]);
-			// if (cmd->fd_input != 0)
-			// 	close(cmd->fd_input);
-			if (cmd->fd_out != 1)
-				close(cmd->fd_out);
-			// if (ft_strnstr (cmd->cmd[0], "export", 7))
-				
-			// else if (ft_strnstr (cmd->cmd[0], "unset", 6))
-			// 	cmd_unset(cmd->env, cmd);
-			// if(cmd->fd_input != 0)
-			// {	
-			// 	dup2(input , STDIN_FILENO);
-			// 	close(input);	
-			// }
-			if(cmd->fd_out != 1)
-			{	
-				dup2(out , STDOUT_FILENO);	
-				close(out);
-			}	
+			
+				j  = 0;
 		}
 		else
 		{
-			// ft_putstr_fd("error2\n", 2);
-			// printf("3333333\n");
 			tmp->pid = fork();
 			if (tmp->pid == 0)
 			{
 				// printf("3  %d\n", y.i);
 				if (tmp->next)
 					close(tmp->fd[0]);
-				if(cmd->fd_input == -1)
+				if(tmp->fd_input == -1)
+				{
+					printf("Minishell$: No such file or directory\n");
 					exit(1);
+				}
 				creat_files(tmp ,tmp2, y.i);
 				ft_command(tmp);
 			}
-			// printf("4  %d\n", y.i);
 			if (tmp->next)
 				close(tmp->fd[1]);
 			if (tmp2)
@@ -712,7 +718,7 @@ void	exection(t_cmd *cmd)
 	t_cmd	*tmp;
 	int		i;
 
-	cmd->paths = get_path(cmd->env);
+	cmd->paths = get_path(*cmd->env);
 	tmp = cmd;
 
 	while (tmp)
