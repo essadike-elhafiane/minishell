@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   creat_files_cmd.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mserrouk <mserrouk@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/16 20:08:08 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/05/10 20:25:58 by mserrouk         ###   ########.fr       */
+/*   Updated: 2023/05/11 00:31:56 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,10 +71,13 @@ t_cmd    *creat_cmd(t_shell *data)
 				// printf("%s\n", tmp->s);
 				if (tmp && tmp->var_re && tmp->len_spl > 1 && tmp->type != DOUBLE)
 				{
-					while (tmp && tmp->var_re)
-						tmp = tmp->next;
+					// while (tmp && tmp->var_re)
+					// 	tmp = tmp->next;
 					ft_putstr_fd("minishell: ambiguous redirect\n", 2);
-					break;
+					while (tmp && tmp->type != PIPE && tmp->type != HER)
+						tmp = tmp->next;
+					if ((tmp && tmp->type != HER) || !tmp)
+						break;
 				}
 				tmp_cmd->fd_input = open(tmp->s, O_RDONLY);
 				if (tmp_cmd->fd_input < 0)
@@ -187,12 +190,12 @@ t_cmd    *creat_cmd(t_shell *data)
 						free(y.ss);
 						y.ss = readline("> ");
 					}
-					close(fd[1]); // close write end of pipe
+					close(fd[1]);
 					exit(0);
 				}
 				else
 				{
-					close(fd[1]); // close write end of pipe
+					close(fd[1]);
 					wait(0);
 					tmp_cmd->fd_input = fd[0];
 					tmp = tmp->next;

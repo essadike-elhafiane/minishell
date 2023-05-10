@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mserrouk <mserrouk@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 18:06:57 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/05/10 19:57:20 by mserrouk         ###   ########.fr       */
+/*   Updated: 2023/05/10 22:30:27 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,7 +129,7 @@ void	check_expand(t_stk *y, t_shell *tmp, t_env *env)
 		{
 			y->i++;
 			y->b = y->i;
-			while (ft_isalpha(tmp->s[y->i]) || ft_isdigit(tmp->s[y->i]) || tmp->s[y->i] == '_')
+			while (ft_isalpha(tmp->s[y->i]) || ft_isdigit(tmp->s[y->i]) || tmp->s[y->i] == '_' || tmp->s[y->i] == '?')
 				y->i++;
 			y->ss = ft_substr(tmp->s, y->b, y->i - y->b);
 			y->ss = expand(y->ss, env);

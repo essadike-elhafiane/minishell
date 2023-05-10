@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exection.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mserrouk <mserrouk@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 23:03:21 by mserrouk          #+#    #+#             */
-/*   Updated: 2023/05/10 20:25:36 by mserrouk         ###   ########.fr       */
+/*   Updated: 2023/05/11 00:18:51 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,8 @@ void	ft_command_path(t_cmd *cmd , char **path)
 		}
 		j++;
 	}
-	error_message("➜ Minishell$: command not found\n");
+	ft_putstr_fd("➜ Minishell$: command not found\n", 2);
+	exit(127);
 }
 
 
@@ -129,15 +130,22 @@ void	cmd_echo(t_cmd *cmd)
 
 void cmd_pwd(t_cmd *cmd)
 {
+	int i;
+	char cd[1024];
+	i = 0;
+
 	while(*cmd->env)
 	{
 		if(ft_strnstr((*cmd->env)->env, "PWD", 3))
 		{
+			i = 1;
 			printf("%s\n",(*cmd->env)->env + 4);
 			break;
 		}
 		*cmd->env = (*cmd->env)->next;
 	}
+	if (i == 0)
+		printf("%s\n",getcwd(cd , 1024));
 	exit(0);
 }
 
@@ -520,6 +528,7 @@ void	ft_command(t_cmd *cmd)
 		// fun_free_env(&cmd->env);
 		execve(cmd->cmd_path, cmd->cmd, tab);
 		perror("execve");
+		exit(126);
 	}
 }
 
@@ -533,7 +542,7 @@ void cmd_cd(t_cmd *cmd)
 	t_env *tmp;
 	static int flg;
 	
-
+	int g = 0;
 	tmp = *cmd->env;
 	ss = NULL;
 	str3= NULL;
@@ -551,8 +560,9 @@ void cmd_cd(t_cmd *cmd)
 	}
 	if (!ss)
 	{
-		printf("variable PWD not fond !\n");
-		return ;
+		// printf("variable PWD not fond !\n");
+		// return ;
+		ss = getcwd(cwd, 1024);
 	}
 	if (cmd->cmd[1] == NULL || cmd->cmd[1][0] == '\0')
 	{
@@ -560,8 +570,12 @@ void cmd_cd(t_cmd *cmd)
 		chdir(str3);
 	}
 	else 
+	{
+		g = 1;
+		str = ft_strjoin(ft_strdup("OLDPWD="), ft_strdup(ss));
 		chdir(cmd->cmd[1]);
-	if (!getcwd(cwd, sizeof(cwd)))
+	}
+	if (!getcwd(cwd, sizeof(cwd)) && !g)
 	{
 		printf("cd: error retrieving current directory: getcwd: \
 			cannot access parent directories: No such file or directory\n");
@@ -574,7 +588,7 @@ void cmd_cd(t_cmd *cmd)
 		ss = ft_strjoin(ss, ft_strdup("/"));
 		ss = ft_strjoin(ss, ft_strdup(cmd->cmd[1]));
 	}
-	else
+	else if(!g)
 	{
 		// printf("hhh\n");
 		if (!flg && ss[ft_strlen(ss) - 1] != '.')
@@ -643,6 +657,8 @@ void ft_pipe(t_cmd *cmd)
 	int out;
 	int j = 0;
 	t_cmd *tmp2;
+	int exs;
+	int sta;
 	tmp2 = NULL;
 	y.i = 0;
 	tmp = cmd;
@@ -662,7 +678,7 @@ void ft_pipe(t_cmd *cmd)
 			// printf("1  %d\n", y.i);
 			pipe(tmp->fd);
 			// printf("3333333\n");
-			write(2,"hh\n",3);
+
 		}
 		// ft_putstr_fd("error\n", 2);
 		if (is_not_fork(tmp))
@@ -695,9 +711,17 @@ void ft_pipe(t_cmd *cmd)
 		tmp = tmp->next;		
 		y.i +=1;
 	}
+	exs =  tmp2->pid;
 	while (y.i > 0)
 	{
-		wait(NULL);
+		if (waitpid(-1 ,&sta, 0) == exs)
+		{
+			 if (WIFEXITED(sta)) {
+            printf("Child process terminated with exit status: %d\n", WEXITSTATUS(sta));
+			} else if (WIFSIGNALED(sta)) {
+				printf("Child process terminated by signal: %d\n", WTERMSIG(sta));
+			}
+		}
 		y.i -= 1;
 	}
 }

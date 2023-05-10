@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mserrouk <mserrouk@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 21:27:02 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/05/10 19:39:40 by mserrouk         ###   ########.fr       */
+/*   Updated: 2023/05/11 00:33:52 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ int	check_error(char *str)
 }
 
 void signal_handler(int signal) {
-   if (signal == SIGINT) 
+   if (signal == SIGINT)
 	{
 		if (waitpid(-1, NULL, WNOHANG))
 		{
