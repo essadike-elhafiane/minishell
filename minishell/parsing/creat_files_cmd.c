@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/16 20:08:08 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/05/11 14:07:33 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/05/11 18:59:52 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ int	word_stop(char *word, char *str)
 	int	i;
 
 	i = 0;
+	if (!str)
+		return (0);
 	while(word[i] == str[i])
 	{
 		if(word[i] == '\0' && str[i] == '\0')
@@ -31,6 +33,16 @@ int	check_is_token(int type)
 	if (type == APPEND || type == HER || type == OUT || type == IN || type == PIPE)
 		return (1);
 	return (0);
+}
+void	signal_her(int signal)
+{
+	if (signal == SIGINT)
+	{
+		if (waitpid(-1, NULL, WNOHANG))
+			exit(3);
+    }
+	if (signal == SIGTERM)
+		return ;
 }
 
 t_cmd    *creat_cmd(t_shell *data)
@@ -127,6 +139,10 @@ t_cmd    *creat_cmd(t_shell *data)
 			
 			if (tmp && tmp->type == HER)
 			{
+				signal(SIGINT, signal_her);
+				signal(SIGQUIT, SIG_IGN);
+				signal(SIGTERM, SIG_IGN);
+				y.ss = NULL;
 				tmp = tmp->next;
 				if (tmp && tmp->type == WSPACE)
 					tmp = tmp->next;
@@ -152,12 +168,12 @@ t_cmd    *creat_cmd(t_shell *data)
 				} 
 				else if (y.pid == 0)
 				{
-					close(fd[0]); // close read end of pipe
-					// Send input to write end of pipe
-					y.ss = readline("> ");
-					while (y.ss && !word_stop(tmp->s, y.ss))
+					close(fd[0]); 
+					while (1 && !word_stop(tmp->s, y.ss))
 					{
-						// printf("%c\n", tmp->type);
+						y.ss = readline("> ");
+						if (!y.ss)
+							continue;
 						if (tmp->type != SINGLE && tmp->type != DOUBLE)
 						{
 							char *ex;
@@ -188,15 +204,19 @@ t_cmd    *creat_cmd(t_shell *data)
 						write(fd[1], y.ss, ft_strlen(y.ss));
 						write(fd[1], "\n", 1);
 						free(y.ss);
-						y.ss = readline("> ");
+						// y.ss = readline("> ");
 					}
 					close(fd[1]);
 					exit(0);
 				}
 				else
 				{
+					int ha;
 					close(fd[1]);
-					wait(0);
+					wait(&ha);
+					printf("%d\n", WEXITSTATUS(ha));
+					if (WEXITSTATUS(ha) == 3)
+						return (NULL);
 					tmp_cmd->fd_input = fd[0];
 					tmp = tmp->next;
 				}
@@ -268,5 +288,7 @@ t_cmd    *creat_cmd(t_shell *data)
 			tmp_cmd->next = NULL;
 		}
 	}
+	signal(SIGINT, signal_handler);
+	signal(SIGQUIT, SIG_IGN);
 	return (cmds);
 }

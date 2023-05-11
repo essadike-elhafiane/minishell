@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 18:06:57 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/05/11 17:51:12 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/05/11 18:06:30 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -200,12 +200,6 @@ void	check_expand(t_stk *y, t_shell *tmp, t_env *env)
 		tmp1->len_spl = i;
 		tmp->next = tmp2;
 	}
-	while (tmp)
-	{
-		printf("%s\n", tmp->s);
-		tmp = tmp->next;
-	}
-	
 }
 
 	// if (flg && tmp->s && ft_strchr(tmp->s, ' '))

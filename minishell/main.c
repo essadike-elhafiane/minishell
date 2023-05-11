@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 21:27:02 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/05/11 16:58:19 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/05/11 18:55:32 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,10 @@ int	check_error(char *str)
 	i = 0;
 	if (str[i] == '\0')
 		return (0);
+	while (str[i] == ' ')
+		i++;
+	if (str[i] == '\0')
+		return (1);
 	while (str[i] == ' ' || str[i] == '\t'
 		|| str[i] == '>' || str[i] == '<' || str[i] == '|')
 		i++;
@@ -78,7 +82,8 @@ int	check_error(char *str)
 	return (0);
 }
 
-void signal_handler(int signal) {
+void signal_handler(int signal) 
+{
    if (signal == SIGINT)
 	{
 		if (waitpid(-1, NULL, WNOHANG))
@@ -89,6 +94,8 @@ void signal_handler(int signal) {
 			rl_redisplay();
 		}
     }
+	if (signal == SIGTERM)
+		exit(0);
 }
 
 void	loop_str(char *str, int error, t_env **envs)
