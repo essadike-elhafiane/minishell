@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 21:27:02 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/05/11 00:33:52 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/05/11 16:58:19 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,11 +105,10 @@ void	loop_str(char *str, int error, t_env **envs)
 		else
 			break ;
 	}
-	if (ft_strnstr(str, "clear", 6))
-	{
-		printf("\033[2J");
-		printf("\033[1;1H");
-	}
+	if (word_stop(str, "clear"))
+		printf("\033[2J\033[1;1H");
+	if (word_stop(str, "exit"))
+		exit(0);
 	else if (str && !error)
 	{
 		if (str[0] != '\0')
@@ -118,6 +117,7 @@ void	loop_str(char *str, int error, t_env **envs)
 	}
 	free(str);
 }
+
 void h(void)
 {
 	system("leaks minishell");
@@ -170,3 +170,5 @@ int	main(int ac, char **av, char **env)
 // {
 	
 // }
+// multi space not error
+// when creat a $? in first time and when run minishell inside of minishell the program the $? and creat another $? so thats given too $? in env

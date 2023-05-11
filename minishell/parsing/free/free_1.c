@@ -6,11 +6,21 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/29 20:18:01 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/04/29 20:19:26 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/05/11 17:51:41 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
+
+void	free_double(char **spl)
+{
+	int l;
+	
+	l = 0;
+	while (spl[l])
+		free(spl[l++]);
+	free(spl);
+}
 
 void	clean_cmd_help(t_cmd *cmd, t_stk	*y, char **spl, int flg)
 {

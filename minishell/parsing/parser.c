@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 18:06:57 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/05/10 22:30:27 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/05/11 17:51:12 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,8 +122,8 @@ void	check_expand(t_stk *y, t_shell *tmp, t_env *env)
 		return ;
 	while (tmp && tmp->s[y->i])
 	{
-		if (tmp->s[y->i] == '$' && (tmp->s[y->i + 1] == '$'))
-			y->i++;
+		while (tmp->s[y->i] == '$' && tmp->s[y->i + 1] == '$')
+			y->i += 2;
 		if (tmp->s[y->i] == '$' && tmp->s[y->i +1] != '\0'
 			&& (tmp->s[y->i + 1] != '$' && tmp->s[y->i + 1] != ' '))
 		{
@@ -144,8 +144,8 @@ void	check_expand(t_stk *y, t_shell *tmp, t_env *env)
 			y->front = ft_substr(tmp->s, 0, y->b -1);
 			free(tmp->s);
 			tmp->s = ft_strjoin(y->front, y->ss);
-			if (y->front[0] == '\0')
-				free(y->front);
+			if (tmp->s[y->i - 1] != '$')
+				y->i--;
 			tmp->s = ft_strjoin(tmp->s, y->back);
 			flg = 1;
 		}
@@ -166,7 +166,8 @@ void	check_expand(t_stk *y, t_shell *tmp, t_env *env)
 		tmp->var_re = 1;
 		tmp2 = tmp->next;
 		spl = ft_split(tmp->s, ' ');
-		tmp->s = spl[0];
+		free(tmp->s);
+		tmp->s = ft_strdup(spl[0]);
 		if (spl[i])
 		{
 			tmp->next = malloc(sizeof(t_shell));
@@ -180,7 +181,7 @@ void	check_expand(t_stk *y, t_shell *tmp, t_env *env)
 		{
 			tmp->next = malloc(sizeof(t_shell));
 			tmp = tmp->next;
-			tmp->s = spl[i];
+			tmp->s = ft_strdup(spl[0]);
 			tmp->type = WORD;
 			tmp->var_re = 1;
 			tmp->next = NULL;
@@ -195,9 +196,16 @@ void	check_expand(t_stk *y, t_shell *tmp, t_env *env)
 				tmp->next = NULL;
 			}
 		}
+		free_double(spl);
 		tmp1->len_spl = i;
 		tmp->next = tmp2;
 	}
+	while (tmp)
+	{
+		printf("%s\n", tmp->s);
+		tmp = tmp->next;
+	}
+	
 }
 
 	// if (flg && tmp->s && ft_strchr(tmp->s, ' '))
@@ -247,7 +255,6 @@ int    parser(t_shell *data, t_env *env)
 	tmp = data;
 	while(tmp)
 	{
-		
 		y.i = 0;
 		if (tmp->type == HER)
 		{
@@ -256,7 +263,6 @@ int    parser(t_shell *data, t_env *env)
 				tmp = tmp->next;
 			while (tmp && !check_is_token(tmp->type))
 				tmp = tmp->next;
-			// printf("%s\n", tmp->s);
 		}
 		if (tmp && tmp->s)
 			check_expand(&y, tmp, env);

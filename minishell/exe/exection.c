@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 23:03:21 by mserrouk          #+#    #+#             */
-/*   Updated: 2023/05/11 00:18:51 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/05/11 16:44:16 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -220,7 +220,7 @@ void	cmd_unset(t_env **envs, t_cmd *cmd)
 		tmp = *envs;
 		tmp1 = *envs;
 		len = ft_strlen(cmd->cmd[i]);
-		if (tmp && ft_strnstr(tmp->env, cmd->cmd[i], len) && (tmp->env[len] == '=' || tmp->env[len] == '\0'))
+		if (tmp && ft_strnstr(tmp->env, cmd->cmd[i], len) && (tmp->env[len] == '=' || tmp->env[len] == '\0') && tmp->env[0] != '?')
 		{
 			*envs = (*envs)->next;
 			free(tmp->env);
@@ -231,7 +231,7 @@ void	cmd_unset(t_env **envs, t_cmd *cmd)
 		{
 			tmp1 = tmp;
 			tmp = tmp->next;
-			if (tmp && ft_strnstr(tmp->env, cmd->cmd[i], len) && (tmp->env[len] == '=' || tmp->env[len] == '\0'))
+			if (tmp && ft_strnstr(tmp->env, cmd->cmd[i], len) && (tmp->env[len] == '=' || tmp->env[len] == '\0') && tmp->env[0] != '?')
 			{
 				tmp1->next = tmp->next;
 				free(tmp->env);
@@ -406,32 +406,27 @@ void	cmd_export_fork(t_env *envs, t_cmd *cmd)
 	int flg;
 	
 	tmp = envs;
-	// printf("if\n");
-	// if(cmd->cmd[1] == NULL || cmd->cmd[2] == NULL)
-	// {
-		while(tmp)
-		{
-			i = 0;
-			flg = 0;
+	while(tmp)
+	{
+		i = -1;
+		flg = 0;
+		if (tmp->env[0] != '?')
 			write(1, "declare -x ", 11);
-			while (tmp->env[i])
-			{
-				write(1, &tmp->env[i], 1);
-				if (tmp->env[i] == '=' && !flg)
-				{
-					write(1 , "\"", 1);
-					flg++;
-				}	
-				i++;
-			}
-			if (flg)
-				write(1 , "\"\n", 2);
-			else
-				write(1 , "\n", 1);
-			// printf("%s\"\n", tmp->export);
-			tmp = tmp->next;
+		while (tmp->env[++i])
+		{
+			if (tmp->env[0] == '?')
+				break;
+			write(1, &tmp->env[i], 1);
+			if (tmp->env[i] == '=' && !flg++)
+				write(1 , "\"", 1);
 		}
-		exit(0);
+		if (flg && i != 0)
+			write(1 , "\"\n", 2);
+		else if (i != 0)
+			write(1 , "\n", 1);
+		tmp = tmp->next;
+	}
+	exit(0);
 }
 
 void	cmd_export(t_env *envs, char *cmd)
@@ -459,7 +454,7 @@ void	cmd_env(t_env *envs)
 	tmp = envs;
 	while(tmp)
 	{
-		if (ft_strchr(tmp->env, '='))
+		if (ft_strchr(tmp->env, '=') && tmp->env[0] != '?')
 			printf("%s\n", tmp->env);
 		tmp = tmp->next;
 	}

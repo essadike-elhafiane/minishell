@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 18:07:00 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/05/10 22:26:52 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/05/11 17:27:55 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,9 +119,11 @@ t_env	*init_env(char *env)
 t_env	*creat_env_list(char **env)
 {
 	int		i;
+	int		flg;
 	t_env	*env_l;
 	t_env	*tmp;
 	
+	flg = 0;
 	if (!*env)
 		return (NULL);
 	env_l = init_env(env[0]);
@@ -130,10 +132,13 @@ t_env	*creat_env_list(char **env)
 	while (env[i])
 	{
 		tmp->next = init_env(env[i]);
+		if (ft_strnstr(env[i], "?", 1))
+			flg = 1;
 		tmp = tmp->next;
 		i++;
 	}
-	tmp->next = init_env("?=0");
+	if (!flg)
+		tmp->next = init_env("?=0");
 	return (env_l);
 }
 
@@ -179,6 +184,7 @@ void	lexer(char *str, t_env **envs)
 	t_cmd *cmd;
 	y.tmp = y.data_cmd;
 	t_cmd *cmdd;
+	system("leaks minishell");
 	cmd = creat_cmd(y.data_cmd);
 	if (!cmd)
 		return ;

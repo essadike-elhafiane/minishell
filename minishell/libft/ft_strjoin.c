@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/31 20:13:57 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/04/15 01:17:19 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/05/11 16:05:44 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,10 @@ char	*ft_strjoin(char *s1, char *s2)
 	x = 0;
 	if (!s1 && !s2)
 		return (NULL);
-	if(!s1 || s1[0] == '\0')
-		return (s2);
-	if (!s2 || s1[0] == '\0')
-		return (s1);
+	if (!s2)
+		s2 = ft_strdup("");
+	if (!s1)
+		s1 = ft_strdup("");
 	str = malloc((ft_strlen(s1) + ft_strlen(s2) +1) * sizeof(char));
 	if (!str)
 		return (0);
@@ -37,7 +37,5 @@ char	*ft_strjoin(char *s1, char *s2)
 	while (s2[x])
 		str[i++] = s2[x++];
 	str[i] = '\0';
-	free(s1);
-	free(s2);
-	return (str);
+	return (free(s1), free(s2), str);
 }
