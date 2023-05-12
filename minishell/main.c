@@ -6,7 +6,7 @@
 /*   By: mserrouk <mserrouk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 21:27:02 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/05/12 21:56:39 by mserrouk         ###   ########.fr       */
+/*   Updated: 2023/05/12 23:16:48 by mserrouk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,10 +94,11 @@ void signal_handler(int signal)
 			rl_replace_line("", 0);
 			rl_on_new_line();
 			rl_redisplay();
+			status = 1;
 		}
     }
-	if (signal == SIGTERM)
-		exit(0);
+	// if (signal == SIGTERM)
+	// 	exit(0);
 }
 
 void	loop_str(char *str, int error, t_env **envs)

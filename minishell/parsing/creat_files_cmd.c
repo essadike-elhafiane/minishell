@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   creat_files_cmd.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mserrouk <mserrouk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/16 20:08:08 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/05/12 15:49:17 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/05/12 23:13:27 by mserrouk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,10 @@ void	signal_her(int signal)
 	if (signal == SIGINT)
 	{
 		if (waitpid(-1, NULL, WNOHANG))
+		{
+			
 			exit(3);
+		}
     }
 	// if (signal == SIGTERM)
 	// {
@@ -89,6 +92,7 @@ t_cmd    *creat_cmd(t_shell *data)
 					// while (tmp && tmp->var_re)
 					// 	tmp = tmp->next;
 					ft_putstr_fd("minishell: ambiguous redirect\n", 2);
+					status = 1;
 					while (tmp && tmp->type != PIPE && tmp->type != HER)
 						tmp = tmp->next;
 					if ((tmp && tmp->type != HER) || !tmp)
@@ -215,7 +219,8 @@ t_cmd    *creat_cmd(t_shell *data)
 					int ha;
 					close(fd[1]);
 					wait(&ha);
-					printf("%d\n", WEXITSTATUS(ha));
+					status = WEXITSTATUS(ha);
+					printf("%d\n", status);
 					if (WEXITSTATUS(ha) == 3)
 						return (fun_free_cmd(&cmds), NULL);
 					tmp_cmd->fd_input = fd[0];

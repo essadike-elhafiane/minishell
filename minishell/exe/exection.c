@@ -6,7 +6,7 @@
 /*   By: mserrouk <mserrouk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 23:03:21 by mserrouk          #+#    #+#             */
-/*   Updated: 2023/05/12 22:08:09 by mserrouk         ###   ########.fr       */
+/*   Updated: 2023/05/12 23:30:17 by mserrouk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -531,10 +531,15 @@ void cmd_cd(t_cmd *cmd)
 			tmp->env = ss;
 			// if (ss)
 		}
-		if (ft_strnstr(tmp->env, "OLDPWD=", 8) && !flg && str != NULL)
+		if (ft_strnstr(tmp->env, "OLDPWD=", 8) && str != NULL)
 		{
-			free(tmp->env);
-			tmp->env = str;
+			if (!flg)
+			{
+				free(tmp->env);
+				tmp->env = str;
+			}
+			else
+				free(str);
 		}
 		tmp = tmp->next;
 	}
@@ -545,11 +550,13 @@ void cmd_cd(t_cmd *cmd)
 
 int is_not_fork(t_cmd *cmd)
 {
-	status = 0;
 	if (cmd->cmd && ft_strnstr(cmd->cmd[0], "export", 7))
 	{
 		if (!cmd->cmd[1])
+		{
+			// status = 0;
 			return (0);
+		}
 		if (cmd->cmd[1] && cmd->cmd[1][0] == '\0')
 		{
 			ft_putstr_fd("minishell: export: `': not a valid identifier\n", 2);
@@ -648,7 +655,8 @@ void ft_pipe(t_cmd *cmd)
 			}
 			 else if (WIFSIGNALED(sta)) 
 			{
-				status = WEXITSTATUS(sta);
+				status = WIFSIGNALED(sta);
+				// printf("%d\n", status);
 			}
 		}
 		y.i -= 1;

@@ -1,0 +1,12 @@
+Makefile
+exe
+include
+libft
+lsk
+main.c
+main.o
+minishell
+parsing
+tests.txt
+tt
+tt.sh
