@@ -6,7 +6,7 @@
 /*   By: mserrouk <mserrouk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 23:03:21 by mserrouk          #+#    #+#             */
-/*   Updated: 2023/05/12 16:27:59 by mserrouk         ###   ########.fr       */
+/*   Updated: 2023/05/12 22:08:09 by mserrouk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,8 +127,7 @@ void	cmd_echo(t_cmd *cmd)
 	if (!flg_n)
 		printf("\n");
 	cmd = cmd->next;
-	close(cmd->fd_input);
-	close(cmd->fd_out);
+	status = 0;
 	exit(0);
 }
 
@@ -161,18 +160,17 @@ int hide_unset(t_env *tmp , char *cmd)
 		tmp->p = 0;
 		return (1);
 	}
-	else if(!ft_strncmp(cmd,"PWD", 4) &&  !ft_strncmp (tmp->env,"PWD" , 4))
+	else if(!ft_strncmp(cmd,"PWD", 3) &&  !ft_strncmp (tmp->env,"PWD" , 3))
 	{
 		tmp->p = 0;
 		return (1);
 	}
-	else if(!ft_strncmp(cmd,"OLDPWD", 4) &&  !ft_strncmp (tmp->env,"" , 4))
+	else if(!ft_strncmp(cmd,"OLDPWD", 6) &&  !ft_strncmp (tmp->env,"OLDPWD" , 6))
 	{
 		tmp->p = 0;
 		return (1);
 	}
 	return (0);
-	
 }
 
 
@@ -349,7 +347,7 @@ void	cmd_export_fork(t_env *envs, t_cmd *cmd)
 			write(1, "declare -x ", 11);
 		while (tmp->env[++i])
 		{
-			if (tmp->env[0] == '?' && tmp->p == 1)
+			if (tmp->env[0] == '?' || tmp->p == 0)
 				break;
 			write(1, &tmp->env[i], 1);
 			if (tmp->env[i] == '=' && !flg++)
@@ -389,7 +387,7 @@ void	cmd_env(t_env *envs)
 	tmp = envs;
 	while(tmp)
 	{
-		if (ft_strchr(tmp->env, '=') && tmp->env[0] != '?')
+		if (ft_strchr(tmp->env, '=') && tmp->env[0] != '?' && tmp->p != 0)
 			printf("%s\n", tmp->env);
 		tmp = tmp->next;
 	}
@@ -487,52 +485,41 @@ void cmd_cd(t_cmd *cmd)
 		}
 		tmp = tmp->next;
 	}
-	if (!ss)
-	{
-		// printf("variable PWD not fond !\n");
-		// return ;
-		ss = getcwd(cwd, 1024);
-	}
 	if (cmd->cmd[1] == NULL || cmd->cmd[1][0] == '\0')
 	{
-		// printf("%s\n", str3);
 		chdir(str3);
+		status = 0;
 	}
 	else 
 	{
-		g = 1;
-		str = ft_strjoin(ft_strdup("OLDPWD="), ft_strdup(ss));
 		if ( chdir(cmd->cmd[1]))
 		{
-			// ft_putstr_fd("➜ Minishell$: " , 2);
-			// ft_putstr_fd(cmd->cmd[1] , 2);
-			// ft_putstr_fd(": No such file or directory\n", 2);
 			perror("Minishell");
+			status = 1;
 			return ;
 		}
 	}
-	if (!getcwd(cwd, sizeof(cwd)) && !g)
+	if (!getcwd(cwd, sizeof(cwd)))
 	{
 		printf("cd: error retrieving current directory: getcwd: \
 			cannot access parent directories: No such file or directory\n");
+			status = 0;
 		if (!flg)
 		{
 			flg++;
-			str =ft_strjoin_exe(ft_strdup("OLDPWD="), ss + 4);
+			str =ft_strjoin(ft_strdup("OLDPWD="), ft_strdup(ss + 4));
 		}
 		ss = ft_strjoin(ft_strdup("PWD="), ft_strdup(ss));
 		ss = ft_strjoin(ss, ft_strdup("/"));
 		ss = ft_strjoin(ss, ft_strdup(cmd->cmd[1]));
 	}
-	else if(!g)
+	else
 	{
-		// printf("hhh\n");
-		if (!flg && ss[ft_strlen(ss) - 1] != '.')
+		if (ss[ft_strlen(ss) - 1] != '.')
 			str = ft_strjoin(ft_strdup("OLDPWD="), ft_strdup(ss));
-		// printf("%s\n",str);
 		ss = ft_strjoin_no_free("PWD=", getcwd(cwd, sizeof(cwd)));
 		flg = 0;
-		// printf("%s\n",ss);
+		status = 0;
 	}
 	tmp = *cmd->env;
 	while(tmp)
@@ -540,7 +527,9 @@ void cmd_cd(t_cmd *cmd)
 		if (ft_strnstr(tmp->env, "PWD", 3))
 		{
 			free(tmp->env);
+				// printf("%s\n",ss);
 			tmp->env = ss;
+			// if (ss)
 		}
 		if (ft_strnstr(tmp->env, "OLDPWD=", 8) && !flg && str != NULL)
 		{
@@ -549,12 +538,14 @@ void cmd_cd(t_cmd *cmd)
 		}
 		tmp = tmp->next;
 	}
-	
+	return ;
 }
+
+
 
 int is_not_fork(t_cmd *cmd)
 {
-	
+	status = 0;
 	if (cmd->cmd && ft_strnstr(cmd->cmd[0], "export", 7))
 	{
 		if (!cmd->cmd[1])
@@ -562,6 +553,7 @@ int is_not_fork(t_cmd *cmd)
 		if (cmd->cmd[1] && cmd->cmd[1][0] == '\0')
 		{
 			ft_putstr_fd("minishell: export: `': not a valid identifier\n", 2);
+			status = 1;
 			return (1);
 		}
 		else
@@ -650,10 +642,13 @@ void ft_pipe(t_cmd *cmd)
 	{
 		if (waitpid(-1 ,&sta, 0) == exs)
 		{
-			 if (WIFEXITED(sta)) {
-            printf("Child process terminated with exit status: %d\n", WEXITSTATUS(sta));
-			} else if (WIFSIGNALED(sta)) {
-				printf("Child process terminated by signal: %d\n", WTERMSIG(sta));
+			if (WIFEXITED(sta)) 
+			{	
+				status = WEXITSTATUS(sta);
+			}
+			 else if (WIFSIGNALED(sta)) 
+			{
+				status = WEXITSTATUS(sta);
 			}
 		}
 		y.i -= 1;

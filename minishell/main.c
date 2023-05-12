@@ -3,14 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mserrouk <mserrouk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 21:27:02 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/05/11 18:55:32 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/05/12 21:56:39 by mserrouk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "include/minishell.h"
+
+
 
 t_shell	*init_data(char *ss, int type1)
 {
@@ -125,6 +127,20 @@ void	loop_str(char *str, int error, t_env **envs)
 	free(str);
 }
 
+void	find_exit_status(t_env *env)
+{
+	while (env)
+	{
+		if(strnstr(env->env, "?", 2))
+		{
+			free(env->env);
+			env->env = ft_strjoin(ft_strdup("?="), ft_itoa(status));
+			break;
+		}
+		env = env->next;
+	}
+}
+
 void h(void)
 {
 	system("leaks minishell");
@@ -155,6 +171,7 @@ int	main(int ac, char **av, char **env)
 				break ;
 		}
 		loop_str(str, error, &envs);
+		find_exit_status(envs);
 		str = readline(
 				"\033[1;32m➜  \033[0m\033[1;36mMinishell\033[0m\033[0;35m$\033[0m ");
 	}
