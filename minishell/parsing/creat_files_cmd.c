@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/16 20:08:08 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/05/11 18:59:52 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/05/12 15:49:17 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,11 @@ void	signal_her(int signal)
 		if (waitpid(-1, NULL, WNOHANG))
 			exit(3);
     }
-	if (signal == SIGTERM)
-		return ;
+	// if (signal == SIGTERM)
+	// {
+	// 	if (waitpid(-1, NULL, WNOHANG))
+	// 		exit(0);
+	// }
 }
 
 t_cmd    *creat_cmd(t_shell *data)
@@ -140,8 +143,7 @@ t_cmd    *creat_cmd(t_shell *data)
 			if (tmp && tmp->type == HER)
 			{
 				signal(SIGINT, signal_her);
-				signal(SIGQUIT, SIG_IGN);
-				signal(SIGTERM, SIG_IGN);
+				signal(SIGTERM, signal_her);
 				y.ss = NULL;
 				tmp = tmp->next;
 				if (tmp && tmp->type == WSPACE)
@@ -173,8 +175,8 @@ t_cmd    *creat_cmd(t_shell *data)
 					{
 						y.ss = readline("> ");
 						if (!y.ss)
-							continue;
-						if (tmp->type != SINGLE && tmp->type != DOUBLE)
+							exit(0);	
+						if (y.ss && tmp->type != SINGLE && tmp->type != DOUBLE)
 						{
 							char *ex;
 							
@@ -204,7 +206,6 @@ t_cmd    *creat_cmd(t_shell *data)
 						write(fd[1], y.ss, ft_strlen(y.ss));
 						write(fd[1], "\n", 1);
 						free(y.ss);
-						// y.ss = readline("> ");
 					}
 					close(fd[1]);
 					exit(0);
@@ -216,7 +217,7 @@ t_cmd    *creat_cmd(t_shell *data)
 					wait(&ha);
 					printf("%d\n", WEXITSTATUS(ha));
 					if (WEXITSTATUS(ha) == 3)
-						return (NULL);
+						return (fun_free_cmd(&cmds), NULL);
 					tmp_cmd->fd_input = fd[0];
 					tmp = tmp->next;
 				}
@@ -289,6 +290,5 @@ t_cmd    *creat_cmd(t_shell *data)
 		}
 	}
 	signal(SIGINT, signal_handler);
-	signal(SIGQUIT, SIG_IGN);
 	return (cmds);
 }

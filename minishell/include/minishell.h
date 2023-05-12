@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 16:38:31 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/05/11 18:21:44 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/05/12 17:38:51 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <signal.h>
+#include <errno.h>
 #include "../libft/libft.h"
 
 # define WSPACE 'S'
@@ -36,6 +37,7 @@
 typedef struct s_env
 {
 	char			*env;
+	int				p;
 	struct s_env  *next;
 } t_env;
 

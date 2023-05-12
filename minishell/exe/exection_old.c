@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exection.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mserrouk <mserrouk@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 23:03:21 by mserrouk          #+#    #+#             */
-/*   Updated: 2023/05/12 16:27:59 by mserrouk         ###   ########.fr       */
+/*   Updated: 2023/05/11 16:44:16 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,30 +23,15 @@ void	ft_command_path(t_cmd *cmd , char **path)
 	int	i;
 	int j;
 	char *tmp;
-	char pwd[1024];
-
 	j = 0;
+
 	while(cmd->cmd[j])
 	{
 		i = 0;
-		if (ft_strchr(cmd->cmd[j] ,'/'))
+		if (ft_strchr(cmd->cmd[j] ,'/') && !access(cmd->cmd[j], X_OK))
 		{
-			if (!access(cmd->cmd[j], X_OK))
-			{
-				cmd->cmd_path = ft_strdup (cmd->cmd[j]);
+			cmd->cmd_path = cmd->cmd[j];
 				return;
-			}
-			if (errno == EACCES)
-			{
-				perror("Minishell");
-				exit(126);
-        	} 
-			else if (errno == ENOENT) 
-			{
-				perror("Minishell");
-				exit(127);
-        	} 
-			
 		}
 		while (path[i])
 		{
@@ -89,6 +74,17 @@ void creat_files(t_cmd *cmd, t_cmd *tmp2, int i)
 		cmd->fd_input = tmp2->fd[0];
 }
 
+// void cmd_pwd(t_cmd *cmd)
+// {
+// 	int i;
+
+// 	i = 0;
+// 	while(cmd->enve[i])
+// 	{
+// 		if(ft_strncmp(cmd->enve[i++], "pwd" ,5))
+// 			printf("%s", cmd->enve[i] + 4);
+// 	}	
+// }
 void	cmd_echo(t_cmd *cmd)
 {
 	int		flg_n;
@@ -153,28 +149,62 @@ void cmd_pwd(t_cmd *cmd)
 	exit(0);
 }
 
+// void export_sort(t_export *export)
+// {
+// 	t_export *tmp;
+// 	t_export *tmp2;
+// 	char *swap;
 
-int hide_unset(t_env *tmp , char *cmd)
-{
-	if(!ft_strncmp(cmd,"HOME", 4) &&  !ft_strncmp (tmp->env,"HOME" , 4))
-	{
-		tmp->p = 0;
-		return (1);
-	}
-	else if(!ft_strncmp(cmd,"PWD", 4) &&  !ft_strncmp (tmp->env,"PWD" , 4))
-	{
-		tmp->p = 0;
-		return (1);
-	}
-	else if(!ft_strncmp(cmd,"OLDPWD", 4) &&  !ft_strncmp (tmp->env,"" , 4))
-	{
-		tmp->p = 0;
-		return (1);
-	}
-	return (0);
+// 	tmp = export;
+// 	tmp2 = export;
+// 	while(tmp)
+// 	{
+// 		tmp2 = tmp->next;
+// 		while(tmp2)
+// 		{
+// 			if((ft_strncmp(tmp->export, tmp2->export, ft_strlen(tmp->export) + 2)) > 0)
+// 			{
+// 				swap = tmp->export;
+// 				tmp->export = tmp2->export;
+// 				tmp2->export = swap;
+// 			}
+// 			tmp2 = tmp2->next;
+// 		}
+// 		tmp = tmp->next;
+// 	}
+// }
+
+// t_export *creat_export(t_env *envs)
+// {
+// 	t_export *export;
+// 	t_export *tmp;
+
+// 	export = malloc(sizeof(t_export*));
+// 	export->export = NULL;
+// 	export->size = envs->size;
+// 	export->next = NULL;
+// 	if(envs)
+// 		export->export = ft_strdup(envs->env);
+// 	else		
+// 		export->export = NULL;
+// 	tmp = export;
 	
-}
+// 	printf("%s\n\n",export->export);
+// 	export->head = export;
+// 	envs = envs->next;
+// 	while(envs)
+// 	{
+// 		tmp->next =(t_export*) malloc(sizeof(t_export));
+// 		tmp = tmp->next;
+// 		tmp->head = export;
+// 		tmp->next = NULL;
+// 		tmp->export = ft_strdup(envs->env);
+// 		envs = envs->next;
+// 	}
 
+// 	// export_sort(export);
+// 	return (export);
+// }
 
 void	cmd_unset(t_env **envs, t_cmd *cmd)
 {
@@ -190,8 +220,7 @@ void	cmd_unset(t_env **envs, t_cmd *cmd)
 		tmp = *envs;
 		tmp1 = *envs;
 		len = ft_strlen(cmd->cmd[i]);
-		
-		if ( tmp && !hide_unset(tmp , cmd->cmd[i]) && ft_strnstr(tmp->env, cmd->cmd[i], len) && (tmp->env[len] == '=' || tmp->env[len] == '\0') && tmp->env[0] != '?')
+		if (tmp && ft_strnstr(tmp->env, cmd->cmd[i], len) && (tmp->env[len] == '=' || tmp->env[len] == '\0') && tmp->env[0] != '?')
 		{
 			*envs = (*envs)->next;
 			free(tmp->env);
@@ -201,8 +230,8 @@ void	cmd_unset(t_env **envs, t_cmd *cmd)
 		while (tmp)
 		{
 			tmp1 = tmp;
-			tmp = tmp->next;	
-			if (tmp && !hide_unset(tmp , cmd->cmd[i]) && ft_strnstr(tmp->env, cmd->cmd[i], len) && (tmp->env[len] == '=' || tmp->env[len] == '\0') && tmp->env[0] != '?')
+			tmp = tmp->next;
+			if (tmp && ft_strnstr(tmp->env, cmd->cmd[i], len) && (tmp->env[len] == '=' || tmp->env[len] == '\0') && tmp->env[0] != '?')
 			{
 				tmp1->next = tmp->next;
 				free(tmp->env);
@@ -248,6 +277,27 @@ int	string_find(char *word, char *str)
 	}
 	return (0);
 }
+
+// void check_export(t_export *tmp, t_cmd *cmd)
+// {
+// 	int i;
+
+// 	i = 0;
+// 	while(tmp)
+// 	{
+// 		if((i = ft_strcchr(tmp->export ,'=')) != - 1 && ft_strnstr(tmp->export,cmd->cmd[1] ,i))
+// 		{
+			
+// 		}
+// 		else if(i = -1 && string_find(tmp->export,cmd->cmd[1]))
+// 		{
+
+// 		}
+// 		tmp = tmp->next;
+// 	}
+// }
+
+
 
 int  check_export(t_env *envs, t_cmd *cmd)
 {
@@ -334,6 +384,21 @@ int  check_export(t_env *envs, t_cmd *cmd)
 	return (0); 
 }
 
+
+// int  check_exp_sp(t_env *envs, t_cmd *cmd, char c)
+// {
+// 	t_export *tmp;
+
+// 	tmp = envs->export;
+// 	while(envs)
+// 	{
+// 		if ((ft_strcchr(cmd->cmd[1] ,'=') == -1  && string_find(cmd->cmd[1][1] , tmp->export)))
+// 			return (1);
+// 		tmp = tmp->next;
+// 	}
+// 	return (0);
+// }
+
 void	cmd_export_fork(t_env *envs, t_cmd *cmd)
 {
 	t_env *tmp;
@@ -345,11 +410,11 @@ void	cmd_export_fork(t_env *envs, t_cmd *cmd)
 	{
 		i = -1;
 		flg = 0;
-		if (tmp->env[0] != '?' && tmp->p == 1)
+		if (tmp->env[0] != '?')
 			write(1, "declare -x ", 11);
 		while (tmp->env[++i])
 		{
-			if (tmp->env[0] == '?' && tmp->p == 1)
+			if (tmp->env[0] == '?')
 				break;
 			write(1, &tmp->env[i], 1);
 			if (tmp->env[i] == '=' && !flg++)
@@ -455,8 +520,9 @@ void	ft_command(t_cmd *cmd)
 	{
 		ft_command_path(cmd ,cmd->paths);
 		tab = envs_tab(*cmd->env);
+		// fun_free_env(&cmd->env);
 		execve(cmd->cmd_path, cmd->cmd, tab);
-		perror("Minishell");
+		perror("execve");
 		exit(126);
 	}
 }
@@ -495,21 +561,14 @@ void cmd_cd(t_cmd *cmd)
 	}
 	if (cmd->cmd[1] == NULL || cmd->cmd[1][0] == '\0')
 	{
-		// printf("%s\n", str3);
+		printf("%s\n", str3);
 		chdir(str3);
 	}
 	else 
 	{
 		g = 1;
 		str = ft_strjoin(ft_strdup("OLDPWD="), ft_strdup(ss));
-		if ( chdir(cmd->cmd[1]))
-		{
-			// ft_putstr_fd("➜ Minishell$: " , 2);
-			// ft_putstr_fd(cmd->cmd[1] , 2);
-			// ft_putstr_fd(": No such file or directory\n", 2);
-			perror("Minishell");
-			return ;
-		}
+		chdir(cmd->cmd[1]);
 	}
 	if (!getcwd(cwd, sizeof(cwd)) && !g)
 	{
@@ -552,6 +611,7 @@ void cmd_cd(t_cmd *cmd)
 	
 }
 
+// !check_export(cmd->env , cmd))
 int is_not_fork(t_cmd *cmd)
 {
 	
@@ -578,6 +638,7 @@ int is_not_fork(t_cmd *cmd)
 	else if (cmd->cmd && word_stop(cmd->cmd[0], "unset") && cmd->cmd[1] != NULL)
 	{
 		cmd_unset(cmd->env, cmd);
+		printf("asfafa\n");
 		return(1);
 	}
 	return (0);
@@ -678,6 +739,7 @@ void	exection(t_cmd *cmd)
 
 	cmd->paths = get_path(*cmd->env);
 	tmp = cmd;
+
 	while (tmp)
 	{
 		tmp->paths = cmd->paths;

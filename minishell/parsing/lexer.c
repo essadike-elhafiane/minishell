@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 18:07:00 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/05/11 18:05:59 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/05/12 15:09:57 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -187,7 +187,7 @@ void	lexer(char *str, t_env **envs)
 	// system("leaks minishell");
 	cmd = creat_cmd(y.data_cmd);
 	if (!cmd)
-		return ;
+		return (fun_free(&y.data_cmd));
 	// exit(1);
 	// clean_cmd(cmd);
 	cmd->env = y.data_cmd->env;
