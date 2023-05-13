@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mserrouk <mserrouk@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 18:07:00 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/05/12 20:14:16 by mserrouk         ###   ########.fr       */
+/*   Updated: 2023/05/13 22:16:41 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -181,7 +181,7 @@ void	lexer(char *str, t_env **envs)
 	// }
 	// // exit(1);
     if (parser(y.data_cmd, *(y.data_cmd->env)))
-		return ;
+		return (fun_free(&y.data_cmd));
 	t_cmd *cmd;
 	y.tmp = y.data_cmd;
 	t_cmd *cmdd;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   creat_files_cmd.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mserrouk <mserrouk@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/16 20:08:08 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/05/12 23:13:27 by mserrouk         ###   ########.fr       */
+/*   Updated: 2023/05/13 22:43:29 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ int	check_is_token(int type)
 		return (1);
 	return (0);
 }
+
 void	signal_her(int signal)
 {
 	if (signal == SIGINT)
@@ -44,11 +45,6 @@ void	signal_her(int signal)
 			exit(3);
 		}
     }
-	// if (signal == SIGTERM)
-	// {
-	// 	if (waitpid(-1, NULL, WNOHANG))
-	// 		exit(0);
-	// }
 }
 
 t_cmd    *creat_cmd(t_shell *data)
@@ -86,11 +82,8 @@ t_cmd    *creat_cmd(t_shell *data)
 						tmp->next->type = SINGLE;
 					tmp = tmp->next;
 				}
-				// printf("%s\n", tmp->s);
 				if (tmp && tmp->var_re && tmp->len_spl > 1 && tmp->type != DOUBLE)
 				{
-					// while (tmp && tmp->var_re)
-					// 	tmp = tmp->next;
 					ft_putstr_fd("minishell: ambiguous redirect\n", 2);
 					status = 1;
 					while (tmp && tmp->type != PIPE && tmp->type != HER)
@@ -106,7 +99,7 @@ t_cmd    *creat_cmd(t_shell *data)
 					if ((tmp && tmp->type != HER) || !tmp)
 						break;
 				}
-				if (tmp->type != HER)	// return (NULL);
+				if (tmp->type != HER)
 					tmp = tmp->next;
 			}
 			if (tmp && tmp->type == OUT)
@@ -123,8 +116,6 @@ t_cmd    *creat_cmd(t_shell *data)
 				}
 				tmp_cmd->fd_out = open(tmp->s, O_CREAT | O_RDWR | O_TRUNC, 0777);
 				tmp = tmp->next;
-				// printf("%s", tmp->s);
-				// write (tmp_cmd->fd_out, "sdfgsfgasf\n", 11);
 			}
 			if (tmp && tmp->type == APPEND)
 			{
@@ -220,7 +211,6 @@ t_cmd    *creat_cmd(t_shell *data)
 					close(fd[1]);
 					wait(&ha);
 					status = WEXITSTATUS(ha);
-					printf("%d\n", status);
 					if (WEXITSTATUS(ha) == 3)
 						return (fun_free_cmd(&cmds), NULL);
 					tmp_cmd->fd_input = fd[0];
@@ -241,19 +231,16 @@ t_cmd    *creat_cmd(t_shell *data)
 				y.i = 0;
 				while(tmp && (tmp->type == WORD || tmp->type == DOUBLE || tmp->type == SINGLE || tmp->type == WSPACE))
 				{
-					
 					if (tmp && tmp->type == WSPACE)
 						tmp = tmp->next;
 					if (tmp && (tmp->type == WORD || tmp->type == DOUBLE || tmp->type == SINGLE ))
 					{
-						// printf("%s\n\n", tmp->s);
 						y.i++;
 						while (tmp && (tmp->type == WORD || tmp->type == DOUBLE || tmp->type == SINGLE ))
 							tmp = tmp->next;
 					}
 				}
 				y.j = 0;
-				// printf("%d\n\n", y.i);
 				tmp_cmd->cmd = (char **)malloc(sizeof(char *) * (y.i + 1));
 				tmp_cmd->cmd[y.i] = NULL;
 				while (y.j < y.i && r)
@@ -261,26 +248,18 @@ t_cmd    *creat_cmd(t_shell *data)
 					if (r && (r->type == WORD || r->type == DOUBLE || r->type == SINGLE))
 					{
 						tmp_cmd->cmd[y.j] = ft_strdup(r->s);
-						// printf("%s\n\n", r->s);
 						r = r->next;
 						while (r && (r->type == WORD || r->type == DOUBLE || r->type == SINGLE ))
 						{
-							// printf("%s\n", tmp_cmd->cmd[y.j]);
 							tmp_cmd->cmd[y.j] = ft_strjoin(tmp_cmd->cmd[y.j], ft_strdup(r->s));
 							r = r->next;
 						}
-						// printf("%s\n", tmp_cmd->cmd[y.j]);
-						// if (r->next && r->next->type != WSPACE)
-						// 	tmp_cmd->flg_space = 1;
 						y.j++;
 					}
 					else
 						r = r->next;
 				}
-				// if (tmp && tmp->type == WSPACE)
-				// 		tmp = tmp->next;
 			}
-				// exit(0);
 		}
 		if (tmp)
 		{

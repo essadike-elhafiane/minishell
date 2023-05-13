@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 18:06:57 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/05/11 18:06:30 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/05/13 22:15:41 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ int	check_double_oper(t_shell *data)
 				if (y.i > 1)
 				{
 					printf("➜  Minishell$: syntax error near unexpected token `%s'\n", tmp->s);
+					status = 258;
 					return (1);
 				}
 			}
@@ -70,12 +71,14 @@ int	check_double_oper(t_shell *data)
 					else
 					{
 						printf("➜  Minishell$: syntax error near unexpected token `%s'\n", tmp->s);
+						status = 258;
 						return (1);
 					}
 				}
 				if (y.j > 1)
 				{
 					printf("➜  Minishell$: syntax error near unexpected token `%s'\n", tmp->s);
+					status = 258;
 					return (1);
 				}
 			} 
@@ -104,7 +107,7 @@ int	check_is_word_after_oper(t_shell *data)
 				tmp = tmp->next;
 			if(!tmp || (tmp->type != WORD && tmp->type != DOUBLE && tmp->type != SINGLE))
 			{
-				printf("➜ Minishell$: syntax error !\n");
+				printf("➜ Minishell$: tax error !\n");
 				return (1);
 			}
 		}

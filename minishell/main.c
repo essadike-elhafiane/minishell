@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mserrouk <mserrouk@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 21:27:02 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/05/12 23:16:48 by mserrouk         ###   ########.fr       */
+/*   Updated: 2023/05/13 22:33:15 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ int check_error_help(char *str, int i)
 	if (str[i] == '|')
 	{
 		printf("Minishell$: syntax error near unexpected token `|'\n");
+		status = 258;
 		return (1);
 	}
 	while (str[i] == '>' || str[i] == '<')
@@ -53,6 +54,7 @@ int check_error_help(char *str, int i)
 	if (str[i] == '\0')
 	{
 		printf("Minishell$: syntax error near unexpected token `newline'\n");
+		status = 258;
 		return (1);
 	}
 	return (0);
@@ -75,6 +77,7 @@ int	check_error(char *str)
 	if (str[i] == '\0')
 	{
 		printf("Minishell$: syntax error !\n");
+		status = 258;
 		return (1);
 	}
 	else
@@ -97,8 +100,26 @@ void signal_handler(int signal)
 			status = 1;
 		}
     }
-	// if (signal == SIGTERM)
-	// 	exit(0);
+}
+
+void	ft_exit(char *s)
+{
+	int	i;
+
+	i = 5;
+	printf("exit\n");
+	while (s[i])
+	{
+		if (!ft_isdigit(s[i]))
+		{
+			printf("minishell: exit:  %s: numeric argument required\n", s +4);
+			exit(255);
+		}
+		i++;
+	}
+	if (!s[i] && i > 5)
+		status = ft_atoi(s + 4);
+	exit(status);
 }
 
 void	loop_str(char *str, int error, t_env **envs)
@@ -117,8 +138,8 @@ void	loop_str(char *str, int error, t_env **envs)
 	}
 	if (word_stop(str, "clear"))
 		printf("\033[2J\033[1;1H");
-	if (word_stop(str, "exit"))
-		exit(0);
+	if (ft_strnstr(str, "exit", 4) && (str[4] == '\0' || str[4] == ' '))
+		ft_exit(str);
 	else if (str && !error)
 	{
 		if (str[0] != '\0')
@@ -179,6 +200,7 @@ int	main(int ac, char **av, char **env)
 	fun_free_env(&envs);
 }
 
+//>""
 // < j| ls seg fault
 
 // <inp >out :inp file doesnt exist
