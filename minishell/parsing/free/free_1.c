@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/29 20:18:01 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/05/11 17:51:41 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/05/13 23:54:21 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 void	free_double(char **spl)
 {
-	int l;
-	
+	int	l;
+
 	l = 0;
 	while (spl[l])
 		free(spl[l++]);

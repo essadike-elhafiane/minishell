@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 18:06:57 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/05/13 22:15:41 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/05/14 00:09:43 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,13 +37,13 @@ char	*expand(char *ss, t_env *env)
 
 int	check_double_oper(t_shell *data)
 {
-	t_shell *tmp;
+	t_shell	*tmp;
 	t_stk	y;
 
 	tmp = data;
 	y.i = 0;
 	y.j = 0;
-	while(tmp)
+	while (tmp)
 	{
 		if (tmp->type == WSPACE)
 			tmp = tmp->next;
@@ -54,7 +54,7 @@ int	check_double_oper(t_shell *data)
 				y.i++;
 				if (y.i > 1)
 				{
-					printf("➜  Minishell$: syntax error near unexpected token `%s'\n", tmp->s);
+					ft_putstr_fd("➜  Minishell$: syntax error\n", 2);
 					status = 258;
 					return (1);
 				}
@@ -70,18 +70,18 @@ int	check_double_oper(t_shell *data)
 						y.i = y.i;
 					else
 					{
-						printf("➜  Minishell$: syntax error near unexpected token `%s'\n", tmp->s);
+						ft_putstr_fd("➜  Minishell$: syntax error\n", 2);
 						status = 258;
 						return (1);
 					}
 				}
 				if (y.j > 1)
 				{
-					printf("➜  Minishell$: syntax error near unexpected token `%s'\n", tmp->s);
+					ft_putstr_fd("➜  Minishell$: syntax error\n", 2);
 					status = 258;
 					return (1);
 				}
-			} 
+			}
 			else
 				y.j = 0;
 			tmp = tmp->next;
@@ -92,34 +92,87 @@ int	check_double_oper(t_shell *data)
 
 int	check_is_word_after_oper(t_shell *data)
 {
-	t_shell *tmp;
+	t_shell	*tmp;
 	t_stk	y;
 
 	tmp = data;
 	y.i = 0;
 	y.j = 0;
-	while(tmp)
+	while (tmp)
 	{
-		if  (tmp->type == IN ||tmp->type == OUT || tmp->type == HER || tmp->type == APPEND)
+		if (tmp->type == IN || tmp->type == OUT
+			|| tmp->type == HER || tmp->type == APPEND)
 		{
 			tmp = tmp->next;
-			if  (tmp && tmp->type == WSPACE)
+			if (tmp && tmp->type == WSPACE)
 				tmp = tmp->next;
-			if(!tmp || (tmp->type != WORD && tmp->type != DOUBLE && tmp->type != SINGLE))
+			if (!tmp || (tmp->type != WORD
+					&& tmp->type != DOUBLE && tmp->type != SINGLE))
 			{
 				printf("➜ Minishell$: tax error !\n");
 				return (1);
 			}
 		}
-		if(tmp)
+		if (tmp)
 			tmp = tmp->next;
 	}
 	return (0);
 }
 
+void	check_space_exp(t_shell *tmp)
+{
+	t_shell	*tmp2;
+	t_shell	*tmp1;
+	char	**spl;
+	int		i;
+	int		type;
+
+	i = 1;
+	type = tmp->type;
+	tmp1 = tmp;
+	tmp->var_re = 1;
+	tmp2 = tmp->next;
+	spl = ft_split(tmp->s, ' ');
+	free(tmp->s);
+	tmp->s = ft_strdup(spl[0]);
+	if (spl[i])
+	{
+		tmp->next = malloc(sizeof(t_shell));
+		tmp = tmp->next;
+		tmp->s = ft_strdup(" ");
+		tmp->type = WSPACE;
+		tmp->var_re = 1;
+		tmp->next = NULL;
+	}
+	while (spl[i])
+	{
+		tmp->next = malloc(sizeof(t_shell));
+		tmp = tmp->next;
+		tmp->s = ft_strdup(spl[0]);
+		tmp->type = WORD;
+		tmp->var_re = 1;
+		tmp->next = NULL;
+		i++;
+		if (spl[i])
+		{
+			tmp->next = malloc(sizeof(t_shell));
+			tmp = tmp->next;
+			tmp->s = ft_strdup(" ");
+			tmp->type = WSPACE;
+			tmp->var_re = 1;
+			tmp->next = NULL;
+		}
+	}
+	free_double(spl);
+	tmp1->len_spl = i;
+	tmp->next = tmp2;
+}
+
 void	check_expand(t_stk *y, t_shell *tmp, t_env *env)
 {
-	int flg = 0;
+	int	flg;
+
+	flg = 0;
 	y->i = 0;
 	if (tmp->type == SINGLE)
 		return ;
@@ -132,7 +185,8 @@ void	check_expand(t_stk *y, t_shell *tmp, t_env *env)
 		{
 			y->i++;
 			y->b = y->i;
-			while (ft_isalpha(tmp->s[y->i]) || ft_isdigit(tmp->s[y->i]) || tmp->s[y->i] == '_' || tmp->s[y->i] == '?')
+			while (ft_isalpha(tmp->s[y->i]) || ft_isdigit(tmp->s[y->i])
+				|| tmp->s[y->i] == '_' || tmp->s[y->i] == '?')
 				y->i++;
 			y->ss = ft_substr(tmp->s, y->b, y->i - y->b);
 			y->ss = expand(y->ss, env);
@@ -156,53 +210,7 @@ void	check_expand(t_stk *y, t_shell *tmp, t_env *env)
 			y->i++;
 	}
 	if (flg && tmp->type != DOUBLE && tmp->s && ft_strchr(tmp->s, ' '))
-	{
-		t_shell *tmp2;
-		t_shell *tmp1;
-		char **spl;
-		int i;
-		int type;
-
-		i = 1;
-		type = tmp->type;
-		tmp1 = tmp;
-		tmp->var_re = 1;
-		tmp2 = tmp->next;
-		spl = ft_split(tmp->s, ' ');
-		free(tmp->s);
-		tmp->s = ft_strdup(spl[0]);
-		if (spl[i])
-		{
-			tmp->next = malloc(sizeof(t_shell));
-			tmp = tmp->next;
-			tmp->s = ft_strdup(" ");
-			tmp->type = WSPACE;
-			tmp->var_re = 1;
-			tmp->next = NULL;
-		}
-		while (spl[i])
-		{
-			tmp->next = malloc(sizeof(t_shell));
-			tmp = tmp->next;
-			tmp->s = ft_strdup(spl[0]);
-			tmp->type = WORD;
-			tmp->var_re = 1;
-			tmp->next = NULL;
-			i++;
-			if (spl[i])
-			{
-				tmp->next = malloc(sizeof(t_shell));
-				tmp = tmp->next;
-				tmp->s = ft_strdup(" ");
-				tmp->type = WSPACE;
-				tmp->var_re = 1;
-				tmp->next = NULL;
-			}
-		}
-		free_double(spl);
-		tmp1->len_spl = i;
-		tmp->next = tmp2;
-	}
+		check_space_exp(tmp);
 }
 
 	// if (flg && tmp->s && ft_strchr(tmp->s, ' '))

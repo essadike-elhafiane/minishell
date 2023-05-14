@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exection.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mserrouk <mserrouk@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 23:03:21 by mserrouk          #+#    #+#             */
-/*   Updated: 2023/05/12 23:30:17 by mserrouk         ###   ########.fr       */
+/*   Updated: 2023/05/14 01:24:29 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -247,7 +247,7 @@ int	string_find(char *word, char *str)
 	return (0);
 }
 
-int  check_export(t_env *envs, t_cmd *cmd)
+int  check_export(t_env **envs, t_cmd *cmd)
 {
 	t_env *tmp;
 	int i;
@@ -258,13 +258,15 @@ int  check_export(t_env *envs, t_cmd *cmd)
 	char *s;
 
 	a = 1;
+	if (!envs)
+		printf("gdfdh\n");
 	while(cmd && cmd->cmd[a])
 	{
 		flg = 0;
 		i = -1;
 		b = 0;
 		plus = 0;
-		tmp = envs;
+		tmp = *envs;
 		i = ft_strcchr(cmd->cmd[a] ,'=');
 		if (i > 0)
 		{
@@ -301,6 +303,7 @@ int  check_export(t_env *envs, t_cmd *cmd)
 				// if (tmp->export[ft_strlen(s) -1] != '\0' && tmp->export[ft_strlen(s) -1] != '=')
 				// 	break;
 				free(tmp->env);
+				tmp->p = 1;
 				tmp->env = ft_strdup(cmd->cmd[a]);
 				flg = 1;
 			}
@@ -308,6 +311,7 @@ int  check_export(t_env *envs, t_cmd *cmd)
 			{
 				if (ft_strcchr(tmp->env, '=') < 0)
 					tmp->env = ft_strjoin(tmp->env, ft_strdup("="));
+				tmp->p = 1;
 				tmp->env =ft_strjoin(tmp->env, ft_strdup(cmd->cmd[a] + i + 2));
 				flg = 1;
 			}
@@ -326,10 +330,14 @@ int  check_export(t_env *envs, t_cmd *cmd)
 		}
 		free(s);
 		if (!flg && b > -1)
-			cmd_export(*cmd->env, cmd->cmd[a]);
+		{
+			printf("%s", cmd->cmd[a]);
+			cmd_export(cmd->env, cmd->cmd[a]);
+
+		}
 		a++;
 	}
-	return (0); 
+	return (0);
 }
 
 void	cmd_export_fork(t_env *envs, t_cmd *cmd)
@@ -362,20 +370,21 @@ void	cmd_export_fork(t_env *envs, t_cmd *cmd)
 	exit(0);
 }
 
-void	cmd_export(t_env *envs, char *cmd)
+void	cmd_export(t_env **envs, char *cmd)
 {
 	t_env *tmp;
 	t_env		*tmp2;
 
 	if (!envs)
 		return ;
-	tmp = envs;
-	tmp2 = envs;
+	tmp = *envs;
+	tmp2 = *envs;
 	
 	while(tmp->next)
 		tmp = tmp->next;
 	tmp->next = (t_env *) malloc(sizeof(t_env));
 	tmp = tmp->next;
+	tmp->p = 1;
 	tmp->next = NULL;
 	tmp->env = ft_strdup(cmd);
 }
@@ -565,7 +574,7 @@ int is_not_fork(t_cmd *cmd)
 		}
 		else
 		{
-			if (check_export(*cmd->env , cmd))
+			if (check_export(cmd->env , cmd))
 				return (0);
 			return (1);
 		}

@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/16 20:08:08 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/05/13 22:43:29 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/05/13 23:25:40 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ t_cmd    *creat_cmd(t_shell *data)
 	t_stk   y;
 	t_cmd	*cmds;
 	t_cmd	*tmp_cmd;
-	void	*tmp_free;
+	// void	*tmp_free;
 
 	tmp = data;
 	cmds = (t_cmd *)malloc(sizeof(t_cmd));

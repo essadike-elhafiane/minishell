@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/13 18:07:00 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/05/13 22:16:41 by eelhafia         ###   ########.fr       */
+/*   Created: 2023/05/13 23:00:51 by eelhafia          #+#    #+#             */
+/*   Updated: 2023/05/13 23:25:03 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,10 @@ void	lexer_0(char *str, t_stk *y)
 			y->i++;
 		y->i--;
 	}
+}
+
+void	lexer_1(char *str, t_stk *y)
+{
 	if (str[y->i] == '|')
 	{
 		y->ss = ft_strdup("|");
@@ -42,29 +46,10 @@ void	lexer_0(char *str, t_stk *y)
 		y->tmp = y->tmp->next;
 		free(y->ss);
 	}
-}
-
-void	lexer_1(char *str, t_stk *y)
-{
-	if (str[y->i] == '>' && str[y->i + 1] != '>')
+	else if (str[y->i] == '>' && str[y->i + 1] != '>')
 	{
 		y->ss = ft_strdup(">");
 		y->tmp->next = init_data(y->ss, OUT);
-		y->tmp = y->tmp->next;
-		free(y->ss);
-	}
-	else if (str[y->i] == '>' && str[y->i + 1] == '>')
-	{
-		y->ss = ft_strdup(">>");
-		y->tmp->next = init_data(y->ss, APPEND);
-		y->tmp = y->tmp->next;
-		free(y->ss);
-		y->i++;
-	}
-	else if (str[y->i] == '<' && str[y->i + 1] != '<')
-	{
-		y->ss = ft_strdup("<");
-		y->tmp->next = init_data(y->ss, IN);
 		y->tmp = y->tmp->next;
 		free(y->ss);
 	}
@@ -72,7 +57,22 @@ void	lexer_1(char *str, t_stk *y)
 
 void	lexer_2(char *str, t_stk *y)
 {
-	if (str[y->i] == '<' && str[y->i + 1] == '<')
+	if (str[y->i] == '>' && str[y->i + 1] == '>')
+	{
+		y->ss = ft_strdup(">>");
+		y->tmp->next = init_data(y->ss, APPEND);
+		y->tmp = y->tmp->next;
+		free(y->ss);
+		y->i++;
+	}
+	if (str[y->i] == '<' && str[y->i + 1] != '<')
+	{
+		y->ss = ft_strdup("<");
+		y->tmp->next = init_data(y->ss, IN);
+		y->tmp = y->tmp->next;
+		free(y->ss);
+	}
+	else if (str[y->i] == '<' && str[y->i + 1] == '<')
 	{
 		y->ss = ft_strdup("<<");
 		y->tmp->next = init_data(y->ss, HER);
@@ -80,11 +80,15 @@ void	lexer_2(char *str, t_stk *y)
 		free(y->ss);
 		y->i++;
 	}
+}
+
+void	lexer_3(char *str, t_stk *y)
+{
 	if (str[y->i] == 39)
 	{
 		y->i++;
 		y->b = y->i;
-		while(str[y->i] != 39)
+		while (str[y->i] != 39)
 			y->i++;
 		y->ss = ft_substr(str, y->b, y->i - y->b);
 		y->tmp->next = init_data(y->ss, SINGLE);
@@ -104,45 +108,6 @@ void	lexer_2(char *str, t_stk *y)
 	}
 }
 
-t_env	*init_env(char *env)
-{
-	t_env	*data;
-
-	data = (t_env *) malloc(sizeof(t_env));
-	if (!data)
-		exit(1);
-	data->env = ft_strdup(env);
-	data->p = 1; 
-	data->next = NULL;
-	return (data);
-}
-
-t_env	*creat_env_list(char **env)
-{
-	int		i;
-	int		flg;
-	t_env	*env_l;
-	t_env	*tmp;
-	
-	flg = 0;
-	if (!*env)
-		return (NULL);
-	env_l = init_env(env[0]);
-	tmp = env_l;
-	i = 1;
-	while (env[i])
-	{
-		tmp->next = init_env(env[i]);
-		if (ft_strnstr(env[i], "?", 1))
-			flg = 1;
-		tmp = tmp->next;
-		i++;
-	}
-	if (!flg)
-		tmp->next = init_env("?=0");
-	return (env_l);
-}
-
 void	lexer(char *str, t_env **envs)
 {
 	t_stk	y;
@@ -156,73 +121,13 @@ void	lexer(char *str, t_env **envs)
 	free(y.ss);
 	while (str[y.i] == ' ' || str[y.i] == '\t')
 		y.i++;
-	while(str[y.i])
+	while (str[y.i])
 	{
 		lexer_0(str, &y);
 		lexer_1(str, &y);
 		lexer_2(str, &y);
+		lexer_3(str, &y);
 		y.i++;
 	}
-	y.i = 0;
-	y.tmp = y.data_cmd;
-	y.data_cmd = y.data_cmd->next;
-	free(y.tmp->s);
-	free(y.tmp);
-	y.tmp = y.data_cmd;
-	// if (!env_creat)
-	// {
-	y.data_cmd->env = envs;
-	// 	env_creat++;
-	// }
-	// while(y.tmp && y.tmp->s)
-	// {
-	// 	printf("%s type %c\n", y.tmp->s, y.tmp->type);
-	// 	y.tmp = y.tmp->next;
-	// }
-	// // exit(1);
-    if (parser(y.data_cmd, *(y.data_cmd->env)))
-		return (fun_free(&y.data_cmd));
-	t_cmd *cmd;
-	y.tmp = y.data_cmd;
-	t_cmd *cmdd;
-	// system("leaks minishell");
-	cmd = creat_cmd(y.data_cmd);
-	if (!cmd)
-		return (fun_free(&y.data_cmd));
-	// exit(1);
-	// clean_cmd(cmd);
-	cmd->env = y.data_cmd->env;
-	// printf("asafa\n");
-	// cmdd = cmd;
-	// while(cmdd)
-	// {
-	// 	int i = 0;
-		
-	// 	// printf("%c || %d\n\n", y.tmp->type, y.i++);
-	// 	if (cmdd->cmd)
-	// 	{
-	// 		while(cmdd->cmd[i])
-	// 		{
-	// 			printf("%d\n", cmdd->fd_input);
-	// 			printf("%s\n", cmdd->cmd[i++]);
-	// 		}
-	// 	}
-	// 	cmdd = cmdd->next;
-	// }
-	// if (word_stop(cmd->cmd[0], "unset") && cmd->cmd[1] != NULL)
-	// {
-	// 	cmd_unset(envs, cmd);
-	// 	printf("asfafa\n");
-	// 	// return(1);
-	// }
-	exection(cmd);
-	
-	// while(y.tmp)
-	// {
-	// 	printf("%c || %d\n\n", y.tmp->type, y.i++);
-	// 	printf("%s\n", y.tmp->s);
-	// 	y.tmp = y.tmp->next;
-	// }
-	fun_free_cmd(&cmd);
-	fun_free(&y.data_cmd);
+	lexer_help(&y, envs);
 }

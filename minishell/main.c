@@ -6,13 +6,11 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 21:27:02 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/05/13 22:33:15 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/05/14 01:25:38 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "include/minishell.h"
-
-
 
 t_shell	*init_data(char *ss, int type1)
 {
@@ -36,90 +34,6 @@ t_shell	*lstlast(t_shell *lst)
 	while (lst->next)
 		lst = lst->next;
 	return (lst);
-}
-int check_error_help(char *str, int i)
-{
-	while (str[i] == ' ' || str[i] == '\t')
-		i++;
-	if (str[i] == '|')
-	{
-		printf("Minishell$: syntax error near unexpected token `|'\n");
-		status = 258;
-		return (1);
-	}
-	while (str[i] == '>' || str[i] == '<')
-		i++;
-	while (str[i] == ' ' || str[i] == '\t')
-		i++;
-	if (str[i] == '\0')
-	{
-		printf("Minishell$: syntax error near unexpected token `newline'\n");
-		status = 258;
-		return (1);
-	}
-	return (0);
-}
-
-int	check_error(char *str)
-{
-	int	i;
-
-	i = 0;
-	if (str[i] == '\0')
-		return (0);
-	while (str[i] == ' ')
-		i++;
-	if (str[i] == '\0')
-		return (1);
-	while (str[i] == ' ' || str[i] == '\t'
-		|| str[i] == '>' || str[i] == '<' || str[i] == '|')
-		i++;
-	if (str[i] == '\0')
-	{
-		printf("Minishell$: syntax error !\n");
-		status = 258;
-		return (1);
-	}
-	else
-		i = 0;
-	if (check_error_help(str, i))
-		return (1);
-	return (0);
-}
-
-void signal_handler(int signal) 
-{
-   if (signal == SIGINT)
-	{
-		if (waitpid(-1, NULL, WNOHANG))
-		{
-			printf("\n");
-			rl_replace_line("", 0);
-			rl_on_new_line();
-			rl_redisplay();
-			status = 1;
-		}
-    }
-}
-
-void	ft_exit(char *s)
-{
-	int	i;
-
-	i = 5;
-	printf("exit\n");
-	while (s[i])
-	{
-		if (!ft_isdigit(s[i]))
-		{
-			printf("minishell: exit:  %s: numeric argument required\n", s +4);
-			exit(255);
-		}
-		i++;
-	}
-	if (!s[i] && i > 5)
-		status = ft_atoi(s + 4);
-	exit(status);
 }
 
 void	loop_str(char *str, int error, t_env **envs)
@@ -149,24 +63,25 @@ void	loop_str(char *str, int error, t_env **envs)
 	free(str);
 }
 
-void	find_exit_status(t_env *env)
+// void h(void)
+// {
+// 	system("leaks minishell");
+// }
+char	*check_pipe(int error, char *str)
 {
-	while (env)
+	int		flg_d;
+
+	while (!error)
 	{
-		if(strnstr(env->env, "?", 2))
-		{
-			free(env->env);
-			env->env = ft_strjoin(ft_strdup("?="), ft_itoa(status));
-			break;
-		}
-		env = env->next;
+		flg_d = checke_pipe(str);
+		if (flg_d)
+			str = ft_strjoin(str, readline("pipe> "));
+		else
+			break ;
 	}
+	return (str);
 }
 
-void h(void)
-{
-	system("leaks minishell");
-}
 int	main(int ac, char **av, char **env)
 {
 	char	*str;
@@ -177,25 +92,18 @@ int	main(int ac, char **av, char **env)
 	(void )ac;
 	(void )av[0];
 	envs = creat_env_list(env);
+	if (!envs)
+		return (0);
 	signal(SIGINT, signal_handler);
 	signal(SIGQUIT, SIG_IGN);
-	str = readline(
-			"\033[1;32m➜  \033[0m\033[1;36mMinishell\033[0m\033[0;35m$\033[0m ");
+	str = readline("➜  \033[1;36mMinishell\033[0m\033[0;35m$\033[0m ");
 	while (str)
 	{
 		error = check_error(str);
-		while (!error)
-		{
-			flg_d = checke_pipe(str);
-			if (flg_d)
-				str = ft_strjoin(str, readline("pipe> "));
-			else
-				break ;
-		}
+		str = check_pipe(error, str);
 		loop_str(str, error, &envs);
 		find_exit_status(envs);
-		str = readline(
-				"\033[1;32m➜  \033[0m\033[1;36mMinishell\033[0m\033[0;35m$\033[0m ");
+		str = readline("➜  \033[1;36mMinishell\033[0m\033[0;35m$\033[0m ");
 	}
 	fun_free_env(&envs);
 }
@@ -206,8 +114,6 @@ int	main(int ac, char **av, char **env)
 // <inp >out :inp file doesnt exist
 
 // always print error in stderr not stdout
-// echo $_ : handle _ in variables names and number shouldnt be in first char in var name
-// echo $.
 // <ok <<ok
 // $$$USER
 // < ss | ls
@@ -215,7 +121,5 @@ int	main(int ac, char **av, char **env)
 // hmeftah
 // int main(int ac, char **av)
 // {
-	
 // }
 // multi space not error
-// when creat a $? in first time and when run minishell inside of minishell the program the $? and creat another $? so thats given too $? in env
