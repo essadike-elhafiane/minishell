@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 18:06:57 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/05/14 00:09:43 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/05/14 02:05:47 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,16 +119,38 @@ int	check_is_word_after_oper(t_shell *data)
 	return (0);
 }
 
+t_shell *init_expand_space(t_shell *tmp, int i, char **spl)
+{
+	while (spl[i])
+	{
+		tmp->next = malloc(sizeof(t_shell));
+		tmp = tmp->next;
+		tmp->s = ft_strdup(spl[i]);
+		tmp->type = WORD;
+		tmp->var_re = 1;
+		tmp->next = NULL;
+		i++;
+		if (spl[i])
+		{
+			tmp->next = malloc(sizeof(t_shell));
+			tmp = tmp->next;
+			tmp->s = ft_strdup(" ");
+			tmp->type = WSPACE;
+			tmp->var_re = 1;
+			tmp->next = NULL;
+		}
+	}
+	return (tmp);
+}
+
 void	check_space_exp(t_shell *tmp)
 {
 	t_shell	*tmp2;
 	t_shell	*tmp1;
 	char	**spl;
 	int		i;
-	int		type;
 
 	i = 1;
-	type = tmp->type;
 	tmp1 = tmp;
 	tmp->var_re = 1;
 	tmp2 = tmp->next;
@@ -144,28 +166,36 @@ void	check_space_exp(t_shell *tmp)
 		tmp->var_re = 1;
 		tmp->next = NULL;
 	}
-	while (spl[i])
-	{
-		tmp->next = malloc(sizeof(t_shell));
-		tmp = tmp->next;
-		tmp->s = ft_strdup(spl[0]);
-		tmp->type = WORD;
-		tmp->var_re = 1;
-		tmp->next = NULL;
-		i++;
-		if (spl[i])
-		{
-			tmp->next = malloc(sizeof(t_shell));
-			tmp = tmp->next;
-			tmp->s = ft_strdup(" ");
-			tmp->type = WSPACE;
-			tmp->var_re = 1;
-			tmp->next = NULL;
-		}
-	}
+	tmp = init_expand_space(tmp, i, spl);
 	free_double(spl);
 	tmp1->len_spl = i;
 	tmp->next = tmp2;
+}
+
+void	check_expand_help(t_stk *y, t_shell *tmp, t_env *env, int flg)
+{
+	y->i++;
+	y->b = y->i;
+	while (ft_isalpha(tmp->s[y->i]) || ft_isdigit(tmp->s[y->i])
+		|| tmp->s[y->i] == '_' || tmp->s[y->i] == '?')
+		y->i++;
+	y->ss = ft_substr(tmp->s, y->b, y->i - y->b);
+	y->ss = expand(y->ss, env);
+	if (!y->ss)
+	{
+		tmp->var_re = 1;
+		tmp->len_spl = 2;
+	}
+	y->back = ft_strdup(tmp->s + y->i);
+	if (!y->ss && tmp->s[y->i] && y->back)
+		y->i = 0;
+	y->front = ft_substr(tmp->s, 0, y->b -1);
+	free(tmp->s);
+	tmp->s = ft_strjoin(y->front, y->ss);
+	if (tmp->s[y->i - 1] != '$')
+		y->i--;
+	tmp->s = ft_strjoin(tmp->s, y->back);
+	flg = 1;
 }
 
 void	check_expand(t_stk *y, t_shell *tmp, t_env *env)
@@ -183,27 +213,7 @@ void	check_expand(t_stk *y, t_shell *tmp, t_env *env)
 		if (tmp->s[y->i] == '$' && tmp->s[y->i +1] != '\0'
 			&& (tmp->s[y->i + 1] != '$' && tmp->s[y->i + 1] != ' '))
 		{
-			y->i++;
-			y->b = y->i;
-			while (ft_isalpha(tmp->s[y->i]) || ft_isdigit(tmp->s[y->i])
-				|| tmp->s[y->i] == '_' || tmp->s[y->i] == '?')
-				y->i++;
-			y->ss = ft_substr(tmp->s, y->b, y->i - y->b);
-			y->ss = expand(y->ss, env);
-			if (!y->ss)
-			{
-				tmp->var_re = 1;
-				tmp->len_spl = 2;
-			}
-			y->back = ft_strdup(tmp->s + y->i);
-			if (!y->ss && tmp->s[y->i] && y->back)
-				y->i = 0;
-			y->front = ft_substr(tmp->s, 0, y->b -1);
-			free(tmp->s);
-			tmp->s = ft_strjoin(y->front, y->ss);
-			if (tmp->s[y->i - 1] != '$')
-				y->i--;
-			tmp->s = ft_strjoin(tmp->s, y->back);
+			check_expand_help(y, tmp, env, flg);
 			flg = 1;
 		}
 		else
@@ -213,44 +223,6 @@ void	check_expand(t_stk *y, t_shell *tmp, t_env *env)
 		check_space_exp(tmp);
 }
 
-	// if (flg && tmp->s && ft_strchr(tmp->s, ' '))
-	// {
-	// 	t_shell *tmp2;
-	// 	char **spl;
-	// 	int i;
-
-	// 	i = 1;
-	// 	tmp2 = tmp->next;
-	// 	spl = ft_split(tmp->s, ' ');
-	// 	tmp->s = spl[0];
-	// 	if (spl[i])
-	// 	{
-	// 		tmp->next = malloc(sizeof(t_shell));
-	// 		tmp = tmp->next;
-	// 		tmp->s = ft_strdup(" ");
-	// 		tmp->type = WSPACE;
-	// 		tmp->next = NULL;
-	// 	}
-	// 	while (spl[i])
-	// 	{
-	// 		tmp->next = malloc(sizeof(t_shell));
-	// 		tmp = tmp->next;
-	// 		tmp->s = spl[i];
-	// 		printf("%s\n", tmp->s);
-	// 		tmp->type = WORD;
-	// 		tmp->next = NULL;
-	// 		i++;
-	// 		if (spl[i])
-	// 		{
-	// 			tmp->next = malloc(sizeof(t_shell));
-	// 			tmp = tmp->next;
-	// 			tmp->s = ft_strdup(" ");
-	// 			tmp->type = WSPACE;
-	// 			tmp->next = NULL;
-	// 		}
-	// 	}
-	// 	tmp->next = tmp2;
-	// }
 
 int    parser(t_shell *data, t_env *env)
 {
@@ -280,12 +252,3 @@ int    parser(t_shell *data, t_env *env)
 		return (1);
 	return (0);
 }
-
-
-	// if(y.i % 2 != 0 || y.j % 2 != 0)
-	// {
-	// 	printf("minishell: syntax error \n");
-	// 	return ;
-	// 	printf("%s", y.ss);
-	// }
-// 
