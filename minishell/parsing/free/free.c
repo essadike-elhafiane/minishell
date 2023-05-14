@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/16 22:48:31 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/05/10 02:42:04 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/05/14 02:30:08 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ void	fun_free(t_shell **a)
 void	fun_free_env(t_env **a)
 {
 	t_env	*tmp;
+
 	while (*a)
 	{
 		tmp = *a;
@@ -59,13 +60,6 @@ void	fun_free_cmd(t_cmd **a)
 			tmp->cmd = NULL;
 		}
 		free(tmp);
-		// if (tmp->paths)
-		// {
-		// 	i = 0;
-		// 	while(tmp->paths[i])
-		// 		free(tmp->paths[i++]);
-		// }
-		// free(tmp);
 	}
 	a = NULL;
 }

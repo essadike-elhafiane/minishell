@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 18:07:00 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/05/14 01:29:31 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/05/14 02:29:07 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,14 +43,6 @@ void	lexer_help(t_stk *y, t_env **envs)
 	if (!cmd)
 		return (fun_free(&y->data_cmd));
 	cmd->env = y->data_cmd->env;
-	// t_cmd *tmpp = cmd;
-	// int i;
-	// while(tmpp)
-	// {	i = 0;
-	// 	while (tmpp->cmd[i])
-	// 	printf("%s\n", tmpp->cmd[i++]);
-	// 	tmpp = tmpp->next;
-	// }
 	exection(cmd);
 	fun_free_cmd(&cmd);
 	fun_free(&y->data_cmd);

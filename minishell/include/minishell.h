@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 16:38:31 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/05/14 00:47:16 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/05/14 02:21:20 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,8 @@ int			check_is_oper_error(char c);
 int			check_error(char *str);
 int			check_is_token(int type);
 int			check_error_help(char *str, int i);
+int			check_double_oper(t_shell *data);
+int			check_is_word_after_oper(t_shell *data);
 int			checke_pipe(char *str);
 int			check_is_oper(char c);
 int			checke_double(char *str);

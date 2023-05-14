@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/16 20:08:08 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/05/13 23:25:40 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/05/14 02:34:43 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,9 @@ int	word_stop(char *word, char *str)
 	i = 0;
 	if (!str)
 		return (0);
-	while(word[i] == str[i])
+	while (word[i] == str[i])
 	{
-		if(word[i] == '\0' && str[i] == '\0')
+		if (word[i] == '\0' && str[i] == '\0')
 			return (1);
 		i++;
 	}
@@ -30,7 +30,8 @@ int	word_stop(char *word, char *str)
 
 int	check_is_token(int type)
 {
-	if (type == APPEND || type == HER || type == OUT || type == IN || type == PIPE)
+	if (type == APPEND || type == HER
+		|| type == OUT || type == IN || type == PIPE)
 		return (1);
 	return (0);
 }
@@ -40,20 +41,16 @@ void	signal_her(int signal)
 	if (signal == SIGINT)
 	{
 		if (waitpid(-1, NULL, WNOHANG))
-		{
-			
 			exit(3);
-		}
-    }
+	}
 }
 
-t_cmd    *creat_cmd(t_shell *data)
+t_cmd	*creat_cmd(t_shell *data)
 {
-	t_shell *tmp;
-	t_stk   y;
+	t_shell	*tmp;
+	t_stk	y;
 	t_cmd	*cmds;
 	t_cmd	*tmp_cmd;
-	// void	*tmp_free;
 
 	tmp = data;
 	cmds = (t_cmd *)malloc(sizeof(t_cmd));
@@ -64,7 +61,7 @@ t_cmd    *creat_cmd(t_shell *data)
 	cmds->next = NULL;
 	tmp_cmd = cmds;
 	y.i = 0;
-	while(tmp)
+	while (tmp)
 	{
 		while(tmp && tmp->type != PIPE)
 		{
