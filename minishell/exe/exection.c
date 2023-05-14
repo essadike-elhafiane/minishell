@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 23:03:21 by mserrouk          #+#    #+#             */
-/*   Updated: 2023/05/14 01:24:29 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/05/14 22:57:12 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,7 +127,7 @@ void	cmd_echo(t_cmd *cmd)
 	if (!flg_n)
 		printf("\n");
 	cmd = cmd->next;
-	status = 0;
+	g_status = 0;
 	exit(0);
 }
 
@@ -497,14 +497,14 @@ void cmd_cd(t_cmd *cmd)
 	if (cmd->cmd[1] == NULL || cmd->cmd[1][0] == '\0')
 	{
 		chdir(str3);
-		status = 0;
+		g_status = 0;
 	}
 	else 
 	{
 		if ( chdir(cmd->cmd[1]))
 		{
 			perror("Minishell");
-			status = 1;
+			g_status = 1;
 			return ;
 		}
 	}
@@ -512,7 +512,7 @@ void cmd_cd(t_cmd *cmd)
 	{
 		printf("cd: error retrieving current directory: getcwd: \
 			cannot access parent directories: No such file or directory\n");
-			status = 0;
+			g_status = 0;
 		if (!flg)
 		{
 			flg++;
@@ -528,7 +528,7 @@ void cmd_cd(t_cmd *cmd)
 			str = ft_strjoin(ft_strdup("OLDPWD="), ft_strdup(ss));
 		ss = ft_strjoin_no_free("PWD=", getcwd(cwd, sizeof(cwd)));
 		flg = 0;
-		status = 0;
+		g_status = 0;
 	}
 	tmp = *cmd->env;
 	while(tmp)
@@ -563,13 +563,13 @@ int is_not_fork(t_cmd *cmd)
 	{
 		if (!cmd->cmd[1])
 		{
-			// status = 0;
+			// g_status = 0;
 			return (0);
 		}
 		if (cmd->cmd[1] && cmd->cmd[1][0] == '\0')
 		{
 			ft_putstr_fd("minishell: export: `': not a valid identifier\n", 2);
-			status = 1;
+			g_status = 1;
 			return (1);
 		}
 		else
@@ -660,12 +660,12 @@ void ft_pipe(t_cmd *cmd)
 		{
 			if (WIFEXITED(sta)) 
 			{	
-				status = WEXITSTATUS(sta);
+				g_status = WEXITSTATUS(sta);
 			}
 			 else if (WIFSIGNALED(sta)) 
 			{
-				status = WIFSIGNALED(sta);
-				// printf("%d\n", status);
+				g_status = WIFSIGNALED(sta);
+				// printf("%d\n", g_status);
 			}
 		}
 		y.i -= 1;

@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 16:38:31 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/05/14 02:21:20 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/05/14 22:55:01 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ typedef struct s_env
 	struct s_env	*next;
 }	t_env;
 
-int	status;
+int	g_status;
 
 typedef struct s_cmd
 {
@@ -78,6 +78,7 @@ typedef struct s_stk
 	int		b;
 }	t_stk;
 
+void		signal_her(int signal);
 void		free_double(char **spl);
 void		ft_exit(char *s);
 void		signal_handler(int signal);
@@ -106,6 +107,10 @@ int			checke_single(char *str);
 void		clean_cmd_help(t_cmd *cmd, t_stk	*y, char **spl, int flg);
 void		lexer_help(t_stk *y, t_env **envs);
 void		find_exit_status(t_env *env);
+int			creat_heredoc(t_cmd **cmds, t_shell **tmp,
+				t_stk *y, t_cmd *tmp_cmd);
+void		creat_append(t_shell **tmp, t_cmd **tmp_cmd);
+int			creat_inp_out(t_shell **tmp, t_stk *y, t_cmd **tmp_cmd);
 
 void		exection(t_cmd *cmd);
 void		cmd_export(t_env **envs, char *cmd);

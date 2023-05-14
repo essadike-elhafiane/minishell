@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/14 02:18:09 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/05/14 02:29:39 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/05/14 22:56:20 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	check_double_oper_h_p(t_stk *y, t_shell *tmp)
 		if (y->i > 1)
 		{
 			ft_putstr_fd("➜  Minishell$: syntax error\n", 2);
-			status = 258;
+			g_status = 258;
 			return (1);
 		}
 	}
@@ -76,7 +76,7 @@ int	check_double_oper(t_shell *data)
 				return (1);
 			if (check_double_oper_h(&y, tmp))
 			{
-				status = 258;
+				g_status = 258;
 				return (1);
 			}
 			tmp = tmp->next;

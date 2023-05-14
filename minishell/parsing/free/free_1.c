@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/29 20:18:01 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/05/13 23:54:21 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/05/14 20:46:41 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,4 +48,28 @@ void	clean_cmd_help(t_cmd *cmd, t_stk	*y, char **spl, int flg)
 		free(cmd->cmd[y->i]);
 		cmd->cmd[y->i] = y->ss;
 	}
+}
+
+int	word_stop(char *word, char *str)
+{
+	int	i;
+
+	i = 0;
+	if (!str)
+		return (0);
+	while (word[i] == str[i])
+	{
+		if (word[i] == '\0' && str[i] == '\0')
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
+int	check_is_token(int type)
+{
+	if (type == APPEND || type == HER
+		|| type == OUT || type == IN || type == PIPE)
+		return (1);
+	return (0);
 }

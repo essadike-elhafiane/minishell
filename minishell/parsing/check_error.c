@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/13 23:29:57 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/05/13 23:49:52 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/05/14 22:59:17 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	check_error_help(char *str, int i)
 	if (str[i] == '|')
 	{
 		ft_putstr_fd("Minishell$: syntax error near unexpected token `|'\n", 2);
-		status = 258;
+		g_status = 258;
 		return (1);
 	}
 	while (str[i] == '>' || str[i] == '<')
@@ -30,7 +30,7 @@ int	check_error_help(char *str, int i)
 	{
 		ft_putstr_fd(
 			"Minishell$: syntax error near unexpected token `newline'\n", 2);
-		status = 258;
+		g_status = 258;
 		return (1);
 	}
 	return (0);
@@ -53,7 +53,7 @@ int	check_error(char *str)
 	if (str[i] == '\0')
 	{
 		ft_putstr_fd("Minishell$: syntax error !\n", 2);
-		status = 258;
+		g_status = 258;
 		return (1);
 	}
 	else
@@ -73,7 +73,7 @@ void	signal_handler(int signal)
 			rl_replace_line("", 0);
 			rl_on_new_line();
 			rl_redisplay();
-			status = 1;
+			g_status = 1;
 		}
 	}
 }
@@ -94,8 +94,8 @@ void	ft_exit(char *s)
 		i++;
 	}
 	if (!s[i] && i > 5)
-		status = ft_atoi(s + 4);
-	exit(status);
+		g_status = ft_atoi(s + 4);
+	exit(g_status);
 }
 
 void	find_exit_status(t_env *env)
@@ -105,7 +105,7 @@ void	find_exit_status(t_env *env)
 		if (ft_strnstr(env->env, "?", 2))
 		{
 			free(env->env);
-			env->env = ft_strjoin(ft_strdup("?="), ft_itoa(status));
+			env->env = ft_strjoin(ft_strdup("?="), ft_itoa(g_status));
 			break ;
 		}
 		env = env->next;
