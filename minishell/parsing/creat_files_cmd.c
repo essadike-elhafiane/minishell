@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/16 20:08:08 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/05/15 19:42:58 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/05/15 23:16:18 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,28 @@ void	signal_her(int signal)
 
 void	creat_word_cmd_h(t_cmd *tmp_cmd, t_shell **r, t_stk *y)
 {
+	int		k;
+	char	**old_cmd;
+
+	k = 0;
 	y->j = 0;
+	if (tmp_cmd->cmd)
+	{
+		while (tmp_cmd->cmd[k])
+			k++;
+		old_cmd = tmp_cmd->cmd;
+		y->i += k;
+	}
 	tmp_cmd->cmd = (char **)malloc(sizeof(char *) * (y->i + 1));
+	if (k)
+	{
+		while (y->j < k)
+		{
+			tmp_cmd->cmd[y->j] = ft_strdup(old_cmd[y->j]);
+			y->j++;
+		}
+		free_double(old_cmd);
+	}
 	tmp_cmd->cmd[y->i] = NULL;
 	while (y->j < y->i && (*r))
 	{

@@ -1,0 +1,16 @@
+total 176
+drwxr-xr-x  15 eelhafia  candidate    510 May 15 23:16 .
+drwxr-xr-x   6 eelhafia  candidate    204 May 15 22:23 ..
+-rw-r--r--   1 eelhafia  candidate   6148 May 15 22:23 .DS_Store
+drwxr-xr-x   5 eelhafia  candidate    170 May 15 22:23 .vscode
+-rwxr-xr-x   1 eelhafia  candidate   1050 May 15 22:24 Makefile
+drwxr-xr-x  21 eelhafia  candidate    714 May 15 22:24 exe
+drwxr-xr-x   3 eelhafia  candidate    102 May 15 22:23 include
+drwxr-xr-x  64 eelhafia  candidate   2176 May 15 22:24 libft
+-rw-r--r--   1 eelhafia  candidate   2839 May 15 22:23 main.c
+-rw-r--r--   1 eelhafia  candidate   6324 May 15 22:24 main.o
+-rwxr-xr-x   1 eelhafia  candidate  61276 May 15 23:16 minishell
+-rwxr-xr-x   1 eelhafia  candidate      0 May 15 23:16 out
+-rwxr-xr-x   1 eelhafia  candidate      0 May 15 23:16 out1
+drwxr-xr-x  21 eelhafia  candidate    714 May 15 23:16 parsing
+-rw-r--r--   1 eelhafia  candidate    119 May 15 22:23 tests.txt
