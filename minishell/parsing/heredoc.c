@@ -6,13 +6,13 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/14 22:36:35 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/05/14 22:57:55 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/05/15 19:40:34 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-void	heredoc_fork_h_1(t_stk *y, t_shell **tmp, char *ex, t_cmd **cmds)
+void	heredoc_fork_h_1(t_stk *y, char *ex, t_cmd **cmds)
 {
 	if (y->ss[y->i] == '$' && y->ss[y->i +1] != '\0'
 		&& (y->ss[y->i + 1] != '$' && y->ss[y->i + 1] != ' '))
@@ -44,7 +44,7 @@ void	heredoc_fork_h(t_stk *y, t_shell **tmp, char *ex, t_cmd **cmds)
 		{
 			if (y->ss[y->i] == '$' && (y->ss[y->i + 1] == '$'))
 				y->i++;
-			heredoc_fork_h_1(y, tmp, ex, cmds);
+			heredoc_fork_h_1(y, ex, cmds);
 			y->i++;
 		}
 	}
@@ -54,6 +54,7 @@ void	heredoc_fork(t_stk *y, t_shell **tmp, int *fd, t_cmd **cmds)
 {
 	char	*ex;
 
+	ex = NULL;
 	close(fd[0]);
 	while (1)
 	{

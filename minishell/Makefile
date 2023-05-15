@@ -1,5 +1,5 @@
 NAME = minishell
-CC = cc -I/goinfre/eelhafia/.brew/opt/readline/include -g
+CC = cc -Wall -Wextra -Werror -I/goinfre/eelhafia/.brew/opt/readline/include -g
 RM = rm -f
 
 SRC = main.c parsing/lexer.c parsing/heredoc.c parsing/creat_inp_out_a.c \

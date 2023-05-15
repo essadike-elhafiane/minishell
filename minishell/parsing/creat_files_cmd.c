@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/16 20:08:08 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/05/14 22:54:18 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/05/15 19:42:58 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ int	creat_cmd_1(t_cmd **cmds, t_shell **tmp, t_stk *y, t_cmd **tmp_cmd)
 	{
 		if ((*tmp) && (*tmp)->type == WSPACE)
 			(*tmp) = (*tmp)->next;
-		if (creat_inp_out(tmp, y, tmp_cmd))
+		if (creat_inp_out(tmp, tmp_cmd))
 			break ;
 		creat_append(tmp, tmp_cmd);
 		if (creat_heredoc(cmds, tmp, y, *tmp_cmd))

@@ -6,13 +6,13 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/14 22:50:21 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/05/14 22:56:15 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/05/15 19:41:49 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-int	creat_inp_1(t_shell **tmp, t_stk *y, t_cmd **tmp_cmd)
+int	creat_inp_1(t_shell **tmp, t_cmd **tmp_cmd)
 {
 	(*tmp_cmd)->fd_input = open((*tmp)->s, O_RDONLY);
 	if ((*tmp_cmd)->fd_input < 0)
@@ -27,7 +27,7 @@ int	creat_inp_1(t_shell **tmp, t_stk *y, t_cmd **tmp_cmd)
 	return (0);
 }
 
-int	creat_inp(t_shell **tmp, t_stk *y)
+int	creat_inp(t_shell **tmp)
 {
 	(*tmp) = (*tmp)->next;
 	if ((*tmp) && (*tmp)->type == WSPACE)
@@ -53,13 +53,13 @@ int	creat_inp(t_shell **tmp, t_stk *y)
 	return (0);
 }
 
-int	creat_inp_out(t_shell **tmp, t_stk *y, t_cmd **tmp_cmd)
+int	creat_inp_out(t_shell **tmp, t_cmd **tmp_cmd)
 {
 	if ((*tmp) && (*tmp)->type == IN)
 	{
-		if (creat_inp(tmp, y))
+		if (creat_inp(tmp))
 			return (1);
-		if (creat_inp_1(tmp, y, tmp_cmd))
+		if (creat_inp_1(tmp, tmp_cmd))
 			return (1);
 	}
 	if ((*tmp) && (*tmp)->type == OUT)

@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 21:27:02 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/05/14 01:25:38 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/05/15 19:39:27 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,6 @@ int	main(int ac, char **av, char **env)
 {
 	char	*str;
 	int		error;
-	int		flg_d;
 	t_env	*envs;
 
 	(void )ac;
