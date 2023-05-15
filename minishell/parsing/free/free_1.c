@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/29 20:18:01 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/05/14 20:46:41 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/05/15 23:28:03 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,4 +72,27 @@ int	check_is_token(int type)
 		|| type == OUT || type == IN || type == PIPE)
 		return (1);
 	return (0);
+}
+
+void	creat_word_cmd_h_1(t_cmd *tmp_cmd, t_shell **r, t_stk *y)
+{
+	while (y->j < y->i && (*r))
+	{
+		if ((*r) && ((*r)->type == WORD
+				|| (*r)->type == DOUBLE || (*r)->type == SINGLE))
+		{
+			tmp_cmd->cmd[y->j] = ft_strdup((*r)->s);
+			(*r) = (*r)->next;
+			while ((*r) && ((*r)->type == WORD
+					|| (*r)->type == DOUBLE || (*r)->type == SINGLE))
+			{
+				tmp_cmd->cmd[y->j]
+					= ft_strjoin(tmp_cmd->cmd[y->j], ft_strdup((*r)->s));
+				(*r) = (*r)->next;
+			}
+			y->j++;
+		}
+		else
+			(*r) = (*r)->next;
+	}
 }

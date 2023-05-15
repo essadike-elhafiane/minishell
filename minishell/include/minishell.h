@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mserrouk <mserrouk@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 16:38:31 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/05/15 21:20:29 by mserrouk         ###   ########.fr       */
+/*   Updated: 2023/05/15 23:28:24 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,7 @@ int			creat_heredoc(t_cmd **cmds, t_shell **tmp,
 				t_stk *y, t_cmd *tmp_cmd);
 void		creat_append(t_shell **tmp, t_cmd **tmp_cmd);
 int			creat_inp_out(t_shell **tmp, t_cmd **tmp_cmd);
-
+void		creat_word_cmd_h_1(t_cmd *tmp_cmd, t_shell **r, t_stk *y);
 void		exection(t_cmd *cmd);
 void		cmd_export(t_env **envs, char *cmd);
 int			ft_strcchr(char *str, char c);

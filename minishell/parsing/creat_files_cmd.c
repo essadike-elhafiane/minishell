@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/16 20:08:08 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/05/15 23:16:18 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/05/15 23:27:55 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,25 +46,7 @@ void	creat_word_cmd_h(t_cmd *tmp_cmd, t_shell **r, t_stk *y)
 		free_double(old_cmd);
 	}
 	tmp_cmd->cmd[y->i] = NULL;
-	while (y->j < y->i && (*r))
-	{
-		if ((*r) && ((*r)->type == WORD
-				|| (*r)->type == DOUBLE || (*r)->type == SINGLE))
-		{
-			tmp_cmd->cmd[y->j] = ft_strdup((*r)->s);
-			(*r) = (*r)->next;
-			while ((*r) && ((*r)->type == WORD
-					|| (*r)->type == DOUBLE || (*r)->type == SINGLE))
-			{
-				tmp_cmd->cmd[y->j]
-					= ft_strjoin(tmp_cmd->cmd[y->j], ft_strdup((*r)->s));
-				(*r) = (*r)->next;
-			}
-			y->j++;
-		}
-		else
-			(*r) = (*r)->next;
-	}
+	creat_word_cmd_h_1(tmp_cmd, r, y);
 }
 
 void	creat_word_cmd(t_cmd *tmp_cmd, t_shell **tmp, t_stk *y)
