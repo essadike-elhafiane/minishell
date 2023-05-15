@@ -6,7 +6,7 @@
 /*   By: mserrouk <mserrouk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/14 22:05:40 by mserrouk          #+#    #+#             */
-/*   Updated: 2023/05/15 19:53:43 by mserrouk         ###   ########.fr       */
+/*   Updated: 2023/05/15 19:59:12 by mserrouk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,4 +104,3 @@ void	cmd_cd(t_cmd *cmd)
 	cmd_cd_norm3(&y, tmp, flg);
 	return ;
 }
-

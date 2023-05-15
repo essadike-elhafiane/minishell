@@ -6,7 +6,7 @@
 /*   By: mserrouk <mserrouk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 23:03:21 by mserrouk          #+#    #+#             */
-/*   Updated: 2023/05/15 19:33:59 by mserrouk         ###   ########.fr       */
+/*   Updated: 2023/05/15 19:58:47 by mserrouk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,6 @@ int	ft_command_path_norm(t_cmd *cmd, int j, char **path)
 	}
 	return (1);
 }
-
 
 char	**get_path(t_env *env)
 {

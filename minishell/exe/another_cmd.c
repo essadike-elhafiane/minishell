@@ -6,7 +6,7 @@
 /*   By: mserrouk <mserrouk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/14 22:37:20 by mserrouk          #+#    #+#             */
-/*   Updated: 2023/05/14 22:38:52 by mserrouk         ###   ########.fr       */
+/*   Updated: 2023/05/15 21:20:11 by mserrouk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,4 +45,22 @@ void	cmd_env(t_env *envs)
 		tmp = tmp->next;
 	}
 	exit(0);
+}
+
+void	cmd_export(t_env **envs, char *cmd)
+{
+	t_env		*tmp;
+	t_env		*tmp2;
+
+	if (!envs)
+		return ;
+	tmp = *envs;
+	tmp2 = *envs;
+	while (tmp->next)
+		tmp = tmp->next;
+	tmp->next = (t_env *) malloc(sizeof(t_env));
+	tmp = tmp->next;
+	tmp->p = 1;
+	tmp->next = NULL;
+	tmp->env = ft_strdup(cmd);
 }
