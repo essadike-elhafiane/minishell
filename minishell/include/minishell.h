@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mserrouk <mserrouk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 16:38:31 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/05/15 19:42:36 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/05/15 19:56:11 by mserrouk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,10 @@ typedef struct s_stk
 	pid_t	pid;
 	int		j;
 	int		b;
+	int		plus;
+	int		flg;
+	t_cmd	*tmp2;
+	t_cmd	*tmp1;
 }	t_stk;
 
 void		signal_her(int signal);
@@ -114,8 +118,17 @@ int			creat_inp_out(t_shell **tmp, t_cmd **tmp_cmd);
 
 void		exection(t_cmd *cmd);
 void		cmd_export(t_env **envs, char *cmd);
-void		add_env(t_env*envs, t_cmd *cmd);
 int			ft_strcchr(char *str, char c);
+void		error_message(char *str, int i);
 void		cmd_unset(t_env **envs, t_cmd *cmd);
-// void    exection(t_cmd *cmd, t_env *envs);
+void		cmd_cd(t_cmd *cmd);
+void		ft_pipe(t_cmd *cmd);
+int			check_export(t_env **envs, t_cmd *cmd);
+void		cmd_unset(t_env **envs, t_cmd *cmd);
+void		ft_command(t_cmd *cmd, t_cmd *tmp2, int i);
+void		cmd_echo(t_cmd *cmd);
+void		cmd_pwd(t_cmd *cmd);
+void		cmd_env(t_env *envs);
+void		cmd_export_fork(t_env *tmp);
+int			ft_command_path_norm(t_cmd *cmd, int j, char **path);
 #endif
