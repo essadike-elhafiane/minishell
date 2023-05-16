@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mserrouk <mserrouk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 21:27:02 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/05/15 19:39:27 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/05/16 20:38:57 by mserrouk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,10 +63,6 @@ void	loop_str(char *str, int error, t_env **envs)
 	free(str);
 }
 
-// void h(void)
-// {
-// 	system("leaks minishell");
-// }
 char	*check_pipe(int error, char *str)
 {
 	int		flg_d;
@@ -106,19 +102,3 @@ int	main(int ac, char **av, char **env)
 	}
 	fun_free_env(&envs);
 }
-
-//>""
-// < j| ls seg fault
-
-// <inp >out :inp file doesnt exist
-
-// always print error in stderr not stdout
-// <ok <<ok
-// $$$USER
-// < ss | ls
-// lsof -c minishell
-// hmeftah
-// int main(int ac, char **av)
-// {
-// }
-// multi space not error
