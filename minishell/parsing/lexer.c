@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/13 23:00:51 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/05/13 23:25:03 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/05/18 20:34:57 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void	lexer_1(char *str, t_stk *y)
 	{
 		y->i++;
 		y->b = y->i;
-		while (str[y->i] != 34)
+		while (str[y->i] && str[y->i] != 34)
 			y->i++;
 		y->ss = ft_substr(str, y->b, y->i - y->b);
 		y->tmp->next = init_data(y->ss, DOUBLE);
@@ -88,7 +88,7 @@ void	lexer_3(char *str, t_stk *y)
 	{
 		y->i++;
 		y->b = y->i;
-		while (str[y->i] != 39)
+		while (str[y->i] && str[y->i] != 39)
 			y->i++;
 		y->ss = ft_substr(str, y->b, y->i - y->b);
 		y->tmp->next = init_data(y->ss, SINGLE);
@@ -119,7 +119,7 @@ void	lexer(char *str, t_env **envs)
 	y.data_cmd = init_data(y.ss, 14);
 	y.tmp = y.data_cmd;
 	free(y.ss);
-	while (str[y.i] == ' ' || str[y.i] == '\t')
+	while (str[y.i] && (str[y.i] == ' ' || str[y.i] == '\t'))
 		y.i++;
 	while (str[y.i])
 	{
@@ -127,7 +127,8 @@ void	lexer(char *str, t_env **envs)
 		lexer_1(str, &y);
 		lexer_2(str, &y);
 		lexer_3(str, &y);
-		y.i++;
+		if (str[y.i])
+			y.i++;
 	}
 	lexer_help(&y, envs);
 }

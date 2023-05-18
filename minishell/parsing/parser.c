@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 18:06:57 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/05/14 02:23:07 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/05/18 19:13:30 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ void	check_expand_help(t_stk *y, t_shell *tmp, t_env *env, int flg)
 	y->front = ft_substr(tmp->s, 0, y->b -1);
 	free(tmp->s);
 	tmp->s = ft_strjoin(y->front, y->ss);
-	if (tmp->s[y->i - 1] != '$')
+	if (tmp->s && tmp->s[y->i] && y->i > 1 && tmp->s[y->i - 1] != '$')
 		y->i--;
 	tmp->s = ft_strjoin(tmp->s, y->back);
 	flg = 1;
@@ -99,7 +99,7 @@ void	check_expand(t_stk *y, t_shell *tmp, t_env *env)
 	y->i = 0;
 	if (tmp->type == SINGLE)
 		return ;
-	while (tmp && tmp->s[y->i])
+	while (tmp && tmp->s && tmp->s[y->i])
 	{
 		while (tmp->s[y->i] == '$' && tmp->s[y->i + 1] == '$')
 			y->i += 2;

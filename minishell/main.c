@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mserrouk <mserrouk@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 21:27:02 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/05/16 20:38:57 by mserrouk         ###   ########.fr       */
+/*   Updated: 2023/05/18 19:24:59 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,9 @@ void	loop_str(char *str, int error, t_env **envs)
 {
 	int	flg_d;
 	int	flg_s;
+	int		flg;
 
+	flg = 0;
 	while (!error)
 	{
 		flg_d = checke_double(str);
@@ -49,11 +51,17 @@ void	loop_str(char *str, int error, t_env **envs)
 			str = ft_strjoin(str, readline("quote> "));
 		else
 			break ;
+		flg++;
+		if (flg > 6)
+			return (free(str), g_status = 1, ft_putstr_fd("error quotes !\n", 2));
 	}
 	if (word_stop(str, "clear"))
 		printf("\033[2J\033[1;1H");
 	if (ft_strnstr(str, "exit", 4) && (str[4] == '\0' || str[4] == ' '))
-		ft_exit(str);
+	{
+		if (ft_exit(str))
+			return (free(str));
+	}
 	else if (str && !error)
 	{
 		if (str[0] != '\0')

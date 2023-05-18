@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mserrouk <mserrouk@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/14 22:08:03 by mserrouk          #+#    #+#             */
-/*   Updated: 2023/05/15 19:56:27 by mserrouk         ###   ########.fr       */
+/*   Updated: 2023/05/18 20:49:33 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,10 +46,12 @@ void	wait_cmd(t_stk y)
 	{
 		if (waitpid(-1, &y.b, 0) == y.tmp2->pid)
 		{
-			if (WIFEXITED(y.b))
+			if (WIFSIGNALED(y.b))
+				g_status = 128 + WTERMSIG(y.b);
+			if (WTERMSIG(y.b) == 3)
+				ft_putstr_fd("Quit: 3\n", 2);
+			else if (WIFEXITED(y.b))
 				g_status = WEXITSTATUS(y.b);
-			else if (WIFSIGNALED(y.b))
-				g_status = WIFSIGNALED(y.b);
 		}
 		y.i -= 1;
 	}
@@ -66,6 +68,8 @@ void	pipe_core(t_stk y)
 			y.tmp1->pid = fork();
 			if (y.tmp1->pid == 0)
 			{
+				signal(SIGQUIT, SIG_DFL);
+				signal(SIGINT, SIG_DFL);
 				if (y.tmp1->next)
 					close(y.tmp1->fd[0]);
 				if (y.tmp1->fd_input == -1)

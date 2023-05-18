@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 16:38:31 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/05/15 23:28:24 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/05/18 19:22:20 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ typedef struct s_stk
 
 void		signal_her(int signal);
 void		free_double(char **spl);
-void		ft_exit(char *s);
+int			ft_exit(char *s);
 void		signal_handler(int signal);
 void		lexer(char *str, t_env **envs);
 t_shell		*init_data(char *ss, int type1);
