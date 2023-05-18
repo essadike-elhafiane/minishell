@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/13 23:29:57 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/05/18 20:40:54 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/05/18 21:02:55 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,9 +65,6 @@ int	check_error(char *str)
 
 void	signal_handler(int signal)
 {
-	pid_t k;
-	
-	
 	if (signal == SIGINT)
 	{
 		if (waitpid(-1, NULL, WNOHANG))
@@ -76,7 +73,7 @@ void	signal_handler(int signal)
 			rl_replace_line("", 0);
 			rl_on_new_line();
 			rl_redisplay();
-			g_status = WIFSIGNALED(k);
+			g_status = 1;
 		}
 	}
 }

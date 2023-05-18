@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 21:27:02 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/05/18 19:24:59 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/05/18 21:04:08 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void	loop_str(char *str, int error, t_env **envs)
 		else
 			break ;
 		flg++;
-		if (flg > 6)
+		if (flg > 4)
 			return (free(str), g_status = 1, ft_putstr_fd("error quotes !\n", 2));
 	}
 	if (word_stop(str, "clear"))

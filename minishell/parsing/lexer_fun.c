@@ -6,7 +6,7 @@
 /*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 18:07:00 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/05/18 20:44:10 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/05/18 21:17:39 by eelhafia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,19 +24,6 @@ t_env	*init_env(char *env)
 	data->next = NULL;
 	return (data);
 }
-
-// void signa_quit (int signal)
-// {
-// 	if (signal == SIGQUIT)
-// 	{
-// 		if (waitpid(-1, NULL, WNOHANG))
-// 		{
-// 			ft_putstr_fd("Quit: 3\n", 1);
-// 			g_status = 131;
-// 			exit(131);
-// 		}
-// 	}
-// }
 
 void	lexer_help(t_stk *y, t_env **envs)
 {
@@ -57,7 +44,6 @@ void	lexer_help(t_stk *y, t_env **envs)
 		return (fun_free(&y->data_cmd));
 	cmd->env = y->data_cmd->env;
 	exection(cmd);
-	// signal(SIGQUIT, SIG_IGN);
 	fun_free_cmd(&cmd);
 	fun_free(&y->data_cmd);
 }
@@ -72,8 +58,8 @@ t_env	*creat_env_list(char **env)
 	flg = 0;
 	if (!*env)
 	{
-		env_l = init_env("");
-		env_l->p = 0;
+		env_l = init_env("?=0");
+		env_l->p = 1;
 		return (env_l);
 	}
 	env_l = init_env(env[0]);
