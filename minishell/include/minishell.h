@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mserrouk <mserrouk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 16:38:31 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/05/18 19:22:20 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/05/20 21:39:18 by mserrouk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,7 +125,7 @@ void		cmd_cd(t_cmd *cmd);
 void		ft_pipe(t_cmd *cmd);
 int			check_export(t_env **envs, t_cmd *cmd);
 void		cmd_unset(t_env **envs, t_cmd *cmd);
-void		ft_command(t_cmd *cmd, t_cmd *tmp2, int i);
+void		ft_command(t_cmd *cmd, t_cmd *tmp2, int i, t_stk y);
 void		cmd_echo(t_cmd *cmd);
 void		cmd_pwd(t_cmd *cmd);
 void		cmd_env(t_env *envs);

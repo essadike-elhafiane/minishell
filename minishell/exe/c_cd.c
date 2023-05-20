@@ -6,7 +6,7 @@
 /*   By: mserrouk <mserrouk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/14 22:05:40 by mserrouk          #+#    #+#             */
-/*   Updated: 2023/05/19 17:03:39 by mserrouk         ###   ########.fr       */
+/*   Updated: 2023/05/20 22:16:02 by mserrouk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int	cmd_cd_norm1(t_stk *y, t_cmd *cmd, t_env *tmp)
 	}
 	if (cmd->cmd[1] == NULL || cmd->cmd[1][0] == '\0')
 	{
-		if (tmp == NULL)
+		if (y->back == NULL)
 			return (g_status = 1,
 				ft_putstr_fd("minishell: cd: HOME not set\n", 2), 0);
 		chdir(y->back);

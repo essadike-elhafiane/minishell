@@ -6,7 +6,7 @@
 /*   By: mserrouk <mserrouk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 23:03:21 by mserrouk          #+#    #+#             */
-/*   Updated: 2023/05/19 17:24:26 by mserrouk         ###   ########.fr       */
+/*   Updated: 2023/05/20 22:09:26 by mserrouk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,35 +14,27 @@
 
 int	ft_command_path_norm(t_cmd *cmd, int j, char **path)
 {
-	int i;
+	int	i;
 
 	i = -1;
 	while (!path && cmd->cmd && cmd->cmd[++i])
 	{
-		if (ft_strchr(cmd->cmd[i],'/'))
+		if (ft_strchr(cmd->cmd[i], '/'))
 			break ;
 		if (cmd->cmd[i + 1] == NULL)
-		{
-			ft_putstr_fd("Minishell: ", 2);
-			error_message(": No such file or directory\n", 127);
-		}
+			error_message("Minishell:  No such file or directory\n", 127);
 	}
 	if (ft_strchr(cmd->cmd[j], '/'))
 	{
 		if (!access(cmd->cmd[j], X_OK))
-		{
-			cmd->cmd_path = ft_strdup (cmd->cmd[j]);
-			return (0);
-		}
-		if (errno == EACCES)
+			return (cmd->cmd_path = ft_strdup (cmd->cmd[j]), 0);
+		if (errno == EACCES || errno == ENOENT)
 		{
 			perror("Minishell");
-			exit(126);
-		}
-		else if (errno == ENOENT)
-		{
-			perror("Minishell");
-			exit(127);
+			if (errno == EACCES)
+				exit(126);
+			else if (errno == ENOENT)
+				exit(127);
 		}
 	}
 	return (1);
@@ -55,7 +47,7 @@ char	**get_path(t_env *env)
 	i = -1;
 	while (env)
 	{
-		if (ft_strnstr(env->env, "PATH", 6) && env->p == 1)
+		if (ft_strnstr(env->env, "PATH", 6))
 			return (ft_split(env->env +5, ':'));
 		env = env->next;
 	}

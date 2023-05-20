@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mserrouk <mserrouk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/14 22:08:03 by mserrouk          #+#    #+#             */
-/*   Updated: 2023/05/18 20:49:33 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/05/20 21:38:48 by mserrouk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,9 +72,7 @@ void	pipe_core(t_stk y)
 				signal(SIGINT, SIG_DFL);
 				if (y.tmp1->next)
 					close(y.tmp1->fd[0]);
-				if (y.tmp1->fd_input == -1)
-					error_message("Minishell$: No such file or directory\n", 1);
-				ft_command(y.tmp1, y.tmp2, y.i);
+				ft_command(y.tmp1, y.tmp2, y.i, y);
 			}
 			if (y.tmp1->next)
 				close(y.tmp1->fd[1]);

@@ -6,7 +6,7 @@
 /*   By: mserrouk <mserrouk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/14 22:30:42 by mserrouk          #+#    #+#             */
-/*   Updated: 2023/05/20 20:51:47 by mserrouk         ###   ########.fr       */
+/*   Updated: 2023/05/20 22:11:26 by mserrouk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,12 +44,10 @@ int	check_export_norm_1(t_env *tmp, t_cmd *cmd, t_stk *y)
 {
 	if (y->i > 0 && ft_strnstr(tmp->env, y->ss, ft_strlen(y->ss))
 		&& y->i != y->plus)
-	{
-		free(tmp->env);
-		tmp->p = 1;
-		tmp->env = ft_strdup(cmd->cmd[y->j]);
-		y->flg = 1;
-	}
+		return (free(tmp->env),
+			tmp->p = 1,
+			tmp->env = ft_strdup(cmd->cmd[y->j]),
+			y->flg = 1, 0);
 	else if (y->i > 0 && ft_strnstr(tmp->env, y->ss, ft_strlen(y->ss))
 		&& y->i == y->plus)
 	{

@@ -6,7 +6,7 @@
 /*   By: mserrouk <mserrouk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 18:07:00 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/05/19 16:52:59 by mserrouk         ###   ########.fr       */
+/*   Updated: 2023/05/20 21:32:18 by mserrouk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,34 +48,42 @@ void	lexer_help(t_stk *y, t_env **envs)
 	fun_free(&y->data_cmd);
 }
 
+void	init_if_not_env(t_env	**env_l)
+{
+	(*env_l) = init_env("?=0");
+	(*env_l)->p = 1;
+	(*env_l)->next = init_env("PWD");
+	(*env_l)->next->next = init_env("OLDPWD=");
+	(*env_l)->next->next->p = 1;
+	(*env_l)->next->next->next = init_env("PATH=/bin:/usr/sbin:/usr/bin");
+	(*env_l)->next->next->next->p = 0;
+	(*env_l)->next->next->next->next = init_env("SHLVL=1");
+	(*env_l)->next->next->next->next->p = 1;
+}
+
 t_env	*creat_env_list(char **env)
 {
-	int		i;
-	int		flg;
+	t_stk	y;
 	t_env	*env_l;
 	t_env	*tmp;
 
-	flg = 0;
+	y.flg = 0;
 	if (!*env)
 	{
-		env_l = init_env("?=0");
-		env_l->p = 1;
-		env_l->next = init_env("PWD");
-		env_l->next->next = init_env("OLDPWD=");
-		env_l->next->next->p = 0;
+		init_if_not_env(&env_l);
 		return (env_l);
 	}
 	env_l = init_env(env[0]);
 	tmp = env_l;
-	i = 0;
-	while (env[++i])
+	y.i = 0;
+	while (env[++y.i])
 	{
-		tmp->next = init_env(env[i]);
-		if (ft_strnstr(env[i], "?", 1))
-			flg = 1;
+		tmp->next = init_env(env[y.i]);
+		if (ft_strnstr(env[y.i], "?", 1))
+			y.flg = 1;
 		tmp = tmp->next;
 	}
-	if (!flg)
+	if (!y.flg)
 		tmp->next = init_env("?=0");
 	return (env_l);
 }
