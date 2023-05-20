@@ -6,7 +6,7 @@
 /*   By: mserrouk <mserrouk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 23:03:21 by mserrouk          #+#    #+#             */
-/*   Updated: 2023/05/15 19:58:47 by mserrouk         ###   ########.fr       */
+/*   Updated: 2023/05/19 17:24:26 by mserrouk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,18 @@
 
 int	ft_command_path_norm(t_cmd *cmd, int j, char **path)
 {
-	if (!path)
+	int i;
+
+	i = -1;
+	while (!path && cmd->cmd && cmd->cmd[++i])
 	{
-		ft_putstr_fd("Minishell: ", 2);
-		error_message(": No such file or directory\n", 127);
+		if (ft_strchr(cmd->cmd[i],'/'))
+			break ;
+		if (cmd->cmd[i + 1] == NULL)
+		{
+			ft_putstr_fd("Minishell: ", 2);
+			error_message(": No such file or directory\n", 127);
+		}
 	}
 	if (ft_strchr(cmd->cmd[j], '/'))
 	{

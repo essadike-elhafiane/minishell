@@ -6,7 +6,7 @@
 /*   By: mserrouk <mserrouk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/14 22:28:54 by mserrouk          #+#    #+#             */
-/*   Updated: 2023/05/14 22:39:41 by mserrouk         ###   ########.fr       */
+/*   Updated: 2023/05/19 16:13:45 by mserrouk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,11 @@ int	hide_unset(t_env *tmp, char *cmd)
 	}
 	else if (!ft_strncmp(cmd, "OLDPWD", 6)
 		&& !ft_strncmp(tmp->env, "OLDPWD", 6))
+	{
+		tmp->p = 0;
+		return (1);
+	}
+	else if (!ft_strncmp(cmd, "SHLVL", 5) && !ft_strncmp(tmp->env, "SHLVL", 5))
 	{
 		tmp->p = 0;
 		return (1);

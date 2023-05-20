@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mserrouk <mserrouk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 21:27:02 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/05/18 21:04:08 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/05/20 21:03:40 by mserrouk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,21 +40,11 @@ void	loop_str(char *str, int error, t_env **envs)
 {
 	int	flg_d;
 	int	flg_s;
-	int		flg;
 
-	flg = 0;
-	while (!error)
-	{
-		flg_d = checke_double(str);
-		flg_s = checke_single(str);
-		if (flg_d % 2 != 0 || flg_s % 2 != 0)
-			str = ft_strjoin(str, readline("quote> "));
-		else
-			break ;
-		flg++;
-		if (flg > 4)
-			return (free(str), g_status = 1, ft_putstr_fd("error quotes !\n", 2));
-	}
+	flg_d = checke_double(str);
+	flg_s = checke_single(str);
+	if (flg_d % 2 != 0 || flg_s % 2 != 0)
+		return (free(str), ft_putstr_fd("Error quotes !\n", 2));
 	if (word_stop(str, "clear"))
 		printf("\033[2J\033[1;1H");
 	if (ft_strnstr(str, "exit", 4) && (str[4] == '\0' || str[4] == ' '))

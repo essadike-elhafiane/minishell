@@ -6,7 +6,7 @@
 /*   By: mserrouk <mserrouk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/14 22:15:12 by mserrouk          #+#    #+#             */
-/*   Updated: 2023/05/15 19:55:57 by mserrouk         ###   ########.fr       */
+/*   Updated: 2023/05/19 17:31:17 by mserrouk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,13 +40,14 @@ void	ft_command_path(t_cmd *cmd, char **path)
 	error_message("➜ Minishell$: command not found\n", 127);
 }
 
-char	**envs_tab(t_env *envs)
+char	**envs_tab(t_env *envs, t_cmd *cmd)
 {
+	int		j;
 	char	**tab;
 	t_env	*tmp;
 	int		i;
 
-	i = 1;
+	i = 0;
 	tmp = envs;
 	while (tmp)
 	{
@@ -60,8 +61,24 @@ char	**envs_tab(t_env *envs)
 	i = 0;
 	while (tmp)
 	{
-		tab[i++] = ft_strdup(tmp->env);
-		tmp = tmp->next;
+		if (!ft_strncmp(tmp->env, "SHLVL", 5))
+		{
+			j = 0;
+			while (cmd->cmd && cmd->cmd[j])
+			{
+				if (word_stop("./minishell", cmd->cmd[j++]))
+				{
+					if (tmp->p == 1)
+						tab[i++] = ft_strjoin(ft_strdup("SHLVL=") , ft_itoa(ft_atoi(tmp->env + 6) + 1));
+					else
+						tab[i++] = ft_strjoin(ft_strdup("SHLVL=") , ft_itoa(2));
+					break;
+				}
+			}
+		}
+		else
+			tab[i++] = ft_strdup(tmp->env);
+			tmp = tmp->next;
 	}
 	tab[i] = NULL;
 	return (tab);
@@ -80,7 +97,7 @@ void	ft_command_norm(t_cmd *cmd)
 	char	**tab;
 
 	ft_command_path(cmd, cmd->paths);
-	tab = envs_tab(*cmd->env);
+	tab = envs_tab(*cmd->env ,cmd);
 	execve(cmd->cmd_path, cmd->cmd, tab);
 	perror("Minishell");
 	exit(126);
@@ -105,7 +122,7 @@ void	ft_command(t_cmd *cmd, t_cmd *tmp2, int i)
 		cmd_pwd(cmd);
 	else if (word_stop (cmd->cmd[0], "export"))
 		cmd_export_fork(*cmd->env);
-	else if (word_stop (cmd->cmd[0], "env"))
+	else if (word_stop (cmd->cmd[0], "env") && cmd->cmd[1] == NULL)
 		cmd_env(*cmd->env);
 	else
 		ft_command_norm(cmd);

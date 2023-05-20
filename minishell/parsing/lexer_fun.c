@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_fun.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eelhafia <eelhafia@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mserrouk <mserrouk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 18:07:00 by eelhafia          #+#    #+#             */
-/*   Updated: 2023/05/18 21:17:39 by eelhafia         ###   ########.fr       */
+/*   Updated: 2023/05/19 16:52:59 by mserrouk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,9 @@ t_env	*creat_env_list(char **env)
 	{
 		env_l = init_env("?=0");
 		env_l->p = 1;
+		env_l->next = init_env("PWD");
+		env_l->next->next = init_env("OLDPWD=");
+		env_l->next->next->p = 0;
 		return (env_l);
 	}
 	env_l = init_env(env[0]);

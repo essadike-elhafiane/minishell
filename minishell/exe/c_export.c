@@ -6,7 +6,7 @@
 /*   By: mserrouk <mserrouk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/14 22:30:42 by mserrouk          #+#    #+#             */
-/*   Updated: 2023/05/15 21:21:05 by mserrouk         ###   ########.fr       */
+/*   Updated: 2023/05/20 20:51:47 by mserrouk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ int	check_export_norm_1(t_env *tmp, t_cmd *cmd, t_stk *y)
 		if (tmp->env[ft_strlen(y->ss)] != '\0'
 			&& tmp->env[ft_strlen(y->ss)] != '=')
 			return (1);
+		tmp->p = 1;
 		y->flg = 1;
 	}
 	return (0);

@@ -6,7 +6,7 @@
 /*   By: mserrouk <mserrouk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/14 22:37:20 by mserrouk          #+#    #+#             */
-/*   Updated: 2023/05/15 21:20:11 by mserrouk         ###   ########.fr       */
+/*   Updated: 2023/05/19 17:30:43 by mserrouk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	cmd_pwd(t_cmd *cmd)
 	i = 0;
 	while (*cmd->env)
 	{
-		if (ft_strnstr((*cmd->env)->env, "PWD", 3))
+		if (ft_strnstr((*cmd->env)->env, "PWD=", 4))
 		{
 			i = 1;
 			printf("%s\n", (*cmd->env)->env + 4);
